@@ -1,0 +1,37 @@
+{
+	"nodes":[
+		{"id":"15d7bfa071f97d63","type":"text","text":"Эллиптическая","x":-460,"y":160,"width":240,"height":60},
+		{"id":"7b3a205c9ebaf8f0","type":"text","text":"Параболическая","x":-10,"y":160,"width":250,"height":60},
+		{"id":"c77b1b958631bf82","type":"text","text":"Гиперболическая","x":500,"y":160,"width":260,"height":60},
+		{"id":"f12953c263007b91","type":"text","text":"Эллиптический параболоид ","x":-340,"y":620,"width":380,"height":60},
+		{"id":"8a1fc3e06ead0632","type":"text","text":"Эллиптический цилиндр","x":-760,"y":620,"width":342,"height":60},
+		{"id":"9d97d64c162a0876","type":"text","text":"Эллипсоид","x":-860,"y":500,"width":200,"height":60},
+		{"id":"2961c86883cad79c","type":"text","text":"Поверхность второго порядка","x":-97,"y":-140,"width":425,"height":60},
+		{"id":"7394f2a46573e85c","type":"text","text":"Линейчатые поверхности","x":-62,"y":1360,"width":360,"height":60},
+		{"id":"4c20685b5f72e5d3","type":"text","text":"Параболический цилиндр","x":-67,"y":880,"width":365,"height":60},
+		{"id":"35bb05f26e436036","type":"text","text":"Гипербалический параболоид","x":223,"y":740,"width":407,"height":60},
+		{"id":"313bc6a1c959ea01","type":"text","text":"Однополостный гиперболоид","x":560,"y":640,"width":400,"height":60},
+		{"id":"dd32fa78622130c9","type":"text","text":"Гиперболический цилиндр","x":890,"y":740,"width":370,"height":60},
+		{"id":"32c38d1bda25b5fa","type":"text","text":"Двухполостный гиперболоид","x":1160,"y":580,"width":400,"height":60}
+	],
+	"edges":[
+		{"id":"a34d43dc37014351","fromNode":"2961c86883cad79c","fromSide":"bottom","toNode":"c77b1b958631bf82","toSide":"top"},
+		{"id":"e36dc809ba9d4293","fromNode":"15d7bfa071f97d63","fromSide":"bottom","toNode":"f12953c263007b91","toSide":"top"},
+		{"id":"4447422f87a684fb","fromNode":"15d7bfa071f97d63","fromSide":"bottom","toNode":"9d97d64c162a0876","toSide":"top"},
+		{"id":"483d88e1db0ef688","fromNode":"2961c86883cad79c","fromSide":"bottom","toNode":"15d7bfa071f97d63","toSide":"top"},
+		{"id":"d6b9ddcde2ba9c43","fromNode":"2961c86883cad79c","fromSide":"bottom","toNode":"7b3a205c9ebaf8f0","toSide":"top"},
+		{"id":"032f559f39a50880","fromNode":"c77b1b958631bf82","fromSide":"bottom","toNode":"32c38d1bda25b5fa","toSide":"top"},
+		{"id":"06e47b50b07cbb72","fromNode":"c77b1b958631bf82","fromSide":"bottom","toNode":"313bc6a1c959ea01","toSide":"top"},
+		{"id":"76a7534a5600c075","fromNode":"c77b1b958631bf82","fromSide":"bottom","toNode":"35bb05f26e436036","toSide":"top"},
+		{"id":"ad74c92cf5b0edc9","fromNode":"15d7bfa071f97d63","fromSide":"bottom","toNode":"8a1fc3e06ead0632","toSide":"top"},
+		{"id":"1687c52d47f2850c","fromNode":"7b3a205c9ebaf8f0","fromSide":"bottom","toNode":"35bb05f26e436036","toSide":"top"},
+		{"id":"16859f1c60b33652","fromNode":"7b3a205c9ebaf8f0","fromSide":"bottom","toNode":"f12953c263007b91","toSide":"top"},
+		{"id":"acdc0fc666c8c23f","fromNode":"7b3a205c9ebaf8f0","fromSide":"bottom","toNode":"4c20685b5f72e5d3","toSide":"top"},
+		{"id":"aaebe75c1dd17b78","fromNode":"7394f2a46573e85c","fromSide":"top","toNode":"313bc6a1c959ea01","toSide":"bottom"},
+		{"id":"9b6d194d3f679ca7","fromNode":"7394f2a46573e85c","fromSide":"top","toNode":"35bb05f26e436036","toSide":"bottom"},
+		{"id":"6e45a52287fa9fe6","fromNode":"7394f2a46573e85c","fromSide":"top","toNode":"4c20685b5f72e5d3","toSide":"bottom"},
+		{"id":"82e086f898da1688","fromNode":"c77b1b958631bf82","fromSide":"bottom","toNode":"dd32fa78622130c9","toSide":"top"},
+		{"id":"22a81a00be3a33cc","fromNode":"7394f2a46573e85c","fromSide":"top","toNode":"dd32fa78622130c9","toSide":"bottom"},
+		{"id":"ece41a295fd0b7ab","fromNode":"7394f2a46573e85c","fromSide":"top","toNode":"8a1fc3e06ead0632","toSide":"bottom"}
+	]
+}
