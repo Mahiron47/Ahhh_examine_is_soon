@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "type": "file",
+      "id": "3878fbf9-0e42-4f11-a9e2-9813006de520",
+      "x": 179.78782469351017,
+      "y": -342.16356382814286,
+      "width": 500,
+      "height": 600.4662784529321,
+      "file": "java/mixins/minecraft/net/minecraft/client/render/WorldRenderer.java"
+    },
+    {
+      "type": "file",
+      "id": "4fa72772-3f37-465c-b2b3-c473186b7aca",
+      "x": -342.2419694009496,
+      "y": -342.6778204350102,
+      "width": 500,
+      "height": 602.3500795717592,
+      "file": "java/mixins/minecraft/net/minecraft/client/gui/screen/world/CreateWorldScreen.java"
+    }
+  ],
+  "edges": []
+}

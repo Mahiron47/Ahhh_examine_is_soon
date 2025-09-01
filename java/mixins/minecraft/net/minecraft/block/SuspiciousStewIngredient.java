@@ -1,0 +1,29 @@
+package net.minecraft.block;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.registry.Registries;
+import org.jetbrains.annotations.Nullable;
+
+public interface SuspiciousStewIngredient {
+	StatusEffect getEffectInStew();
+
+	int getEffectInStewDuration();
+
+	static List<SuspiciousStewIngredient> getAll() {
+		return (List<SuspiciousStewIngredient>)Registries.ITEM.stream().map(SuspiciousStewIngredient::of).filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
+	@Nullable
+	static SuspiciousStewIngredient of(ItemConvertible item) {
+		if (item.asItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SuspiciousStewIngredient suspiciousStewIngredient) {
+			return suspiciousStewIngredient;
+		} else {
+			return item.asItem() instanceof SuspiciousStewIngredient suspiciousStewIngredient2 ? suspiciousStewIngredient2 : null;
+		}
+	}
+}
