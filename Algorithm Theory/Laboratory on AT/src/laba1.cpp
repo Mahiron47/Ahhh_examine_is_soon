@@ -14,7 +14,12 @@ private:
 	size_t size;
 	size_t temp = 0;
 public:
-	simples(size_t n) : data{ new uint32_t[n] }, new_fls{ new bool[n] }, size{n} {}
+	simples(size_t n) : data{ new uint32_t[n] }, new_fls{ new bool[n] }, size{n} {
+		for (size_t i = 0; i < n; i++) {
+			data[i] = UINT32_MAX;
+			new_fls[i] = true;
+		}
+	}
 	~simples() {
 		delete[] data;
 		delete[] new_fls;
@@ -113,6 +118,8 @@ int main() {
 			continue;
 		}
 
+		long long shift = 0;
+
 		switch (N) {
 			case 0:
 			case 1:
@@ -128,6 +135,13 @@ int main() {
 				if (s->search_index(3) == UINT64_MAX) s->push_back(3);
 				b_point = get_time();
 				goto SKIP;
+			default:
+				a_point = get_time();
+				if (s->search_index(2) == UINT64_MAX) s->push_back(2);
+				if (s->search_index(3) == UINT64_MAX) s->push_back(3);
+				b_point = get_time();
+				delta, shift += b_point - a_point;
+				break;
 		}
 		
 		a_point = get_time();
@@ -151,7 +165,7 @@ int main() {
 		}
 		std::cout << "That should be enough" << std::endl;
 
-		std::cout << "All primes up to " << N << " have been calculated for " << (b_point - a_point) << " ticks" << std::endl;
+		std::cout << "All primes up to " << N << " have been calculated for " << b_point - a_point + shift << " ticks" << std::endl;
 	}
 	std::cout << "Total time: " << delta << " ticks" << std::endl;
 	delete s;
