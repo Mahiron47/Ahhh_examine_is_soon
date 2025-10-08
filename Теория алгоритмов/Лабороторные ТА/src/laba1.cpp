@@ -10,12 +10,14 @@ long long get_time() {
 class simples {
 private:
 	uint32_t* data;
+	bool* new_fls;
 	size_t size;
 	size_t temp = 0;
 public:
-	simples(size_t n) : data{ new uint32_t[n] }, size{n} {}
+	simples(size_t n) : data{ new uint32_t[n] }, new_fls{ new bool[n] }, size{n} {}
 	~simples() {
 		delete[] data;
+		delete[] new_fls;
 	}
 	const uint32_t& operator[](size_t i) const {
 		if (i < size) {
@@ -28,21 +30,35 @@ public:
 	size_t get_size() {
 		return temp;
 	}
+	bool is_new(size_t index) {
+		if (new_fls[index]) {
+			new_fls[index] = false;
+			return true;
+		} else {
+			return false;
+		}
+	}
 	void push_back(uint32_t value) {
 		if (temp < size) {
 			data[temp] = value;
+			new_fls[temp] = true;
 			temp++;
 		} else {
 			size_t old_size = size;
 			size = size << 1;
 			uint32_t* old_data = data;
+			bool* old_new_fls = new_fls;
 			data = new uint32_t[size];
+			new_fls = new bool[size];
 			for (size_t i = 0; i < old_size; i++) {
 				data[i] = old_data[i];
+				new_fls[i] = old_new_fls[i];
 			} for (size_t i = old_size; i < size; i++) {
 				data[i] = UINT32_MAX;
+				new_fls[i] = true;
 			}
 			data[old_size] = value;
+			new_fls[old_size] = true;
 			temp = old_size;
 			temp++;
 		}
@@ -69,16 +85,10 @@ int main() {
 	long long a_point, b_point, delta = 0;
 	
 	simples* s = new simples(16);
-	
-	s->push_back(2);
-	s->push_back(3);
 
 	auto func = [&s](uint32_t value) -> uint32_t { 
-		bool fl = false;
 		if (s->search_index(value) != UINT64_MAX) {
 			return value;
-		} else {
-			fl = true;
 		}
 
 		for (uint32_t i = 2; i < sqrt(value) + 1; i++) {
@@ -87,9 +97,8 @@ int main() {
 			}
 		}
 
-		if (fl) {
-			s->push_back(value);
-		}
+		s->push_back(value);
+		
 		return value;
 	};
 
@@ -103,6 +112,23 @@ int main() {
 			std::cout << "Input out of range\n";
 			continue;
 		}
+
+		switch (N) {
+			case 0:
+			case 1:
+				break;
+			case 2:
+				a_point = get_time();
+				if (s->search_index(2) == UINT64_MAX) s->push_back(2);
+				b_point = get_time();
+				goto SKIP;
+			case 3:
+				a_point = get_time();
+				if (s->search_index(2) == UINT64_MAX) s->push_back(2);
+				if (s->search_index(3) == UINT64_MAX) s->push_back(3);
+				b_point = get_time();
+				goto SKIP;
+		}
 		
 		a_point = get_time();
 		for (uint32_t i = 1; 6 * i - 1 <= N; i++) {
@@ -113,10 +139,14 @@ int main() {
 			//if (f2 != 0) std::cout << f2 << std::endl;
 		}
 		b_point = get_time();
+
+		SKIP:
+
 		delta += b_point - a_point;
 
 		for (size_t i = 0; i < s->get_size(); i++) {
 			if ((*s)[i] > N) break;
+			if ((*s).is_new(i)) std::cout << "New number calculated" << std::endl;
 			std::cout << (*s)[i] << std::endl;
 		}
 		std::cout << "That should be enough" << std::endl;
