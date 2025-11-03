@@ -1,4 +1,4 @@
-g++ src/laba1.cpp -o build/main.exe
+g++ src/laba2/laba2.cpp -o build/main.exe
 
 cd build
 
