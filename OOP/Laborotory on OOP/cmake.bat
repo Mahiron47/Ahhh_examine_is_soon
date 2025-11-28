@@ -1,4 +1,4 @@
-g++ src/laba4.cpp -o build/main.exe -Wall -Wextra -pedantic
+g++ src/laba5.cpp -o build/main.exe -Wall -Wextra -pedantic
 
 cd build
 
