@@ -1,0 +1,10 @@
+^C:\USERS\ADMIN\DESKTOP\AHHH_EXAMINE_IS_SOON\OOP\LABOROTORY ON OOP\SRC\LABA6.CPP\OUT\BUILD\DEFAULT MSVC\CMAKEFILES\292A04AF7F623951B1722826A9D598A6\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp" "-BC:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp/out/build/default MSVC" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp/out/build/default MSVC/laba6.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

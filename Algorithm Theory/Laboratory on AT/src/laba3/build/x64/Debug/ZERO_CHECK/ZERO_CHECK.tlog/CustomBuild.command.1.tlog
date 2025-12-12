@@ -1,0 +1,10 @@
+^C:\USERS\ADMIN\DESKTOP\AHHH_EXAMINE_IS_SOON\ALGORITHM THEORY\LABORATORY ON AT\SRC\LABA3\BUILD\CMAKEFILES\E0B59D7B9F8CA2DC82CC83E8D84610BF\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Admin/Desktop/Ahhh_examine_is_soon/Algorithm Theory/Laboratory on AT/src/laba3" "-BC:/Users/Admin/Desktop/Ahhh_examine_is_soon/Algorithm Theory/Laboratory on AT/src/laba3/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Admin/Desktop/Ahhh_examine_is_soon/Algorithm Theory/Laboratory on AT/src/laba3/build/BrainfuckInterpretator.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
