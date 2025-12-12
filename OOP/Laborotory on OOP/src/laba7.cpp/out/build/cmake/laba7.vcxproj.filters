@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Admin\Desktop\Ahhh_examine_is_soon\OOP\Laborotory on OOP\src\laba7.cpp\src\Bank.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Admin\Desktop\Ahhh_examine_is_soon\OOP\Laborotory on OOP\src\laba7.cpp\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Admin\Desktop\Ahhh_examine_is_soon\OOP\Laborotory on OOP\src\laba7.cpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{DBEB42FC-F61C-38BE-BC98-1E377C2F0B37}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
