@@ -1,3 +1,0 @@
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp/out/build/default MSVC/CMakeFiles/laba6.dir
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp/out/build/default MSVC/CMakeFiles/ALL_BUILD.dir
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba6.cpp/out/build/default MSVC/CMakeFiles/ZERO_CHECK.dir

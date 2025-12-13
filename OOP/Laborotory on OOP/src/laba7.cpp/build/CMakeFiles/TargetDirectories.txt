@@ -1,3 +1,0 @@
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba7.cpp/build/CMakeFiles/laba7.dir
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba7.cpp/build/CMakeFiles/edit_cache.dir
-C:/Users/Admin/Desktop/Ahhh_examine_is_soon/OOP/Laborotory on OOP/src/laba7.cpp/build/CMakeFiles/rebuild_cache.dir
