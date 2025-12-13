@@ -1,7 +1,7 @@
 #ifndef BRAINFUCKINTERPRITATOR_HPP
 #define BRAINFUCKINTERPRITATOR_HPP
-#include "Memory.hpp"
-#include "Pointer.hpp"
+#include "memory/Memory.hpp"
+#include "memory/Pointer.hpp"
 
 class BrainfuckInterpretator {
 public:

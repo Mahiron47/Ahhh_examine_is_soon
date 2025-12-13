@@ -18,10 +18,10 @@ Pointer::operator uint64_t() const {
 Pointer& Pointer::operator++() {
 	if (position == end_point) {
 		position = 0;
-#ifdef DEBUG
+#ifdef LOGGER_HPP
 		Logger::warn(WarningCode::POINTER_OUT_OF_BOUNDS,
 					 ". Pointer current position = 0", position);
-#endif // DEBUG
+#endif // LOGGER_HPP
 
 	} else {
 		++position;

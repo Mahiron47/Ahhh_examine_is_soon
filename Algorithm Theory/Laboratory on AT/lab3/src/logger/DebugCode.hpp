@@ -1,5 +1,3 @@
-#ifdef DEBUG
-
 #ifndef DEBUGCODE_HPP
 #define DEBUGCODE_HPP
 
@@ -71,5 +69,3 @@ private:
 };
 
 #endif // !DEBUGCODE_HPP
-
-#endif // DEBUG

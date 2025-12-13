@@ -1,4 +1,5 @@
 ﻿#include "BrainfuckInterpretator.hpp"
+
 #include <iostream>
 
 void BrainfuckInterpretator::init(int argc, char* argv[]) {
@@ -13,7 +14,7 @@ void BrainfuckInterpretator::init(int argc, char* argv[]) {
                 a += argv[i][4] << 8;
                 a += argv[i][5];
                 if (a == 0x45425547) {
-#define DEBUG
+
  				}
                 break;
             }

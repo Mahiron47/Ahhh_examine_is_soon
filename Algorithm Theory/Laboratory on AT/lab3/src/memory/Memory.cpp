@@ -1,5 +1,4 @@
 #include "Memory.hpp"
-#include <ostream>
 #include <iomanip>
 
 Memory::Memory(const char* memory, uint64_t size) {

@@ -1,8 +1,7 @@
-#ifdef DEBUG
-
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
-#include "DebugCode.hpp"
+#include "logger/DebugCode.hpp"
+
 #include <cstdint>
 
 class Logger {
@@ -16,5 +15,3 @@ private:
 };
 
 #endif // !LOGGER_HPP
-
-#endif // DEBUG

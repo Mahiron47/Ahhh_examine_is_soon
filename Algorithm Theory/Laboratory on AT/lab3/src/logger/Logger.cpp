@@ -1,6 +1,5 @@
-#ifdef DEBUG
-
 #include "Logger.hpp"
+
 #include <iostream>
 
 Logger::Logger() {
@@ -24,5 +23,3 @@ void Logger::error(ErrorCode e, const char* message, uint64_t pos) {
 	std::cerr << "[ERROR]: " << e << " : " << e.what() 
 			  << message << " at " << pos << " position." << std::endl;
 }
-
-#endif // DEBUG
