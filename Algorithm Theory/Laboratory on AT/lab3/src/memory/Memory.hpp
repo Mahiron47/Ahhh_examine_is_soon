@@ -4,6 +4,10 @@
 #include <ostream>
 
 class Memory {
+	char* memory;
+	uint64_t size;
+
+
 public:
 	Memory(const char* memory, uint64_t size);
    ~Memory();
@@ -14,13 +18,6 @@ public:
 	void operator-=(const uint64_t index);
 
 	friend std::ostream& operator<<(std::ostream& os, const Memory& mem);
-
-
-private:
-	char* memory;
-	uint64_t size;
-
-
 };
 
 #endif // !MEMORY_HPP

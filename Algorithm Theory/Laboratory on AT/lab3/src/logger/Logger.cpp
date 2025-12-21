@@ -1,25 +1,32 @@
 #include "Logger.hpp"
+#include "../BrainfuckInterpretator.hpp"
 
 #include <iostream>
 
-Logger::Logger() {
+bool Logger::is_debug = false;
 
-}
-
-Logger::~Logger() {
-
+void Logger::init() {
+    is_debug = true;
 }
 
 void Logger::log(const char* message) {
-	std::cout << "[LOG]: " << message << std::endl;
+    std::cout << "[LOG]: " << message << std::endl;
 }
 
-void Logger::warn(WarningCode w, const char* message, uint64_t pos) {
-	std::cout << "[WARNING]: " << w << " : " << w.what() 
-			  << message << " at " << pos << " position." << std::endl;
+void Logger::warn(WarningCode w) {
+    std::cout << "[WARNING]: " << w << " : " << w.what() << " at " << BrainfuckInterpretator::getCodePosition() << " position." << std::endl;
 }
 
-void Logger::error(ErrorCode e, const char* message, uint64_t pos) {
-	std::cerr << "[ERROR]: " << e << " : " << e.what() 
-			  << message << " at " << pos << " position." << std::endl;
+void Logger::warn(WarningCode w, const char* message) {
+    std::cout << "[WARNING]: " << w << " : " << w.what()
+              << message << " at " << BrainfuckInterpretator::getCodePosition() << " position." << std::endl;
+}
+
+void Logger::error(ErrorCode e) {
+    std::cerr << "[ERROR]: " << e << " : " << e.what() << " at " << BrainfuckInterpretator::getCodePosition() << " position." << std::endl;
+}
+
+void Logger::error(ErrorCode e, const char* message) {
+    std::cerr << "[ERROR]: " << e << " : " << e.what()
+              << message << " at " << BrainfuckInterpretator::getCodePosition() << " position." << std::endl;
 }

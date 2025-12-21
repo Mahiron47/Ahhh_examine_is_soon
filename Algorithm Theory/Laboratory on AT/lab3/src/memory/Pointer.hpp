@@ -2,9 +2,12 @@
 #define POINTER_HPP
 #include <cstdint>
 
-#ifdef DEBUG
 class Pointer {
+	uint64_t position = 0;
+	uint64_t end_point;
+
 public:
+	Pointer();
 	Pointer(uint64_t size);
    ~Pointer();
 
@@ -13,32 +16,10 @@ public:
 	Pointer operator++(int);
 	Pointer& operator--();
 	Pointer operator--(int);
+	void operator+(const int arg);
+	void operator-(const int arg);
+	Pointer& operator=(const int arg);
 	operator bool() const;
-private:
-	uint64_t position = 0;
-	uint64_t end_point;
-	uint64_t code_point;
 };
-#endif // DEBUG
-
-#ifndef DEBUG
-
-class Pointer {
-public:
-	Pointer(uint64_t size);
-   ~Pointer();
-
-	operator uint64_t() const;
-	Pointer& operator++();
-	Pointer operator++(int);
-	Pointer& operator--();
-	Pointer operator--(int);
-	operator bool() const;
-private:
-	uint64_t position = 0;
-	uint64_t end_point;
-};
-
-#endif // DEBUG
 
 #endif // POINTER_HPP
