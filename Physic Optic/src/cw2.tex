@@ -1,0 +1,52 @@
+% !TEX program = lualatex
+\documentclass[12pt]{article}
+
+% LuaLaTeX: fontspec + polyglossia для корректной работы с кириллицей
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont{Times New Roman}
+\newfontfamily\cyrillicfont{Times New Roman}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+
+\usepackage[style=numeric, backend=biber]{biblatex} % Обязательный пакет для корректной сборки
+\usepackage{graphicx}        						% Графика
+\usepackage{microtype}       						% Микротипографика
+\usepackage{amssymb}        						% Математические символы
+\usepackage{amsmath}        						% Математика
+\usepackage{tikz}           						% Рисование
+\usepackage{circuitikz}     						% Электрические схемы
+\usepackage{fix-cm}         						% Чтобы работал большой размер шрифта
+\usepackage{anyfontsize}    						% Для любого размера шрифта
+\usepackage{ragged2e}       						% Для команды \justifying
+
+\usepackage[a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
+
+\newfontfamily\titletimesnewroman[Scale=1.4]{Times New Roman}
+
+\begin{document}
+
+\begin{center}
+	
+Федеральное государственное бюджетное образовательное учреждение высшего\\
+профессионального образования\\
+«Национальный исследовательский институт МИЭТ»
+\vskip2cm
+кафедра электротехники
+\vskip2cm
+% локально убрать отступ первой строки (parindent=0) внутри minipage, шрифт сохраняется
+{
+  \setlength{\parindent}{0pt}
+  \hbadness=10000 % отключить предупреждения underfull
+  \linespread{1.5}\selectfont % увеличить межстрочный интервал
+  % первая строка — центр
+  \centering\titletimesnewroman\bfseries
+  Пояснительная записка к курсовому проекту\par
+  % следующие строки — растянуть на всю ширину страницы
+  \titletimesnewroman\bfseries
+  \makebox[\textwidth][s]{на тему: «Линейные электрические цепи постоянного и}\par
+  \makebox[\textwidth][s]{переменного тока. (Методы расчета). Переходные процессы.»}\par
+}
+
+\end{center}
+\end{document}
