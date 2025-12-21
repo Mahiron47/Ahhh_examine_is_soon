@@ -5,13 +5,24 @@
 #include <cstdint>
 
 class Logger {
+	static bool is_debug;
+
+
 public:
-	Logger();
-   ~Logger();
+	Logger() = default;
+   ~Logger() = default;
+
+	static void init();
+
 	static void log(const char* message);
-	static void warn(WarningCode w, const char* message, uint64_t pos);
-	static void error(ErrorCode e, const char* message, uint64_t pos);
-private:
+	static void warn(WarningCode w);
+	static void warn(WarningCode w, const char* message);
+	static void error(ErrorCode e);
+	static void error(ErrorCode e, const char* message);
+
+	static bool isDebug() {
+		return is_debug;
+	}
 };
 
 #endif // !LOGGER_HPP

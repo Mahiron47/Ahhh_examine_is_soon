@@ -1,4 +1,6 @@
 #include "Memory.hpp"
+#include "logger/Logger.hpp"
+
 #include <iomanip>
 
 Memory::Memory(const char* memory, uint64_t size) {
@@ -14,7 +16,10 @@ Memory::~Memory() {
 }
 
 char& Memory::operator[](uint64_t index) {
-	//TODO: add additinal logic
+	if (index >= size) {
+		Logger::error(ErrorCode::INVALID_MEMORY_ACCESS);
+		throw ErrorCode::INVALID_MEMORY_ACCESS;
+	}
 	return memory[index];
 }
 

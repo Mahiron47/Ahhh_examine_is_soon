@@ -4,7 +4,18 @@
 #include "memory/Pointer.hpp"
 
 class BrainfuckInterpretator {
+	Memory* memory;
+
+	static Pointer code_pointer;
+
+	void doInterpretation(const char* source_code);
+	
+	
 public:
+	static uint64_t getCodePosition() {
+		return (uint64_t)code_pointer;
+	}
+
 	BrainfuckInterpretator() = default;
    ~BrainfuckInterpretator() = default;
 	
@@ -12,10 +23,6 @@ public:
 	void exec();
 
 	BrainfuckInterpretator& operator=(const BrainfuckInterpretator& other);
-private:
-	Memory* memory;
-
-	void doInterpretation(const char* source_code, Pointer& pointer);
 };
 
 #endif // !BRAINFUCKINTERPRITATOR_HPP
