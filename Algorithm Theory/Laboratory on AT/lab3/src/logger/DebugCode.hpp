@@ -1,32 +1,35 @@
 #ifndef DEBUGCODE_HPP
 #define DEBUGCODE_HPP
 
-class DebugCode {
+#include <sstream>
+#include <exception>
+
+class DebugCode : public std::exception {
 public:
     virtual ~DebugCode() = default;
-    virtual const char* what() = 0;
+    const char* what() const noexcept override = 0;
     operator const char*() {
         return code();
 	}
     
 protected:
-    virtual const char* code() = 0;
+    virtual const char* code() const = 0;
 
 };
 
 class WarningCode : public DebugCode {
 public:
     enum Value {
-        POINTER_OUT_OF_BOUNDS = 1,
-        POINTER_NEGATIVE_SET = 2,
-        UNREACHEABLE_POINTER_SIZE = 3
+        POINTER_CROSS_BOUNDS = 1,
+        MEMORY_SIZE_FIXED = 2,
+        CONSOLE_SPECIAL_CHARACTERS_DETECTED = 3
     };
     WarningCode(Value v) : value(v) {}
 
-    const char* what() override;
+    const char* what() const noexcept override;
 
 protected:
-    const char* code() override;
+    const char* code() const override;
 
 private:
     Value value;
@@ -43,10 +46,10 @@ public:
     };
     ErrorCode(Value v) : value(v) {}
 
-    const char* what() override;
+    const char* what() const noexcept override;
 
 protected:
-    const char* code() override;
+    const char* code() const override;
 
 private:
     Value value;

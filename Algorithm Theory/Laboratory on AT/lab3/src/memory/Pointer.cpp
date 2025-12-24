@@ -1,13 +1,23 @@
 #include "Pointer.hpp"
-#include "Logger.hpp"
+#include "../logger/Logger.hpp"
 
 #include <iostream>
-#include <cstdio>
+
+Pointer::Pointer(uint64_t pos, uint64_t end) : position(pos), end_point(end) {
+}
 
 Pointer::Pointer() : end_point(0) {
 }
 
 Pointer::Pointer(uint64_t size) : end_point(size - 1) {
+}
+
+Pointer& Pointer::operator=(const Pointer& other) {
+    if (this != &other) {
+        position = other.position;
+        end_point = other.end_point;
+    }
+    return *this;
 }
 
 Pointer::~Pointer() {
@@ -19,42 +29,22 @@ Pointer::operator uint64_t() const {
 }
 
 Pointer& Pointer::operator++() {
-    if (position == end_point) {
+    ++position;
+	if (position > end_point) {
         position = 0;
-
-		if (!Logger::isDebug()) return *this;
-
-        Logger::warn(WarningCode::POINTER_OUT_OF_BOUNDS,
-                     ". Pointer current position = 0");
-    } else {
-        ++position;
     }
     return *this;
 }
 
 Pointer Pointer::operator++(int) {
-	Pointer tmp = *this;
+	Pointer temp = *this;
 	++(*this);
-	return tmp;
+	return temp;
 }
 
 Pointer& Pointer::operator--() {
 	if (position == 0) {
 		position = end_point;
-
-		if (!Logger::isDebug()) return *this;
-
-		char* buffer = nullptr;
-		Logger::warn(WarningCode::POINTER_OUT_OF_BOUNDS,
-					 [this, &buffer]() -> const char* {
-				const char* msg = ". Pointer current position = ";
-				buffer = new char[64];
-				// Copy position to the buffer
-				std::snprintf(buffer, 64, "%s%llu", msg, static_cast<unsigned long long>(this->position));
-				
-				return buffer;
-			 }());
-		if (buffer != nullptr) delete[] buffer;
 	} else {
 		--position;
 	}
@@ -62,42 +52,51 @@ Pointer& Pointer::operator--() {
 }
 
 Pointer Pointer::operator--(int) {
-	Pointer tmp = *this;
+	Pointer temp = *this;
 	--(*this);
-	return tmp;
+	return temp;
 }
 
-void Pointer::operator+(const int arg) {
-    if (end_point + arg > UINT64_MAX) {
-        end_point = UINT64_MAX;
-        if (!Logger::isDebug()) return;
-        Logger::warn(WarningCode::UNREACHEABLE_POINTER_SIZE,
-                     ". Pointer size set to UINT64_MAX");
-    } else {
-        end_point += arg;
-    }
-}
+Pointer& Pointer::operator+=(const uint64_t arg) {
+    position += arg;
+	position %= (end_point + 1);
 
-void Pointer::operator-(const int arg) {
-    if (end_point < arg) {
-        end_point = 0;
-        if (!Logger::isDebug()) return;
-        Logger::warn(WarningCode::UNREACHEABLE_POINTER_SIZE,
-                     ". Pointer size set to 0");
-    } else {
-        end_point -= arg;
-    }
-}
-Pointer& Pointer::operator=(const int arg) {
-    if (arg < 0) {
-		position = 0;
+    if (position == 0) {
 		if (!Logger::isDebug()) return *this;
-		Logger::warn(WarningCode::POINTER_NEGATIVE_SET);
-	} else {
-		position = static_cast<uint64_t>(arg);
+
+		Logger::warn(WarningCode::POINTER_CROSS_BOUNDS, 
+					 std::string(". Pointer current position = ") + std::to_string(this->position));
+    }
+	return *this;
+}
+
+Pointer& Pointer::operator-=(const uint64_t arg) {
+    if (position < arg) {
+		position = (end_point + 1) - (arg - position);
+
+		if (!Logger::isDebug()) return *this;
+
+		Logger::warn(WarningCode::POINTER_CROSS_BOUNDS, 
+					 std::string(". Pointer current position = ") + std::to_string(this->position));
+    } else {
+		position -= arg;
+	}
+	return *this;
+}
+
+Pointer& Pointer::operator=(const uint64_t arg) {
+	position = arg % (end_point + 1);
+
+	if (arg > end_point) {
+
+		if (!Logger::isDebug()) return *this;
+
+		Logger::warn(WarningCode::POINTER_CROSS_BOUNDS, 
+					 std::string(". Pointer current position = ") + std::to_string(this->position));
 	}
     return *this;
 }
-Pointer::operator bool() const {
-    return position != end_point;
+
+uint64_t Pointer::size() const {
+    return end_point + 1;
 }

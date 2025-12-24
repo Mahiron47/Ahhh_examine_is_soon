@@ -6,9 +6,12 @@ class Pointer {
 	uint64_t position = 0;
 	uint64_t end_point;
 
+	Pointer(uint64_t pos, uint64_t end);
+
 public:
 	Pointer();
 	Pointer(uint64_t size);
+	Pointer& operator=(const Pointer& other);
    ~Pointer();
 
 	operator uint64_t() const;
@@ -16,10 +19,11 @@ public:
 	Pointer operator++(int);
 	Pointer& operator--();
 	Pointer operator--(int);
-	void operator+(const int arg);
-	void operator-(const int arg);
-	Pointer& operator=(const int arg);
-	operator bool() const;
+	Pointer& operator+=(const uint64_t arg);
+	Pointer& operator-=(const uint64_t arg);
+	Pointer& operator=(const uint64_t arg);
+
+	uint64_t size() const;
 };
 
 #endif // POINTER_HPP

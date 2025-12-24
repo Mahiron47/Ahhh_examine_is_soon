@@ -1,21 +1,21 @@
 #include "BrainfuckInterpretator.hpp"
+#include "memory/Memory.hpp"
 
 #include <iostream>
+#include <vector>
 
 int main(int argc, char* argv[]) {
-	BrainfuckInterpretator* interpretator = new BrainfuckInterpretator();
-	interpretator->init(argc, argv);
+	BrainfuckInterpretator interpreter = BrainfuckInterpretator();
+	
+	std::vector<const char*> arg = {"-DEBUG", "-i", "C:\\Users\\Admin\\Desktop\\Ahhh_examine_is_soon\\Algorithm Theory\\Laboratory on AT\\lab3\\res\\Task2ru.bf"};
+	interpreter.init((int) arg.size(), const_cast<char**>(arg.data()));
+	
+	interpreter.exec();
 
-	Memory mem1("abcdefghij", 10);
-	Memory mem2("1111111111", 10);
-
-	std::cout << mem1 << std::endl;
-	std::cout << mem2 << std::endl;
-	mem2 = mem1;
-	std::cout << mem1 << std::endl;
-	std::cout << mem2 << std::endl;
-
-	delete interpretator;
-
+	//BrainfuckInterpretator interpreter;
+    //std::string code = "|------------->*++++++++>*++++++++>*|------------->*++++++++>|-------------~";
+	//Logger::init();
+    //interpreter.init(code.c_str(), code.size());
+    //interpreter.exec();
 	return 0;
 }

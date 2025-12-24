@@ -1,32 +1,32 @@
 #include "DebugCode.hpp"
 
-const char* WarningCode::what() {
+const char* WarningCode::what() const noexcept {
     switch (value) {
-    case POINTER_OUT_OF_BOUNDS:
+    case POINTER_CROSS_BOUNDS:
         return "The sign crossed the border and was moved to the opposite side";
-    case POINTER_NEGATIVE_SET:
-        return "Attempted to set pointer to a negative size. Pointer set to 0";
-    case UNREACHEABLE_POINTER_SIZE:
-        return "Attempted to set pointer size to an unreachable value";
+    case MEMORY_SIZE_FIXED:
+        return "Memory size has been fixed after memory pointer cross bounds";
+    case CONSOLE_SPECIAL_CHARACTERS_DETECTED:
+        return "Special characters detected in console input whose may change console stream behavior";
     default:
         return "UNDEFINED";
     }
 }
 
-const char* WarningCode::code() {
+const char* WarningCode::code() const {
     switch (value) {
-    case POINTER_OUT_OF_BOUNDS:
-        return "POINTER_OUT_OF_BOUNDS";
-    case POINTER_NEGATIVE_SET:
-        return "POINTER_NEGATIVE_SET";
-    case UNREACHEABLE_POINTER_SIZE:
-        return "UNREACHEABLE_POINTER_SIZE";
+    case POINTER_CROSS_BOUNDS:
+        return "POINTER_CROSS_BOUNDS";
+    case MEMORY_SIZE_FIXED:
+        return "MEMORY_SIZE_FIXED";
+    case CONSOLE_SPECIAL_CHARACTERS_DETECTED:
+        return "CONSOLE_SPECIAL_CHARACTERS_DETECTED";
     default:
         return "UNDEFINED";
     }
 }
 
-const char* ErrorCode::what() {
+const char* ErrorCode::what() const noexcept {
     switch (value) {
     case UNDEFINED_INSTRUCTION:
         return "The instruction is not defined";
@@ -41,7 +41,7 @@ const char* ErrorCode::what() {
     }
 }
 
-const char* ErrorCode::code() {
+const char* ErrorCode::code() const {
     switch (value) {
     case UNDEFINED_INSTRUCTION:
         return "UNDEFINED_INSTRUCTION";
