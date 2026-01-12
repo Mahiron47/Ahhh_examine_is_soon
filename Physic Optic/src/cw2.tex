@@ -18,13 +18,23 @@
 \usepackage{circuitikz}     						% Электрические схемы
 \usepackage{fix-cm}         						% Чтобы работал большой размер шрифта
 \usepackage{anyfontsize}    						% Для любого размера шрифта
-\usepackage{ragged2e}       						% Для команды \justifying
+\usepackage{fancyhdr}        						% Колонтитулы
+
+\newfontfamily\titletimesnewroman[Scale=1.4]{Times New Roman}
+\newfontfamily\regulartimesnewroman[Scale=1.2]{Times New Roman}
+
+% Настройка колонтитула для титульной страницы
+\fancypagestyle{titlepage}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\linespread{1.4}\selectfont\regulartimesnewroman Москва\par 2025\par}% центр футера: Москва и новая строка 2025
+  \renewcommand{\headrulewidth}{0pt}% убрать линию вверху
+  \renewcommand{\footrulewidth}{0pt}% убрать линию внизу
+}
 
 \usepackage[a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
 
-\newfontfamily\titletimesnewroman[Scale=1.4]{Times New Roman}
-
 \begin{document}
+\hbadness=10000 % отключить предупреждения underfull
 
 \begin{center}
 	
@@ -37,7 +47,6 @@
 % локально убрать отступ первой строки (parindent=0) внутри minipage, шрифт сохраняется
 {
   \setlength{\parindent}{0pt}
-  \hbadness=10000 % отключить предупреждения underfull
   \linespread{1.5}\selectfont % увеличить межстрочный интервал
   % первая строка — центр
   \centering\titletimesnewroman\bfseries
@@ -47,6 +56,362 @@
   \makebox[\textwidth][s]{на тему: «Линейные электрические цепи постоянного и}\par
   \makebox[\textwidth][s]{переменного тока. (Методы расчета). Переходные процессы.»}\par
 }
-
 \end{center}
+
+\vskip8cm
+
+{
+  \linespread{1.1}\selectfont
+
+  \noindent Выполнил : Андреев И.А. \par
+  \noindent Группа №~ ЭН-25 \par
+  \vskip0.5cm
+  \noindent Преподаватель : Самохин Д.В.\par
+}
+
+% Временно уменьшить отступ футера, чтобы поднять текст футера вверх на титульной странице
+\addtolength{\footskip}{-6mm}% уменьшить на 6mm
+\thispagestyle{titlepage}
+
+\clearpage
+% Восстановить отступ футера для последующих страниц
+\addtolength{\footskip}{6mm}% вернуть прежнее значение
+
+\section*{\centering Вариант 1}
+
+% Заголовок для схемы
+{\centering\textbf{Исходная электрическая цепь}\par\vspace{0.5em}}
+
+\begin{tabular}{l c}
+  % Документация:
+  % \begin{minipage}[t]{0.25\linewidth}
+  % [t] — опция вертикального выравнивания: выравнивать верхнюю границу minipage по базовой линии окружения (top).
+  % Альтернативы: [c] — по центру, [b] — по нижней границе.
+  % {0.25\linewidth} — ширина minipage (25% от ширины строки).
+  % Содержимое — строки в математическом режиме; '\\' делает перенос строки внутри minipage.
+  % Символ '&' указывает на разделение колонок (minipage, вероятно, используется внутри табличной/выравнивающей среды).
+  % \begin{tikzpicture}[scale=1,baseline=(current bounding box.center), european resistors]
+  % — начало рисунка TikZ: scale задаёт масштаб, baseline выравнивает рисунок по указанной точке, 'european resistors' — стиль/библиотека для элементного оформления схем.
+  \scalebox{1.2}{
+    \begin{minipage}[c]{0.2\linewidth}
+      \vspace{0.5cm}
+      $E=10e^{j45^\circ}$ \\ 
+      $R_1=1\,\Omega$ \\ 
+      $R_3=1\,\Omega$ \\ 
+      $X_{L_1}=j$ \\ 
+      $X_{L_3}=2j$ \\ 
+      $X_{C_2}=-5j$
+    \end{minipage}
+  } & \begin{tikzpicture}[scale=1,baseline=(current bounding box.center), european resistors, american inductors]
+    \draw (-0.5,0) to[sinusoidal voltage source, l=$E$] (-0.5,2) -- (-0.5,3)
+    to[short, -, i>=$I_1$] (0.5,3) to[R, l=$R_1$] (2,3) to[L, l=$L_1$] (4,3) 
+    to[short, *-] (5.5,3) to[short, -, i>=$I_3$] (5.5,2.5) to[R, l=$R_3$] (5.5,1) 
+    to[L, l=$L_3$] (5.5,-0.5) to[short, -*] (4,-0.5) -- (-0.5, -0.5) -- (-0.5,0);
+    \draw (4,3) to[short, -, i>=$I_2$] (4,2.5) to[C, l=$C_2$] (4,-0.5);
+  \end{tikzpicture} \\
+\end{tabular}
+
+\section{Рассчитать сопротивления ветвей $Z_1$, $Z_2$, $Z_3$}
+
+Будем считать, что ветвь $Z_1$ соответствует ветви с 
+резистором $R_1$ и катушкой $L_1$, ветвь $Z_2$ соответствует 
+конденсатору $C_2$, а ветвь $Z_3$ соответствует ветви с 
+резистором $R_3$ и катушкой $L_3$. Тогда ветвь $Z_1$ 
+соединена последовательно с ветвью $Z_{23}$, которая, в свою 
+очередь, является параллельным соединением ветвей $Z_2$ и $Z_3$.
+Зная это воспользуемся законом Ома и посчитаем сопротивления
+ветвей.
+\begin{equation*}
+  \begin{aligned}
+    Z_1 &= R_1 + X_{L_1} = 1 + j \\
+    Z_2 &= X_{C_2} = -5j \\
+    Z_3 &= R_3 + X_{L_3} = 1 + 2j \\
+  \end{aligned}
+\end{equation*}
+
+\section{Рассчитать входное сопротивление $Z_{\text{вх}}$}
+
+Входное сопротивление цепи можно найти как сумму сопротивления
+ветви $Z_1$ и сопротивления параллельного соединения ветвей $Z_2$ и $Z_3$.
+\begin{equation*}
+  \begin{aligned}
+    Z_{\text{вх}} &= Z_1 + Z_{23} = Z_1 + \frac{Z_2 Z_3}{Z_2 + Z_3} = \\
+    &= (1 + j) + \frac{(-5j)(1 + 2j)}{-5j + (1 + 2j)} = \\
+    &= (1 + j) + \frac{-5j - 10j^2}{1 - 3j} = \\
+    &= (1 + j) + \frac{10 - 5j}{1 - 3j} \cdot \frac{1 + 3j}{1 + 3j} = \\
+    &= (1 + j) + \frac{10 + 30j - 5j - 15j^2}{1 + 9} = \\
+    &= (1 + j) + \frac{25 + 25j}{10} = \\
+    &= (1 + j) + (2.5 + 2.5j) = \\
+    &= 3.5 + 3.5j \\
+  \end{aligned}
+\end{equation*}
+
+\section{Рассчитать токи ветвей $I_1$, $I_2$, $I_3$}
+
+Используя закон Ома, найдем ток от источника (через ветвь $Z_1$):
+\begin{equation*}
+  \begin{aligned}
+    I_1 &= \frac{E}{Z_{\text{вх}}} = \frac{10e^{j45^\circ}}{3.5 + 3.5j} = \frac{10e^{j45^\circ}}{3.5(1 + j)} = \\
+    &= \frac{10(\cos 45^\circ + j\sin 45^\circ)}{3.5\sqrt{2}e^{j45^\circ}} = \frac{10e^{j45^\circ}}{4.95e^{j45^\circ}} = \\
+    &= \frac{10}{4.95} \approx 2.02\,\text{А}
+  \end{aligned}
+\end{equation*}
+
+Теперь найдем напряжение на параллельном соединении $Z_{23}$:
+\begin{equation*}
+  \begin{aligned}
+    U_{23} &= I_1 \cdot Z_{23} = 2.02 \cdot (2.5 + 2.5j) = \\
+    &= 5.05 + 5.05j = 7.14e^{j45^\circ}\,\text{В}
+  \end{aligned}
+\end{equation*}
+
+Используя найденное напряжение $U_{23}$, рассчитаем токи в ветвях $Z_2$ и $Z_3$:
+\begin{equation*}
+  \begin{aligned}
+    I_2 &= \frac{U_{23}}{Z_2} = \frac{5.05 + 5.05j}{-5j} = \frac{(5.05 + 5.05j) \cdot j}{5} = \\
+    &= \frac{5.05j - 5.05}{5} = \frac{-5.05 + 5.05j}{5} \approx -1.01 + 1.01j\,\text{А} \\
+    I_3 &= \frac{U_{23}}{Z_3} = \frac{5.05 + 5.05j}{1 + 2j} = \frac{(5.05 + 5.05j)(1 - 2j)}{(1 + 2j)(1 - 2j)} = \\
+    &= \frac{5.05 - 10.1j + 5.05j + 10.1}{5} = \frac{15.15 - 5.05j}{5} \approx 3.03 - 1.01j\,\text{А}
+  \end{aligned}
+\end{equation*}
+
+\section{Построить векторную диаграмму токов (проверка 1 закона Кирхгоффа)}
+
+Для построения векторной диаграммы токов используем полученные значения в алгебраической форме.
+\begin{equation*}
+  \begin{aligned}
+    I_1 &\approx 2.02 + 0j\,\text{А} \\
+    I_2 &\approx -1.01 + 1.01j\,\text{А} \\
+    I_3 &\approx 3.03 - 1.01j\,\text{А}
+  \end{aligned}
+\end{equation*}
+
+Построим векторную диаграмму токов.
+\begin{center}
+\begin{tikzpicture}[scale=1.2, >=stealth]
+  % Определение масштаба: максимальная амплитуда ~4.47, используем радиус 5 для основного круга
+  \def\rmax{5}
+  
+  % Концентрические круги с подписями амплитуд (смещены правее от окружности)
+  \foreach \r/\label in {1/1, 2/2, 3/3, 4/4} {
+    \draw[gray, dashed, thin] (0,0) circle (\r);
+    \node[gray, font=\small] at (\r+0.15, 0.15) {\label};
+  }
+  
+  % Основной круг (сплошная линия)
+  \draw[black, thick] (0,0) circle (\rmax);
+  \node[font=\small] at (\rmax+0.15, 0.15) {5};
+  
+  % Оси координат
+  \draw[->, thick] (-\rmax-0.5, 0) -- (\rmax+0.5, 0) node[right] {Re};
+  \draw[->, thick] (0, -\rmax-0.5) -- (0, \rmax+0.5) node[above] {Im};
+  
+  % Подписи углов каждые 30 градусов (со смещением для 0°, 90°, 180°, 270°)
+  \foreach \angle/\label in {30/30°, 60/60°, 120/120°, 150/150°, 210/210°, 240/240°, 300/300°, 330/330°} {
+    \draw (\angle:\rmax+0.3) node[font=\scriptsize] {\label};
+  }
+  % Специальные позиции для углов на осях
+  \node[font=\scriptsize, left] at (-\rmax-0.5, 0) {180°};
+  \node[font=\scriptsize, below] at (0, -\rmax-0.5) {270°};
+  
+  % Векторы токов с красивыми стрелками
+  % I_1 ≈ 2.02 (амплитуда 2.02, угол 0°)
+  \draw[->, very thick, blue] (0,0) -- (0:2.02) node[right, font=\small] {$I_1$};
+  
+  % I_2 ≈ -1.01 + 1.01j (амплитуда 1.43, угол 135°)
+  \draw[->, very thick, red] (0,0) -- (135:1.43) node[above left, font=\small] {$I_2$};
+  
+  % I_3 ≈ 3.03 - 1.01j (амплитуда 3.19, угол -18.43°)
+  \draw[->, very thick, green!60!black] (0,0) -- (-18.43:3.19) node[right, font=\small] {$I_3$};
+  
+  % Точка начала координат
+  \fill (0,0) circle (1.5pt);
+  
+\end{tikzpicture}
+\end{center}
+
+Проверим первый закон Кирхгоффа для узла, где сходятся ветви $Z_2$ и $Z_3$.
+\begin{equation*}
+  I_1 - I_2 - I_3 \approx 2.02 - (-1.01 + 1.01j) - (3.03 - 1.01j) \approx 0
+\end{equation*}
+
+Закон Кирхгоффа выполняется с точностью до погрешности округления.
+
+\section{Построить векторно-топографическую диаграмму для контура, рассчитав напряжения}
+
+Рассчитаем напряжения на каждом элементе цепи, используя найденные токи.
+\begin{equation*}
+  \begin{aligned}
+    U_{R_1} &= I_1 \cdot R_1 = 2.02 \cdot 1 = 2.02\,\text{В} \\
+    U_{L_1} &= I_1 \cdot X_{L_1} = 2.02 \cdot j = 2.02j\,\text{В} \\
+    U_{C_2} &= I_2 \cdot X_{C_2} = (-1.01 + 1.01j) \cdot (-5j) = 5.05 + 5.05j\,\text{В} \\
+    U_{R_3} &= I_3 \cdot R_3 = (3.03 - 1.01j) \cdot 1 = 3.03 - 1.01j\,\text{В} \\
+    U_{L_3} &= I_3 \cdot X_{L_3} = (3.03 - 1.01j) \cdot 2j = 2.02 + 6.06j\,\text{В} \\
+  \end{aligned}
+\end{equation*}
+
+Построим векторно-топографическую диаграмму для контуров.
+\begin{center}
+\begin{tikzpicture}[scale=1.2, >=stealth]
+  % Масштабный коэффициент для удобства отображения
+  \def\scale{0.8}
+  
+  % Сетка
+  \draw[gray!30, very thin] (-0.9,-0.9) grid[step=1] (9.9,7.9);
+  
+  % Оси координат
+  \draw[->, thick] (-1, 0) -- (8, 0) node[right] {Re, В};
+  \draw[->, thick] (0, -1) -- (0, 8) node[above] {Im, В};
+
+  % Точка начала (общая точка)
+  \fill[black] (0,0) circle (1.5pt);
+  
+  % Вектор U_{R_1} = 2.02 В (по оси Re)
+  \draw[->, very thick, blue] (0,0) -- (2.02*\scale,0);
+  \fill[blue] (2.02*\scale,0);
+  
+  % Вектор U_{L_1} = 2.02j В (по оси Im)
+  \draw[->, very thick, red] (2.02*\scale,0) -- (2.02*\scale,2.02*\scale);
+  \fill[red] (2.02*\scale,2.02*\scale);
+  
+  % Вектор U_{C_2} = 5.05 + 5.05j В
+  \draw[->, very thick, cyan!70!blue] (2.02*\scale,2.02*\scale) -- (2.02*\scale+5.05*\scale,2.02*\scale+5.05*\scale);
+  \fill[cyan!70!blue] (2.02*\scale+5.05*\scale,2.02*\scale+5.05*\scale);
+  
+  % Вектор источника E (от начала до конца - пунктиром)
+  \draw[->, ultra thick, purple, dashed] (0,0) -- (2.02*\scale+5.05*\scale,2.02*\scale+5.05*\scale);
+  
+  % Альтернативный путь через R_3 и L_3
+  % U_{R_3} = 3.03 - 1.01j
+  \draw[->, thick, orange] (2.02*\scale,2.02*\scale) -- (2.02*\scale+3.03*\scale,2.02*\scale-1.01*\scale);
+  \fill[orange] (2.02*\scale+3.03*\scale,2.02*\scale-1.01*\scale);
+  
+  % U_{L_3} = 2.02 + 6.06j
+  \draw[->, thick, orange!80!red] (2.02*\scale+3.03*\scale,2.02*\scale-1.01*\scale) -- 
+    (2.02*\scale+5.05*\scale,2.02*\scale+5.05*\scale);
+  
+  % Легенда
+  \node[draw, thick, fill=white, align=left, font=\small] at (8.5, 4) {
+    \tikz \draw[->, very thick, blue] (0,0) -- (0.5,0); \, $U_{R_1}=2.02$ В \\
+    \tikz \draw[->, very thick, red] (0,0) -- (0.5,0); \, $U_{L_1}=2.02j$ В \\
+    \tikz \draw[->, very thick, cyan!70!blue] (0,0) -- (0.5,0); \, $U_{C_2}=5.05+5.05j$ В \\
+    \tikz \draw[->, ultra thick, purple, dashed] (0,0) -- (0.5,0); \, $E=10e^{j45^\circ}$ В \\
+    \tikz \draw[->, thick, orange] (0,0) -- (0.5,0); \, $U_{R_3}=3.03-1.01j$ В \\
+    \tikz \draw[->, thick, orange!80!red] (0,0) -- (0.5,0); \, $U_{L_3}=2.02+6.06j$ В
+  };
+  
+\end{tikzpicture}
+\end{center}
+
+Проверка второго закона Кирхгоффа
+\begin{equation*}
+  \begin{aligned}
+    E &= U_{R_1} + U_{L_1} + U_{23} = 2.02 + 2.02j + 5.05 + 5.05j = 7.07 + 7.07j = 10e^{j45^\circ}\,\text{В} \\
+    E &= U_{R_1} + U_{L_1} + U_{R_3} + U_{L_3} = 2.02 + 2.02j + 3.03 - 1.01j + 2.02 + 6.06j = \\
+      &= 7.07 + 7.07j = 10e^{j45^\circ}\,\text{В} 
+  \end{aligned}
+\end{equation*}
+
+Второй закон Кирхгоффа также выполняется.
+
+\newpage
+
+\section{Построить обобщённую векторную диаграмму}
+
+Совместим в одной диаграмме диаграмму токов и диаграмму напряжений.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, >=stealth]
+  % Определение масштаба: максимальное напряжение ~10В
+  \def\rmax{10}
+  
+  % Концентрические круги с подписями амплитуд
+  \foreach \r/\label in {2/2, 4/4, 6/6, 8/8} {
+    \draw[gray, dashed, thin] (0,0) circle (\r*0.7);
+    \node[gray, font=\small] at (\r*0.7+0.15, 0.2) {\label};
+  }
+  
+  % Основной круг (сплошная линия)
+  \draw[black, thick] (0,0) circle (\rmax*0.7);
+  \node[font=\small] at (\rmax*0.7+0.2, 0.2) {10};
+  
+  % Оси координат
+  \draw[->, thick] (-\rmax*0.7-0.5, 0) -- (\rmax*0.7+0.5, 0) node[right, font=\normalsize] {Re};
+  \draw[->, thick] (0, -\rmax*0.7-0.5) -- (0, \rmax*0.7+0.5) node[above, font=\normalsize] {Im};
+  
+  % Подписи углов каждые 30 градусов
+  \foreach \angle/\label in {30/30°, 60/60°, 120/120°, 150/150°, 210/210°, 240/240°, 300/300°, 330/330°} {
+    \draw (\angle:\rmax*0.7+0.5) node[font=\small] {\label};
+  }
+  % Специальные позиции для углов на осях
+  \node[font=\small, left] at (-\rmax*0.7-0.5, 0) {180°};
+  \node[font=\small, below] at (0, -\rmax*0.7-0.5) {270°};
+  
+  % Точка начала
+  \fill[black] (0,0) circle (1.5pt);
+  
+  % Векторы отрисовываются от больших к меньшим, чтобы меньшие были сверху
+  
+  % E = 10e^{j45°} (угол 45°) - самый большой, сплошной
+  \draw[->, ultra thick, purple] (0,0) -- (45:10*0.7) node[pos=1.05, font=\small] {$E$};
+  
+  % U_{C_2} = 5.05 + 5.05j (угол 45°) - сплошной
+  \draw[->, very thick, cyan!70!blue, dashed] (0,0) -- (45:7.14*0.7) node[pos=1.05, font=\small] {$U_{C_2}$};
+  
+  % U_{L_3} = 2.02 + 6.06j (угол 71.57°) - пунктирный
+  \draw[->, thick, orange!70!red] (0,0) -- (71.57:6.38*0.7) node[pos=1.05, font=\small] {$U_{L_3}$};
+  
+  % U_{R_3} = 3.03 - 1.01j (угол -18.43°) - пунктирный
+  \draw[->, thick, orange] (0,0) -- (-18.43:3.19*0.7) node[pos=1.1, font=\small, below] {$U_{R_3}$};
+  
+  % I_3 ≈ 3.03 - 1.01j (угол -18.43°) - пунктирный
+  \draw[->, thick, green!60!black, dashed] (0,0) -- (-18.43:3.19*0.7) node[pos=1.1, font=\small, above] {$I_3$};
+  
+  % U_{R_1} = 2.02В (угол 0°) - пунктирный
+  \draw[->, very thick, blue] (0,0) -- (0:2.02*0.7) node[pos=1.15, font=\small, below] {$U_{R_1}$};
+  
+  % I_1 ≈ 2.02А (угол 0°) - пунктирный
+  \draw[->, thick, red, dashed] (0,0) -- (0:2.02*0.7) node[pos=1.15, font=\small, above] {$I_1$};
+  
+  % U_{L_1} = 2.02j В (угол 90°) - пунктирный
+  \draw[->, very thick, blue!70!red, dashed] (0,0) -- (90:2.02*0.7) node[pos=1.15, font=\small] {$U_{L_1}$};
+  
+  % I_2 ≈ -1.01 + 1.01j (угол 135°) - пунктирный, самый маленький
+  \draw[->, thick, red!60] (0,0) -- (135:1.43*0.7) node[pos=1.25, font=\small] {$I_2$};
+  
+  % Легенда (компактная)
+  \node[draw, thick, fill=white, align=left, font=\small, inner sep=4pt] at (5.5, -5) {
+    \textbf{Токи:} \\
+    \tikz \draw[->, thick, red, dashed] (0,0) -- (0.5,0); \, \textcolor{red}{$I_1=2.02$ А} \\
+    \tikz \draw[->, thick, red!60] (0,0) -- (0.5,0); \, \textcolor{red!60}{$I_2=-1.01+1.01j$ А} \\
+    \tikz \draw[->, thick, green!60!black, dashed] (0,0) -- (0.5,0); \, \textcolor{green!60!black}{$I_3=3.03-1.01j$ А} \\[0.1cm]
+    \textbf{Напряжения:} \\
+    \tikz \draw[->, very thick, blue] (0,0) -- (0.5,0); \, \textcolor{blue}{$U_{R_1}=2.02$ В} \\
+    \tikz \draw[->, very thick, blue!70!red, dashed] (0,0) -- (0.5,0); \, \textcolor{blue!70!red}{$U_{L_1}=2.02j$ В} \\
+    \tikz \draw[->, very thick, cyan!70!blue, dashed] (0,0) -- (0.5,0); \, \textcolor{cyan!70!blue}{$U_{C_2}=5.05+5.05j$ В} \\
+    \tikz \draw[->, thick, orange] (0,0) -- (0.5,0); \, \textcolor{orange}{$U_{R_3}=3.03-1.01j$ В} \\
+    \tikz \draw[->, thick, orange!70!red] (0,0) -- (0.5,0); \, \textcolor{orange!70!red}{$U_{L_3}=2.02+6.06j$ В} \\
+    \tikz \draw[->, ultra thick, purple] (0,0) -- (0.5,0); \, \textcolor{purple}{$E=10e^{j45^\circ}$ В}
+  };
+  
+\end{tikzpicture}
+\end{center}
+
+\section{Рассчитать баланс мощности}
+
+Баланс мощности в цепи выражается равенством мощности источника и суммы мощностей, потребляемых всеми элементами цепи. 
+\begin{equation*}
+  \begin{aligned}
+    E \cdot I_1^* &- |I_1|^2 \cdot Z_1 - |I_2|^2 \cdot Z_2 - |I_3|^2 \cdot Z_3 = \\
+    &= (7.07 + 7.07j) \cdot 2.02 - (2.02)^2 \cdot (1 + j) - \\
+    &- \left[(-1.01)^2 + (1.01)^2\right] \cdot (-5j) - \left[(3.03)^2 + (-1.01)^2\right] \cdot (1 + 2j) = \\
+    &= 14.28 + 14.28j - 4.08 - 4.08j - 2.04 \cdot (-5j) - 10.2 \cdot (1 + 2j) = \\
+    &= 14.28 + 14.28j - 4.08 - 4.08j + 10.2j - 10.2 - 20.4j = \\
+    &= (14.28 - 4.08 - 10.2) + j(14.28 - 4.08 + 10.2 - 20.4) = \\
+    &= 0 + 0j = 0
+  \end{aligned}
+\end{equation*}
+
+Баланс мощности выполняется, что подтверждает правильность рассчётов.
+
 \end{document}
