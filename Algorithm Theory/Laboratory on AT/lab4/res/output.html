@@ -1,0 +1,3277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> -2</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 19</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> -1</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 20</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> -4</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 24</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 4</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 20</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> -1</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 21</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 2</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 19</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 0</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 19</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> -3</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 22</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 3</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 19</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 1</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 18</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 5</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 13</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+<style>
+table { border-collapse: collapse; margin: 20px; }
+td { width: 20px; height: 20px; border: 1px solid #ccc; text-align: center; }
+.alive { background-color: #ff0000; color: #fff; }
+.dead { background-color: #fff; color: #000; }
+</style>
+</head>
+<body>
+<h2>Game of Life - Matrix State</h2>
+<p><strong>Dead cells this step:</strong> 0</p>
+<p><strong>Matrix size:</strong> 15 x 15</p>
+<p><strong>Alive cells:</strong> 13</p>
+<table>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+  <tr>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+    <td class="dead">&#9633;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="alive">&#9632;</td>
+    <td class="dead">&#9633;</td>
+  </tr>
+</table>
+</body>
+</html>

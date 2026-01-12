@@ -13,7 +13,7 @@ class DiscreteMatrix;
 
 class DSCmatrix {
 	DiscreteMatrix* ptr;
-	uint64_t dead_cells_count = 0;
+
 public:
 	DSCmatrix(DiscreteMatrix* p = nullptr);
 
@@ -56,13 +56,14 @@ class DiscreteMatrix {
 	Pointer horizonstal_pointer;
 	Pointer vertical_pointer;
 	bool** data;
-
+	
 	DiscreteMatrix(uint32_t horizontal_size, uint32_t vertical_size);
 	DiscreteMatrix(std::initializer_list<bool> condition);
 	DiscreteMatrix(const std::vector<bool>& condition);
-   ~DiscreteMatrix();
-
+	~DiscreteMatrix();
+	
 public:
+	uint64_t dead_cells_count = 0;
 	DSCsize get_size() const {
 		return DSCsize {horizonstal_pointer.size(), vertical_pointer.size()};
 	}

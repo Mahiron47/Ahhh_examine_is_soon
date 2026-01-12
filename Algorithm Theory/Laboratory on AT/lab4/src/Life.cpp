@@ -28,7 +28,7 @@ void Life::write_to_end(const string& text) {
 
 string Life::iterate_generations(uint32_t count) {
 	for (uint32_t gen = 0; gen < count; gen++) {
-		dsc_matrix->do_each_cell(nullptr, [](bool cell, DSCposition pos, void* user_data, DiscreteMatrix& dsc_matrix) -> bool {
+		dsc_matrix->do_each_cell([](bool cell, DSCposition pos, DiscreteMatrix& dsc_matrix) -> bool {
 			DSCneighbors neighbors = dsc_matrix.get_neighbors(pos);
 			
 			uint8_t alive_neighbors = neighbors.top_left + neighbors.top + neighbors.top_right +

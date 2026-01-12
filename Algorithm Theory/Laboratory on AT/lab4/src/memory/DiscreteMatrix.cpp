@@ -11,6 +11,13 @@ DiscreteMatrix::DiscreteMatrix(uint32_t horizontal_size, uint32_t vertical_size)
 	
 	do { data[(uint32_t) vertical_pointer] = new bool[horizontal_size];
 	} while (++vertical_pointer);
+
+	do_each_cell(&dead_cells_count, [](bool cell, DSCposition pos, void* data, DiscreteMatrix& dsc_matrix) -> bool {
+			if (!cell) {
+				(*static_cast<uint64_t*>(data))++;
+			}
+			return cell;
+		});
 }
 
 DiscreteMatrix::DiscreteMatrix(std::initializer_list<bool> condition) :
@@ -20,6 +27,13 @@ DiscreteMatrix::DiscreteMatrix(std::initializer_list<bool> condition) :
 	
 	do { data[(uint32_t) vertical_pointer] = new bool[(uint32_t) std::floor(std::sqrt(condition.size()))];
 	} while (++vertical_pointer);
+
+	do_each_cell(&dead_cells_count, [](bool cell, DSCposition pos, void* data, DiscreteMatrix& dsc_matrix) -> bool {
+			if (!cell) {
+				(*static_cast<uint64_t*>(data))++;
+			}
+			return cell;
+		});
 }
 
 DiscreteMatrix::DiscreteMatrix(const std::vector<bool>& condition) :
@@ -38,6 +52,13 @@ DiscreteMatrix::DiscreteMatrix(const std::vector<bool>& condition) :
 			}
 		} while (++horizonstal_pointer);
 	} while (++vertical_pointer);
+
+	do_each_cell(&dead_cells_count, [](bool cell, DSCposition pos, void* data, DiscreteMatrix& dsc_matrix) -> bool {
+			if (!cell) {
+				(*static_cast<uint64_t*>(data))++;
+			}
+			return cell;
+		});
 }
 
 DiscreteMatrix::~DiscreteMatrix() {
@@ -125,12 +146,27 @@ DSCneighbors DiscreteMatrix::get_neighbors(DSCposition pos) {
 }
 
 void DiscreteMatrix::do_each_cell(bool(*func)(bool cell, DSCposition pos, DiscreteMatrix& dsc_matrix)) {
-    do { do { data[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer] =
-				func(data[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer], 
-					 DSCposition {(uint32_t)horizonstal_pointer, (uint32_t)vertical_pointer}, 
-					 *this);
+    bool** new_states = new bool*[vertical_pointer.size()];
+	do { new_states[(uint32_t) vertical_pointer] = new bool[horizonstal_pointer.size()];
+	} while (++vertical_pointer);
+	
+	do { do {
+			DSCposition pos = {(uint32_t)horizonstal_pointer, (uint32_t)vertical_pointer};
+			bool current_cell = this->data[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer];
+			bool new_cell = func(current_cell, pos, *this);
+			new_states[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer] = new_cell;
 		} while (++horizonstal_pointer);
 	} while (++vertical_pointer);
+	
+	do { do {
+			this->data[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer] = 
+				new_states[(uint32_t)vertical_pointer][(uint32_t)horizonstal_pointer];
+		} while (++horizonstal_pointer);
+	} while (++vertical_pointer);
+	
+	do {  delete[] new_states[(uint32_t) vertical_pointer];
+	} while (--vertical_pointer);
+	delete[] new_states;
 }
 
 void DiscreteMatrix::do_each_cell(void* data, bool(*func)(bool cell, DSCposition pos, void* data, DiscreteMatrix& dsc_matrix)) {
@@ -161,15 +197,8 @@ bool& DiscreteMatrix::operator[](const DSCposition& pos) {
     return data[pos.vertical_position][pos.horizontal_position];
 }
 
-DSCmatrix::DSCmatrix(DiscreteMatrix* p) : ptr(p), dead_cells_count(0) {
-	if (ptr != nullptr) {
-		ptr->do_each_cell(&dead_cells_count, [](bool cell, DSCposition pos, void* data, DiscreteMatrix& dsc_matrix) -> bool {
-			if (!cell) {
-				(*static_cast<uint64_t*>(data))++;
-			}
-			return cell;
-		});
-	}
+DSCmatrix::DSCmatrix(DiscreteMatrix* p) : ptr(p) {
+	
 }
 
 bool& DSCmatrix::operator[](const DSCposition& pos) const {
@@ -192,8 +221,8 @@ DSCmatrix::operator string() const {
 		return cell;
 	});
 
-	int64_t delta_dead_cells_count = dead_cells_count_iteration - dead_cells_count;
-	const_cast<DSCmatrix*>(this)->dead_cells_count = dead_cells_count_iteration;
+	int64_t delta_dead_cells_count = dead_cells_count_iteration - ptr->dead_cells_count;
+	ptr->dead_cells_count = dead_cells_count_iteration;
 	
 	string html = "<!DOCTYPE html>\n<html>\n<head>\n";
 	html += "<style>\n";
