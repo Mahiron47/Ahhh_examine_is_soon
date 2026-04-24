@@ -1,0 +1,220 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+\setmainfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\newfontfamily\cyrillicfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+\usepackage{graphicx}        					          % Графика
+\usepackage[protrusion=false]{microtype}       	% Микротипографика
+\usepackage{amsmath, amsfonts, amssymb, amsthm}	% Математика
+\usepackage{braket} 							              % Braket нотация для квантовой механики
+\usepackage{unicode-math} 						          % Современный пакет для математики в LuaLaTeX
+\usepackage{longtable}       					          % Таблицы с разрывом страниц
+\usepackage{tikz}           					          % Рисование
+\usepackage[europeanresistors]{circuitikz}		  % Рисование электрических схем в европейском стиле
+\usepackage{listings}							              % Для отображения кода
+\usepackage{tabularx}       					          % Для таблиц во всю ширину
+\usepackage{array}		  						            % Для расширенных возможностей таблиц
+\usepackage{float}          					          % Для точного позиционирования фигур
+\usepackage{pgfplots}                           % Для построения графиков
+\usepackage{caption}                            % Для настройки подписей к рисункам и таблицам
+\usepackage{xfp}                                % Для вычислений в LaTeX
+\pgfplotsset{compat=1.18}
+\usepackage[a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
+
+\usetikzlibrary{arrows.meta}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand\lstlistingname{Исходный код}
+
+\lstdefinestyle{main}{
+	backgroundcolor=\color{gray!8},   
+	commentstyle=\color{green!50!black},
+	keywordstyle=\color{blue!80!black},
+	numberstyle=\small\color{darkgray},
+	stringstyle=\rmfamily\color{orange!90!black},
+	basicstyle=\ttfamily\small,
+	breakatwhitespace=false,         
+	breaklines=true,                   
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=8pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}	
+
+\lstset{style=main}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% =========================================================
+%         СЛУЖЕБНЫЕ КОМАНДЫ ДЛЯ ВЫЧИСЛЕНИЙ
+% =========================================================
+\newcommand{\CalcTwo}  [1]{\fpeval{round((#1),2)}}
+\newcommand{\CalcThree}[1]{\fpeval{round((#1),3)}}
+\newcommand{\CalcFour} [1]{\fpeval{round((#1),4)}}
+\newcommand{\CalcFive} [1]{\fpeval{round((#1),5)}}
+
+% ---------------------------------------------------------
+% ОБЩИЕ ДАННЫЕ
+% ---------------------------------------------------------
+\def\VariantN{1}          					         % Номер варианта
+\def\StudentName{Андреев Иван Алексеевич}  	 % ФИО студента
+\def\TeacherName{NOTHING} % ФИО преподавателя
+\def\LabNumber{3}							               % Номер лабораторной работы
+\def\Discipline{Атомная физика}				           % Название дисциплины
+\def\LabTitle{Изучение термоэлектронной эмиссии и определение работы выхода}	 % Название лабораторной работы
+
+\def\IoneFive       {1}
+\def\IoneTen        {2}
+\def\IoneFifteen    {2}
+\def\IoneTwenty     {2}
+\def\IoneTwentyFive {2}
+\def\IoneThirty     {2}
+\def\IoneThirtyFive {2}
+\def\IoneFortyFive  {3}
+\def\IoneFiftyFive  {3}
+\def\IoneSixtyFive  {3}
+\def\IoneSeventyFive{4}
+
+\def\ItwoFive       {1}
+\def\ItwoTen        {4}
+\def\ItwoFifteen    {6}
+\def\ItwoTwenty     {7}
+\def\ItwoTwentyFive {7}
+\def\ItwoThirty     {8}
+\def\ItwoThirtyFive {8}
+\def\ItwoFortyFive  {8}
+\def\ItwoFiftyFive  {8}
+\def\ItwoSixtyFive  {8}
+\def\ItwoSeventyFive{8}
+
+\def\IthreeFive       {2}
+\def\IthreeTen        {4}
+\def\IthreeFifteen    {8}
+\def\IthreeTwenty     {12}
+\def\IthreeTwentyFive {14}
+\def\IthreeThirty     {16}
+\def\IthreeThirtyFive {18}
+\def\IthreeFortyFive  {18}
+\def\IthreeFiftyFive  {19}
+\def\IthreeSixtyFive  {20}
+\def\IthreeSeventyFive{20}
+
+\title{
+	МИНОБРНАУКИ РОССИИ
+
+	федеральное государственное автономное образовательное учреждение
+
+	высшего образования
+
+	«Национальный исследовательский университет
+	«Московский институт электронной техники»
+	\vspace{2em}
+}
+\author{
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\begin{center}
+\Large Отчёт по Лабораторной работе $\LabNumber$\\
+по дисциплине «\Discipline»\\
+«\LabTitle»
+\end{center}
+
+\begin{center}
+\Large Вариант \VariantN
+\end{center}
+
+\vspace{12em}
+
+\begin{table}[h]
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} p{0.48\textwidth} p{0.52\textwidth}}
+Студент, группа & \StudentName, ЭН-$25$ \\
+[0.5em] Руководитель & \TeacherName
+\end{tabular*}
+\end{table}
+
+\cfoot{Москва 2026}
+
+\pagebreak
+
+\fancyhead[L]{\LabTitle} 
+\fancyhead[R]{\Discipline}
+\fancyfoot[C]{\thepage}
+
+\begin{center}
+	\begin{tabularx}{\textwidth}{|p{1cm}|C|C|C|C|C|C|C|C|C|C|C|}
+		\hline
+		$U_A$, В & $5$ & $10$ & $15$ & $20$ & $25$ & $30$ & $35$ & $45$ & $55$ & $65$ & $75$ \\
+		\hline
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|C p{2cm}|}
+		$I_\text{н} = 1.60$ A & $U_\text{н} = 3.3$ В
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|p{1cm}|C|C|C|C|C|C|C|C|C|C|C|}
+		\hline
+		$I_A$, A & $\IoneFive$ & $\IoneTen$ & $\IoneFifteen$ & $\IoneTwenty$ & $\IoneTwentyFive$ & $\IoneThirty$ & $\IoneThirtyFive$ & $\IoneFortyFive$ & $\IoneFiftyFive$ & $\IoneSixtyFive$ & $\IoneSeventyFive$ \\
+		\hline
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|C p{2cm}|}
+		$I_\text{н} = 1.70$ A & $U_\text{н} = 3.8$ В
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|p{1cm}|C|C|C|C|C|C|C|C|C|C|C|}
+		\hline
+		$I_A$, A & $\ItwoFive$ & $\ItwoTen$ & $\ItwoFifteen$ & $\ItwoTwenty$ & $\ItwoTwentyFive$ & $\ItwoThirty$ & $\ItwoThirtyFive$ & $\ItwoFortyFive$ & $\ItwoFiftyFive$ & $\ItwoSixtyFive$ & $\ItwoSeventyFive$ \\
+		\hline
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|C p{2cm}|}
+		$I_\text{н} = 1.80$ A & $U_\text{н} = 4.2$ В
+	\end{tabularx}
+	\begin{tabularx}{\textwidth}{|p{1cm}|C|C|C|C|C|C|C|C|C|C|C|}
+		\hline
+		$I_A$, A & $\IthreeFive$ & $\IthreeTen$ & $\IthreeFifteen$ & $\IthreeTwenty$ & $\IthreeTwentyFive$ & $\IthreeThirty$ & $\IthreeThirtyFive$ & $\IthreeFortyFive$ & $\IthreeFiftyFive$ & $\IthreeSixtyFive$ & $\IthreeSeventyFive$ \\
+		\hline
+	\end{tabularx}
+\end{center}
+
+\end{document}

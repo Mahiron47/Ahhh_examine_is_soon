@@ -1,0 +1,363 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\setmainfont{Alice-Regular}[Path=font/,Extension=.ttf]
+\newfontfamily\cyrillicfont{Alice-Regular}[Path=font/,Extension=.ttf]
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+\usepackage[protrusion=false]{microtype}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage[europeanresistors,americaninductors]{circuitikz}
+\usetikzlibrary{arrows.meta,calc}
+\usepackage[a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newcommand{\Ohm}{\,\Omega}
+\newcommand{\Volt}{\,\text{В}}
+\newcommand{\Amp}{\,\text{А}}
+\newcommand{\Var}{\,\text{Вт}}
+\newcommand{\VA}{\,\text{Вт}}
+
+\title{
+	МИНОБРНАУКИ РОССИИ
+
+	федеральное государственное автономное образовательное учреждение
+
+	высшего образования
+
+	«Национальный исследовательский университет
+	«Московский институт электронной техники»
+	\vspace{2em}
+}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\begin{center}
+\Large Отчёт по курсовой работе. Часть 2\\
+по дисциплине «Электротехника»\\
+«Переменный ток»
+\end{center}
+
+\begin{center}
+\Large Вариант 2
+\end{center}
+
+\vspace{12em}
+
+\begin{table}[h]
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} p{0.48\textwidth} p{0.52\textwidth}}
+Студент & Анисимов А. С., ЭН-$25$ \\
+[0.5em] Руководитель & Самохин Д.В.
+\end{tabular*}
+\end{table}
+
+\cfoot{Москва 2026}
+
+\pagebreak
+
+\fancyhead[L]{Курсовая работа. Часть 2}
+\fancyhead[R]{Переменный ток}
+\fancyfoot[C]{\thepage}
+
+\section*{Исходные данные}
+
+Для второго варианта даны следующие параметры элементов цепи и источник напряжения:
+\[
+R_1 = 2\Ohm, \qquad R_3 = 2\Ohm, \qquad X_{L_1} = j\Ohm, \qquad X_{L_3} = 3j\Ohm,
+\]
+\[
+X_{C_2} = -5j\Ohm, \qquad E = 10e^{j45^\circ}\Volt.
+\]
+
+\section*{Исходная схема}
+
+\begin{center}
+\begin{tabular}{m{0.28\textwidth}m{0.62\textwidth}}
+\centering
+$E=10e^{j45^\circ}$ \\
+$R_1=2\Ohm$ \\
+$R_3=2\Ohm$ \\
+$X_{L_1}=j\Ohm$ \\
+$X_{L_3}=3j\Ohm$ \\
+$X_{C_2}=-5j\Ohm$
+&
+\begin{circuitikz}[scale=1.0, transform shape]
+\draw (-0.5,0) to[sinusoidal voltage source,l=$E$] (-0.5,2)
+      -- (-0.5,3)
+      to[short, i>^=$I_1$] (0.5,3)
+      to[R,l=$R_1$] (2,3)
+      to[L,l=$L_1$] (4,3)
+      to[short,*-] (5.5,3)
+      to[short, i>^=$I_3$] (5.5,2.4)
+      to[R,l=$R_3$] (5.5,1.0)
+      to[L,l=$L_3$] (5.5,-0.5)
+      to[short,-*] (4,-0.5)
+      -- (-0.5,-0.5) -- (-0.5,0);
+\draw (4,3) to[short, i>^=$I_2$] (4,2.4)
+      to[C,l=$C_2$] (4,-0.5);
+\end{circuitikz}
+\end{tabular}
+\end{center}
+
+\section{Расчёт сопротивлений ветвей $Z_1$, $Z_2$, $Z_3$}
+
+Будем считать, что:
+\begin{itemize}
+  \item ветвь $Z_1$ содержит элементы $R_1$ и $L_1$;
+  \item ветвь $Z_2$ содержит конденсатор $C_2$;
+  \item ветвь $Z_3$ содержит элементы $R_3$ и $L_3$.
+\end{itemize}
+
+Тогда
+\begin{equation*}
+\begin{aligned}
+Z_1 &= R_1 + X_{L_1} = 2 + j,\\
+Z_2 &= X_{C_2} = -5j,\\
+Z_3 &= R_3 + X_{L_3} = 2 + 3j.
+\end{aligned}
+\end{equation*}
+
+\section{Расчёт входного сопротивления $Z_{\text{вх}}$}
+
+Сопротивление параллельного участка:
+\begin{equation*}
+\begin{aligned}
+Z_{23} &= \frac{Z_2 Z_3}{Z_2 + Z_3}
+= \frac{(-5j)(2+3j)}{-5j + (2+3j)}
+= \frac{15 - 10j}{2 - 2j} \\
+&= \frac{(15 - 10j)(2 + 2j)}{(2 - 2j)(2 + 2j)}
+= \frac{50 + 10j}{8}
+= 6.25 + 1.25j.
+\end{aligned}
+\end{equation*}
+
+Следовательно,
+\begin{equation*}
+\begin{aligned}
+Z_{\text{вх}} &= Z_1 + Z_{23} = (2+j) + (6.25 + 1.25j) \\
+&= 8.25 + 2.25j
+= 8.551e^{j15.26^\circ}\Ohm.
+\end{aligned}
+\end{equation*}
+
+\section{Расчёт токов ветвей $I_1$, $I_2$, $I_3$}
+
+Напряжение источника в алгебраической форме:
+\[
+E = 10e^{j45^\circ} = 7.071 + 7.071j\Volt.
+\]
+
+Ток в неразветвлённой части цепи:
+\begin{equation*}
+\begin{aligned}
+I_1 &= \frac{E}{Z_{\text{вх}}}
+= \frac{7.071 + 7.071j}{8.25 + 2.25j} \\
+&= \frac{(7.071 + 7.071j)(8.25 - 2.25j)}{8.25^2 + 2.25^2}
+\approx 1.015 + 0.580j\Amp \\
+&\approx 1.169e^{j29.74^\circ}\Amp.
+\end{aligned}
+\end{equation*}
+
+Напряжение на параллельном участке:
+\begin{equation*}
+\begin{aligned}
+U_{23} &= I_1 Z_{23} = (1.015 + 0.580j)(6.25 + 1.25j) \\
+&\approx 5.621 + 4.895j\Volt
+\approx 7.454e^{j41.05^\circ}\Volt.
+\end{aligned}
+\end{equation*}
+
+Токи в ветвях параллельного участка:
+\begin{equation*}
+\begin{aligned}
+I_2 &= \frac{U_{23}}{Z_2}
+= \frac{5.621 + 4.895j}{-5j}
+\approx -0.979 + 1.124j\Amp \\
+&\approx 1.491e^{j131.05^\circ}\Amp,\\[0.75em]
+I_3 &= \frac{U_{23}}{Z_3}
+= \frac{5.621 + 4.895j}{2 + 3j}
+\approx 1.994 - 0.544j\Amp \\
+&\approx 2.067e^{-j15.26^\circ}\Amp.
+\end{aligned}
+\end{equation*}
+
+\section{Векторная диаграмма токов и проверка первого закона Кирхгофа}
+
+Полученные токи в алгебраической форме:
+\[
+I_1 \approx 1.015 + 0.580j\Amp, \qquad
+I_2 \approx -0.979 + 1.124j\Amp, \qquad
+I_3 \approx 1.994 - 0.544j\Amp.
+\]
+
+\begin{center}
+\begin{tikzpicture}[scale=1.45,>=Stealth]
+  \draw[step=0.5, gray!25, very thin] (-1.8,-1.2) grid (2.5,1.8);
+  \draw[->, thick] (-1.9,0) -- (2.6,0) node[right] {Re, А};
+  \draw[->, thick] (0,-1.3) -- (0,1.9) node[above] {Im, А};
+
+  \draw[->, very thick, blue] (0,0) -- (1.015,0.580) node[above right] {$I_1$};
+  \draw[->, very thick, red] (0,0) -- (-0.979,1.124) node[above left] {$I_2$};
+  \draw[->, very thick, green!60!black] (0,0) -- (1.994,-0.544) node[below right] {$I_3$};
+
+  \fill (0,0) circle (1.2pt);
+\end{tikzpicture}
+\end{center}
+
+Проверка первого закона Кирхгофа:
+\begin{equation*}
+\begin{aligned}
+I_2 + I_3 &\approx (-0.979 + 1.124j) + (1.994 - 0.544j) \\
+&\approx 1.015 + 0.580j\Amp = I_1.
+\end{aligned}
+\end{equation*}
+
+Следовательно, первый закон Кирхгофа выполняется.
+
+\section{Векторно-топографическая диаграмма для контура}
+
+Рассчитаем напряжения на элементах цепи:
+\begin{equation*}
+\begin{aligned}
+U_{R_1} &= I_1 R_1 = (1.015 + 0.580j)\cdot 2 \approx 2.031 + 1.160j\Volt,\\
+U_{L_1} &= I_1 X_{L_1} = (1.015 + 0.580j)\cdot j \approx -0.580 + 1.015j\Volt,\\
+U_{C_2} &= I_2 X_{C_2} = (-0.979 + 1.124j)(-5j) \approx 5.621 + 4.895j\Volt,\\
+U_{R_3} &= I_3 R_3 = (1.994 - 0.544j)\cdot 2 \approx 3.989 - 1.088j\Volt,\\
+U_{L_3} &= I_3 X_{L_3} = (1.994 - 0.544j)\cdot 3j \approx 1.632 + 5.983j\Volt.
+\end{aligned}
+\end{equation*}
+
+Построение векторно-топографической диаграммы выполняем по двум путям от начала координат к вектору источника $E$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85,>=Stealth]
+  \draw[step=1, gray!25, very thin] (-1,-1) grid (8,8);
+  \draw[->, thick] (-1.2,0) -- (8.4,0) node[right] {Re, В};
+  \draw[->, thick] (0,-1.2) -- (0,8.4) node[above] {Im, В};
+
+  % Основной путь O-A-B-C
+  \draw[->, very thick, blue] (0,0) -- (2.031,1.160) node[midway, below right] {$U_{R_1}$};
+  \draw[->, very thick, red] (2.031,1.160) -- (1.450,2.176) node[midway, left] {$U_{L_1}$};
+  \draw[->, very thick, cyan!70!blue] (1.450,2.176) -- (7.071,7.071) node[midway, above] {$U_{C_2}$};
+
+  % Альтернативный путь B-D-C
+  \draw[->, thick, orange] (1.450,2.176) -- (5.439,1.088) node[midway, below] {$U_{R_3}$};
+  \draw[->, thick, orange!80!red] (5.439,1.088) -- (7.071,7.071) node[midway, right] {$U_{L_3}$};
+
+  % Вектор источника
+  \draw[->, ultra thick, purple, dashed] (0,0) -- (7.071,7.071) node[pos=1.05, above right] {$E$};
+
+  \fill (0,0) circle (1.2pt);
+  \fill (2.031,1.160) circle (1.0pt);
+  \fill (1.450,2.176) circle (1.0pt);
+  \fill (5.439,1.088) circle (1.0pt);
+  \fill (7.071,7.071) circle (1.2pt);
+\end{tikzpicture}
+\end{center}
+
+Проверка второго закона Кирхгофа:
+\begin{equation*}
+\begin{aligned}
+E &= U_{R_1} + U_{L_1} + U_{C_2} \\
+&\approx (2.031 + 1.160j) + (-0.580 + 1.015j) + (5.621 + 4.895j) \\
+&\approx 7.071 + 7.071j\Volt,\\[0.5em]
+E &= U_{R_1} + U_{L_1} + U_{R_3} + U_{L_3} \\
+&\approx (2.031 + 1.160j) + (-0.580 + 1.015j) + (3.989 - 1.088j) + (1.632 + 5.983j) \\
+&\approx 7.071 + 7.071j\Volt.
+\end{aligned}
+\end{equation*}
+
+Следовательно, второй закон Кирхгофа выполняется.
+
+\newpage
+
+\section{Обобщённая векторная диаграмма}
+
+На общей диаграмме совместим векторы напряжений и токов. Для удобства отображения токи показаны в масштабе $1\Amp = 3\Volt$.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.78,>=Stealth]
+  \draw[step=1, gray!20, very thin] (-4,-3) grid (9,9);
+  \draw[->, thick] (-4.3,0) -- (9.5,0) node[right] {Re};
+  \draw[->, thick] (0,-3.3) -- (0,9.5) node[above] {Im};
+
+  % Напряжения
+  \draw[->, ultra thick, purple] (0,0) -- (7.071,7.071) node[pos=1.05, above right] {$E$};
+  \draw[->, very thick, blue] (0,0) -- (2.031,1.160) node[pos=1.1, right] {$U_{R_1}$};
+  \draw[->, very thick, red] (0,0) -- (-0.580,1.015) node[pos=1.15, above left] {$U_{L_1}$};
+  \draw[->, very thick, cyan!70!blue, dashed] (0,0) -- (5.621,4.895) node[pos=1.05, above] {$U_{C_2}$};
+  \draw[->, thick, orange] (0,0) -- (3.989,-1.088) node[pos=1.05, below] {$U_{R_3}$};
+  \draw[->, thick, orange!80!red] (0,0) -- (1.632,5.983) node[pos=1.08, right] {$U_{L_3}$};
+
+  % Токи в масштабе 1A = 3V
+  \draw[->, thick, blue!60!black, dashed] (0,0) -- (3.045,1.740) node[pos=1.05, below right] {$3I_1$};
+  \draw[->, thick, red!70!black, dashed] (0,0) -- (-2.937,3.372) node[pos=1.05, above left] {$3I_2$};
+  \draw[->, thick, green!50!black, dashed] (0,0) -- (5.982,-1.632) node[pos=1.05, below right] {$3I_3$};
+
+  \fill (0,0) circle (1.2pt);
+\end{tikzpicture}
+\end{center}
+
+Из диаграммы видно, что геометрические соотношения между токами и напряжениями согласуются с ранее полученными аналитическими результатами.
+
+\section{Баланс мощностей}
+
+Комплексная мощность источника:
+\begin{equation*}
+\begin{aligned}
+P_{\text{ист}} &= E I_1^* = (7.071 + 7.071j)(1.015 - 0.580j) \\
+&\approx 11.282 + 3.077j\VA.
+\end{aligned}
+\end{equation*}
+
+Мощности на отдельных элементах:
+\begin{equation*}
+\begin{aligned}
+P_{R_1} &= |I_1|^2 R_1 \approx 2.735\,\text{Вт},\\
+P_{L_1} &= |I_1|^2 \cdot jX_{L_1} \approx 1.368j\Var,\\
+P_{C_2} &= |I_2|^2 \cdot (-5j) \approx -11.111j\Var,\\
+P_{R_3} &= |I_3|^2 R_3 \approx 8.547\,\text{Вт},\\
+P_{L_3} &= |I_3|^2 \cdot 3j \approx 12.821j\Var.
+\end{aligned}
+\end{equation*}
+
+Суммарная мощность потребителей:
+\begin{equation*}
+\begin{aligned}
+\sum P &= P_{R_1} + P_{L_1} + P_{C_2} + P_{R_3} + P_{L_3} \\
+&\approx 2.735 + 1.368j - 11.111j + 8.547 + 12.821j \\
+&\approx 11.282 + 3.077j\VA.
+\end{aligned}
+\end{equation*}
+
+Следовательно,
+\[
+P_{\text{ист}} = \sum P,
+\]
+то есть баланс мощностей выполняется.
+
+\end{document}
