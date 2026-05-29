@@ -1,0 +1,204 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+\setmainfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\newfontfamily\cyrillicfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+\usepackage{graphicx}        					          % Графика
+\usepackage[protrusion=false]{microtype}       	% Микротипографика
+\usepackage{amsmath, amsfonts, amssymb, amsthm}	% Математика
+\usepackage{braket} 							              % Braket нотация для квантовой механики
+\usepackage{unicode-math} 						          % Современный пакет для математики в LuaLaTeX
+\usepackage{longtable}       					          % Таблицы с разрывом страниц
+\usepackage{tikz}           					          % Рисование
+\usepackage[europeanresistors]{circuitikz}		  % Рисование электрических схем в европейском стиле
+\usepackage{listings}							              % Для отображения кода
+\usepackage{tabularx}       					          % Для таблиц во всю ширину
+\usepackage{array}		  						            % Для расширенных возможностей таблиц
+\usepackage{float}          					          % Для точного позиционирования фигур
+\usepackage{pgfplots}                           % Для построения графиков
+\usepackage{caption}                            % Для настройки подписей к рисункам и таблицам
+\usepackage{xfp}                                % Для вычислений в LaTeX
+\pgfplotsset{compat=1.18}
+\usepackage[a4paper,left=20mm,right=20mm,top=20mm,bottom=20mm]{geometry}
+
+\usetikzlibrary{arrows.meta}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand\lstlistingname{Исходный код}
+
+\lstdefinestyle{main}{
+	backgroundcolor=\color{gray!8},   
+	commentstyle=\color{green!50!black},
+	keywordstyle=\color{blue!80!black},
+	numberstyle=\small\color{darkgray},
+	stringstyle=\rmfamily\color{orange!90!black},
+	basicstyle=\ttfamily\small,
+	breakatwhitespace=false,         
+	breaklines=true,                   
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=8pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}	
+
+\lstset{style=main}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% =========================================================
+%         СЛУЖЕБНЫЕ КОМАНДЫ ДЛЯ ВЫЧИСЛЕНИЙ
+% =========================================================
+\newcommand{\CalcZero} [1]{\fpeval{round((#1),0)}}
+\newcommand{\CalcOne}  [1]{\fpeval{round((#1),1)}}
+\newcommand{\CalcTwo}  [1]{\fpeval{round((#1),2)}}
+\newcommand{\CalcThree}[1]{\fpeval{round((#1),3)}}
+\newcommand{\CalcFour} [1]{\fpeval{round((#1),4)}}
+\newcommand{\CalcFive} [1]{\fpeval{round((#1),5)}}
+
+% ---------------------------------------------------------
+% ОБЩИЕ ДАННЫЕ
+% ---------------------------------------------------------
+\def\VariantN{1}          					      % Номер варианта
+\def\StudentName{Андреев Иван Алексеевич} % ФИО студента
+\def\LabNumber{14}							          % Номер лабораторной работы
+\def\Discipline{Атомная физика}				    % Название дисциплины
+\def\LabTitle{Эффект Холла}	              % Название лабораторной работы
+
+\title{
+	МИНОБРНАУКИ РОССИИ
+
+	федеральное государственное автономное образовательное учреждение
+
+	высшего образования
+
+	«Национальный исследовательский университет
+	«Московский институт электронной техники»
+	\vspace{2em}
+}
+\author{
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\begin{center}
+\Large Отчёт по Лабораторной работе $\LabNumber$\\
+по дисциплине «\Discipline»\\
+«\LabTitle»
+\end{center}
+
+\begin{center}
+\Large Вариант \VariantN
+\end{center}
+
+\vspace{12em}
+
+\cfoot{Москва 2026}
+
+\pagebreak
+
+\fancyhead[L]{\LabTitle} 
+\fancyhead[R]{\Discipline}
+\fancyfoot[C]{\thepage}
+
+\section{Зависимость напряжения Холла от тока через образец}
+
+\def\B{\fpeval{0.2}} % Магнитная индукция в Теслах
+\def\b{\fpeval{1.3 * 10^{-3}}}  % Толщина образца в мм
+\def\gammaI{\fpeval{1.6}} % Коэффициент пропорциональности для эффекта Холла
+
+Дано
+\begin{equation*}
+  U_H(I_p) \quad  B = \B \text{ Тл} \quad d = 10 \text{ мм} \quad l = 20 \text{ мм} \quad b = \b \text{ мм}
+\end{equation*}
+
+\begin{equation*}
+  U_H = \frac{I_pB}{b}R
+\end{equation*}
+
+\def\R1{\fpeval{(\gammaI * \b) / (\B)}} % Сопротивление образца, найденное из первого эксперимента
+
+\begin{equation*}
+	\begin{aligned}
+		\gamma = \frac{R_\text{х} B}{b} \iff R_\text{х} = \frac{\gamma b}{B} \quad &   \\
+		& R_\text{х} = \frac{\gammaI \cdot \b}{\B} = \R1
+	\end{aligned}
+\end{equation*}
+
+Найти $R$
+
+\section{Зависимость напряжения Холла от магнитного поля}
+
+\def\Ip{\fpeval{30 * 10^{-3}}} % Ток через образец в Амперах
+\def\gammaB{\fpeval{243.9 * 10^(-3)}} % Коэффициент пропорциональности для эффекта Холла
+
+\def\R2{\fpeval{(\gammaB * \b) / (\Ip)}} % Сопротивление образца, найденное из второго эксперимента
+\def\p{\fpeval{1 / (1.6 * 10^(-19) * \R2)}} % Концентрация носителей заряда, найденная из второго эксперимента
+
+Дано
+\begin{equation*}
+  U_H(B) \quad  I_p = \fpeval{\Ip * 10^3} \text{ мА} \quad d = 10 \text{ мм} \quad l = 20 \text{ мм} \quad b = \b \text{ мм}
+\end{equation*}
+
+\begin{equation*}
+  U_H = \frac{I_pB}{b}R \quad R = \frac{1}{ep}
+\end{equation*}
+
+\begin{equation*}
+	\begin{aligned}
+		\gamma = \frac{R_\text{х} I_p}{b} \iff R_\text{х} = \frac{\gamma b}{B} \quad &   \\
+		& R_\text{х} = \frac{\gammaB \cdot \b}{\Ip} = \R2
+	\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+	\begin{aligned}
+		R_\text{х} = \frac{1}{ep} \iff p = \frac{1}{eR_\text{х}} \quad &   \\
+		& p = \CalcFive{\p * 10^{-20}} \cdot 10^{20} \text{ м$^{-3}$}
+	\end{aligned}
+\end{equation*}
+
+Найти $R$, $p$
+ 
+\end{document}
