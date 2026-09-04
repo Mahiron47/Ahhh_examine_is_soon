@@ -1,1 +1,0 @@
-build\lab4.exe -i res\15x15.txt -o res\output.html
