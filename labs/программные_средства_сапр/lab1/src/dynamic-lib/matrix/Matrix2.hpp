@@ -1,8 +1,6 @@
 #ifndef MATRIX2HPP
 #define MATRIX2HPP
 
-struct Pos2;
-
 class Matrix2 : public Imatrix {
     uint32_t  _size;
     Element** _mat;
@@ -21,14 +19,14 @@ public:
         } /* unpacking */
 
         for (uint32_t i = 0; i < _size; i++) { 
-            _mat[i] = new Element[_size]
+            _mat[i] = new Element[_size];
             for (uint32_t j = 0; j < _size; j++) {
                 _mat[i][j].symbol = mat[i * _size + j];
-                _mat[i][j].condition = UNCHECKED;
+                _mat[i][j].condition = 0;
         }   }
     }
 
-   ~Matrix2() noexcept {
+   ~Matrix2() {
         for (uint32_t i = 0; i < _size; i++) { 
             delete[] _mat[i];
         }
@@ -52,8 +50,9 @@ public:
     using Imatrix::get;
 
     Element get(Pos2 pos) const noexcept {
-        if (0 < pos.x && pos.x >= _size && 0 < pos.y && pos.y >= _size) 
-            return Element { .symbol = '\0', .condition = 0b1111'1111 };
+        if (0 < pos.x || pos.x >= _size || 0 < pos.y || pos.y >= _size) 
+            return Element { .symbol = '\0', 
+                             .condition = Conditions::OUT_OF_BOUNDS_BIT };
 
         return this->get(pos.x, pos.y);
     };

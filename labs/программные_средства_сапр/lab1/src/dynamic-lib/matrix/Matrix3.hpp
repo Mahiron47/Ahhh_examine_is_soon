@@ -25,10 +25,10 @@ public:
                 _mat[i][j] = new Element[_size_xy];
                 for (uint32_t k = 0; k < _size_xy; k++) {
                     _mat[i][j][k].symbol = mat[i * _size_xy * _size_xy + j * _size_xy + k];
-                    _mat[i][j][k].condition = UNCHECKED;
+                    _mat[i][j][k].condition = 0;
     }   }   }   }
 
-   ~Matrix3() noexcept {
+   ~Matrix3() {
         for (uint32_t i = 0; i < _size_z; i++) { 
             delete[] _mat[i];                
             for (uint32_t j = 0; j < _size_xy; j++) {
@@ -57,8 +57,9 @@ public:
     using Imatrix::get;
 
     Element get(Pos3 pos) const {
-        if (0 < pos.x && pos.x >= _size && 0 < pos.y && pos.y >= _size) 
-            return Element { .symbol = '\0', .condition = 0b1111'1111 };
+        if (0 < pos.x || pos.x >= _size_xy || 0 < pos.y || pos.y >= _size_xy || 0 < pos.z || pos.z >= _size_z) 
+            return Element { .symbol = '\0', 
+                             .condition = Conditions::OUT_OF_BOUNDS_BIT };
 
         return this->get(pos.x, pos.y, pos.z);
     }
