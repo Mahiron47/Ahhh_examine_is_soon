@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 4.4.3)
 
 add_executable(matrix-test protocol-test.cpp)
 
-target_link_libraries(matrix-test PRIVATE Catch2::Catch2
+target_link_libraries(matrix-test PRIVATE static_lib
+                                          dynamic_lib
+                                          Catch2::Catch2
                                           Catch2::Catch2WithMain)
 
 catch_discover_tests(matrix-test TEST_PREFIX "matrixZZ" 

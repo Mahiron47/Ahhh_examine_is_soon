@@ -26,7 +26,7 @@ protected:
 public:
     virtual ~Imatrix() noexcept = default;
 
-    virtual void print() const noexcept = 0;
+    virtual void print(char(*print_func)(Element)) const noexcept = 0;
     virtual uint8_t get_dimensions() const noexcept = 0;
     
 };

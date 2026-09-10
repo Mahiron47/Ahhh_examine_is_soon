@@ -1,9 +1,11 @@
+#ifndef DYNAMICLIBHPP
+#define DYNAMICLIBHPP
+
 #include <iostream>
 #include <concepts>
 #include <stdint.h>
 #include <assert.h>
 #include <math.h>
-#include <vector>
 #include <queue>
 #include <span>
 
@@ -23,6 +25,14 @@ enum Directions : uint32_t {
     DIRECTION_UP       = 0b100,
     DIRECTION_DOWN     = 0b101,
 };
+
+enum Results : uint32_t {
+    SUCCESS        = 0b1,
+    PATH_NOT_FOUND = 0b10,
+    INVALID_INPUT  = 0b100,
+};
+
+#define DEFAULT_ORDER Directions::DIRECTION_FORWARD | (Directions::DIRECTION_BACKWARD << 3) | (Directions::DIRECTION_RIGHT << 6) | (Directions::DIRECTION_LEFT << 9) | (Directions::DIRECTION_UP << 12) | (Directions::DIRECTION_DOWN << 15)
 
 static constexpr uint32_t SEED = 521355634;
 static double RANDOM_PREV_RESULT = 1.0;
@@ -51,6 +61,14 @@ struct Pos2 : Ipos {
         return Pos2( this->x + other.x,
                      this->y + other.y );
     }
+
+    constexpr bool operator==(Pos2 other) const noexcept {
+        return other.x == this->x && other.y == this->y;
+    }
+
+    constexpr bool operator!=(Pos2 other) const noexcept {
+        return !(other == *this);
+    }
 };
 
 struct Pos3 : Ipos {
@@ -67,13 +85,43 @@ struct Pos3 : Ipos {
                      this->y + other.y,
                      this->z + other.z );
     }
+
+    constexpr bool operator==(Pos3 other) const noexcept {
+        return other.x == this->x && other.y == this->y && other.z == this->z;
+    }
+
+    constexpr bool operator!=(Pos3 other) const noexcept {
+        return !(other == *this);
+    }
 };
 
 inline constexpr uint8_t operator|(uint8_t lhs, Conditions rhs) noexcept {
     return static_cast<uint8_t>(lhs | static_cast<uint8_t>(rhs));
 }
 
+inline constexpr uint8_t operator&(uint8_t lhs, Conditions rhs) noexcept {
+    return static_cast<uint8_t>(lhs & static_cast<uint8_t>(rhs));
+}
+
+inline constexpr uint8_t operator|(Conditions lhs, Conditions rhs) noexcept {
+    return static_cast<uint8_t>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
+}
+
+inline constexpr uint8_t operator&(Conditions lhs, Conditions rhs) noexcept {
+    return static_cast<uint8_t>(static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs));
+}
+
+inline constexpr uint8_t operator==(Conditions lhs, Conditions rhs) noexcept {
+    return static_cast<uint8_t>(static_cast<uint8_t>(lhs) == static_cast<uint8_t>(rhs));
+}
+
+inline constexpr uint8_t operator!=(Conditions lhs, Conditions rhs) noexcept {
+    return static_cast<uint8_t>(static_cast<uint8_t>(lhs) != static_cast<uint8_t>(rhs));
+}
+
 #include "matrix/Imatrix.hpp"
 #include "matrix/Matrix2.hpp"
 #include "matrix/Matrix3.hpp"
 #include "algorithm/WaveAlgorithm.hpp"
+
+#endif // DYNAMICLIBHPP
