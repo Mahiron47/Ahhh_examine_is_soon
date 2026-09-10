@@ -32,15 +32,17 @@ enum Results : uint32_t {
     INVALID_INPUT  = 0b100,
 };
 
-#define DEFAULT_ORDER Directions::DIRECTION_FORWARD | (Directions::DIRECTION_BACKWARD << 3) | (Directions::DIRECTION_RIGHT << 6) | (Directions::DIRECTION_LEFT << 9) | (Directions::DIRECTION_UP << 12) | (Directions::DIRECTION_DOWN << 15)
+#define DEFAULT_ORDER Directions::DIRECTION_FORWARD | (Directions::DIRECTION_BACKWARD << 3) | \
+        (Directions::DIRECTION_RIGHT << 6) | (Directions::DIRECTION_LEFT << 9) | \
+        (Directions::DIRECTION_UP << 12) | (Directions::DIRECTION_DOWN << 15)
 
-static constexpr uint32_t SEED = 521355634;
-static double RANDOM_PREV_RESULT = 1.0;
+static constexpr uint32_t SEED = 52634;
+static double RANDOM_PREV_RESULT = 11.4325;
 
 inline static uint32_t get_random(uint32_t min, uint32_t max) noexcept {
-    double t = std::sin(RANDOM_PREV_RESULT * std::sqrt(SEED) + SEED);
+    double t = std::sin(RANDOM_PREV_RESULT * SEED) * SEED;
         
-    RANDOM_PREV_RESULT = min + (t - std::abs(t)) * (max - min);
+    RANDOM_PREV_RESULT = min + std::abs(t - std::floor(t)) * (max - min);
 
     return RANDOM_PREV_RESULT;
 }
