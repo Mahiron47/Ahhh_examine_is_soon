@@ -89,8 +89,6 @@ class WaveAlgorithm {
         bool get_neighbors(Matrix3* matrix, Matrix3* wave_matrix, uint32_t order, std::queue<Node3>* queue, bool(*func_check_condition)(Matrix3*, Pos3)) const {
             if (func_check_condition(matrix, pos)) return true;
 
-            bool trace_flag = true;
-            
             Imatrix::Element forward  = matrix->get(pos + Pos3( 0,  1,  0));
             Imatrix::Element backward = matrix->get(pos + Pos3( 0, -1,  0));
             Imatrix::Element up       = matrix->get(pos + Pos3( 0,  0,  1));
@@ -109,7 +107,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = forward.symbol, 
                                                        .condition = forward.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(0, 1, 0));
-                        trace_flag = false;
                     }
                 break;
                 case Directions::DIRECTION_BACKWARD:
@@ -121,7 +118,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = backward.symbol, 
                                                        .condition = backward.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(0, -1, 0)); 
-                        trace_flag = false;
                     }
                 break;
                 case Directions::DIRECTION_UP:
@@ -133,7 +129,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = up.symbol, 
                                                        .condition = up.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(0, 0, 1)); 
-                        trace_flag = false;
                     }
                 break;
                 case Directions::DIRECTION_DOWN:
@@ -145,7 +140,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = down.symbol, 
                                                        .condition = down.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(0, 0, -1)); 
-                        trace_flag = false;
                     }
                 break;
                 case Directions::DIRECTION_RIGHT:
@@ -157,7 +151,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = right.symbol, 
                                                        .condition = right.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(1, 0, 0)); 
-                        trace_flag = false;
                     }
                 break;
                 case Directions::DIRECTION_LEFT:
@@ -169,7 +162,6 @@ class WaveAlgorithm {
                         matrix->set(Imatrix::Element { .symbol = left.symbol, 
                                                        .condition = left.condition | Conditions::CHECKED_BIT }, 
                                     pos + Pos3(-1, 0, 0)); 
-                        trace_flag = false;
                     }
                 break;
                 default:
@@ -184,7 +176,7 @@ class WaveAlgorithm {
             func((order >> 12) & 0b111);
             func((order >> 15) & 0b111);
 
-            return trace_flag;
+            return false;
         }
 
 
@@ -209,24 +201,39 @@ public:
     WaveAlgorithm(Imatrix* matrix, 
                   uint32_t order) : _matrix(matrix),
                                     _order(order) {
+        this->_point_a = nullptr;
+        this->_point_b = nullptr;
+
         switch (_matrix->get_dimensions()) {
         case 2: {
             Matrix2 matrix2 = *static_cast<Matrix2*>(_matrix);
             for (uint32_t i = 0; i < matrix2.get_size().x; i++) {
                 for (uint32_t j = 0; j < matrix2.get_size().y; j++) {
-                    if (_point_a != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point a not found.");
+                    if (matrix2.get(i, j).symbol == 'A') { 
+                        if (_point_a != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point a not found.");
+
+                        _point_a = new Pos2(i, j);
+                    }
+                    if (matrix2.get(i, j).symbol == 'B') {
                     if (_point_b != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point b not found.");
-                    if (matrix2.get(i, j).symbol == 'A') _point_a = new Pos2(i, j);
-                    if (matrix2.get(i, j).symbol == 'B') _point_b = new Pos2(i, j);
+
+                        _point_b = new Pos2(i, j);
+                    } 
         }   }   } break; case 3: {
             Matrix3 matrix3 = *static_cast<Matrix3*>(_matrix);
             for (uint32_t i = 0; i < matrix3.get_size().x; i++) {
                 for (uint32_t j = 0; j < matrix3.get_size().y; j++) {
                     for (uint32_t k = 0; k < matrix3.get_size().z; k++) {
-                        if (_point_a != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point a not found.");
-                        if (_point_b != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point b not found.");
-                        if (matrix3.get(i, j, k).symbol == 'A') _point_a = new Pos3(i, j, k);
-                        if (matrix3.get(i, j, k).symbol == 'B') _point_b = new Pos3(i, j, k);
+                        if (matrix3.get(i, j, k).symbol == 'A') {
+                            if (_point_a != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point a not found.");
+        
+                            _point_a = new Pos3(i, j, k);
+                        }
+                        if (matrix3.get(i, j, k).symbol == 'B') {
+                            if (_point_b != nullptr) throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : point b not found.");
+
+                            _point_b = new Pos3(i, j, k);
+                        }
         }   }   }   } break; default:
             throw std::runtime_error("WaveAlgorithm::WaveAlgorithm : unpredicted Matrix.");
         }
@@ -326,11 +333,11 @@ inline uint32_t WaveAlgorithm::matrix2_solution() const {
     auto func = [&](uint32_t order, uint32_t wave) -> bool {
         switch (order) {
         case Directions::DIRECTION_FORWARD:
-            temp_node.pos = final_node.pos + Pos2(0, 1);
+            temp_node.pos = final_node.pos + Pos2(0, -1);
             return wave_matrix.get(final_node.pos + Pos2(0, -1)).condition == wave - 1;
         break;
         case Directions::DIRECTION_BACKWARD:
-            temp_node.pos = final_node.pos + Pos2(0, -1);
+            temp_node.pos = final_node.pos + Pos2(0, 1);
             return wave_matrix.get(final_node.pos + Pos2(0, 1)).condition == wave - 1;
         break;
         case Directions::DIRECTION_RIGHT:
@@ -345,27 +352,22 @@ inline uint32_t WaveAlgorithm::matrix2_solution() const {
         }   
     };
 
+    auto mark_path_func = [&]() -> void {
+        matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
+                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
+                       final_node.pos);
+        final_node.pos = temp_node.pos;
+    };
+
     for (uint32_t i = final_node.wave; i != 0; i--) {
         if (func(_order & 0b111, i)) {
-            matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
-                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
-                       final_node.pos);
-            final_node.pos = temp_node.pos;
+            mark_path_func();
         } else if (func((_order >> 3) & 0b111, i)) {
-            matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
-                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
-                       final_node.pos);
-            final_node.pos = temp_node.pos;
+            mark_path_func();
         } else if (func((_order >> 6) & 0b111, i)) {
-            matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
-                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
-                       final_node.pos);
-            final_node.pos = temp_node.pos;
+            mark_path_func();
         } else if (func((_order >> 9) & 0b111, i)) {
-            matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
-                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
-                       final_node.pos);
-            final_node.pos = temp_node.pos;
+            mark_path_func();
         } else {
             throw std::runtime_error("WaveAlgorithm::initiate : path not found.");
     }   }
@@ -373,12 +375,12 @@ inline uint32_t WaveAlgorithm::matrix2_solution() const {
 }
 
 inline uint32_t WaveAlgorithm::matrix3_solution() const {
-    Matrix3* matrix = static_cast<Matrix3*>(_matrix);
+    Matrix3 matrix = *static_cast<Matrix3*>(_matrix);
     Pos3 point_a = *static_cast<Pos3*>(_point_a);
     Pos3 point_b = *static_cast<Pos3*>(_point_b);
 
-    Imatrix::Element element_at_point_a = matrix->get(point_a);
-    Imatrix::Element element_at_point_b = matrix->get(point_b);
+    Imatrix::Element element_at_point_a = matrix.get(point_a);
+    Imatrix::Element element_at_point_b = matrix.get(point_b);
 
     if (element_at_point_a.condition & Conditions::OUT_OF_BOUNDS_BIT) {
         std::cout << "Wrong input: point a is out of bounds." << std::endl;
@@ -398,14 +400,17 @@ inline uint32_t WaveAlgorithm::matrix3_solution() const {
         return Results::INVALID_INPUT;
     }
 
-     matrix->set(Imatrix::Element { .symbol = 'A',
-                                    .condition = element_at_point_a.condition | Conditions::POINT_A_BIT },
+     matrix.set(Imatrix::Element { .symbol = 'A',
+                                    .condition = element_at_point_a.condition | Conditions::POINT_A_BIT | Conditions::CHECKED_BIT },
                  point_a);
-     matrix->set(Imatrix::Element { .symbol = 'B', 
+     matrix.set(Imatrix::Element { .symbol = 'B', 
                                     .condition = element_at_point_b.condition | Conditions::POINT_B_BIT }, 
                  point_b);
 
-    Matrix3 wave_matrix = Matrix3(*matrix);
+    element_at_point_a = matrix.get(point_a);
+    element_at_point_b = matrix.get(point_b);
+
+    Matrix3 wave_matrix = Matrix3(matrix);
 
     wave_matrix.set(Imatrix::Element { .symbol = element_at_point_a.symbol, 
                                        .condition = 0 },
@@ -419,59 +424,79 @@ inline uint32_t WaveAlgorithm::matrix3_solution() const {
     queue.push(Node3(point_a, 0));
 
     while (!queue.empty()) {
-        Node3 node = queue.back();
+        Node3 node = queue.front();
         
-        if (node.get_neighbors(matrix, &wave_matrix, _order, &queue, [](Matrix3* matrix, Pos3 pos) -> bool {
+        if (node.get_neighbors(&matrix, &wave_matrix, _order, &queue, [](Matrix3* matrix, Pos3 pos) -> bool {
                 return matrix->get(pos).condition & Conditions::POINT_B_BIT;
         })) break;
 
         queue.pop();
     }
 
-    Node3 final_node = queue.back();
+    if (queue.empty()) {
+        std::cout << "Path not found." << std::endl;
+        return Results::PATH_NOT_FOUND;
+    }
+
+    Node3 final_node = queue.front();
 
     if (final_node.pos != point_b) {
         std::cout << "Path not found." << std::endl;
         return Results::PATH_NOT_FOUND;
     }
 
+    Node3 temp_node = final_node;
+
     auto func = [&](uint32_t order, uint32_t wave) -> bool {
         switch (order) {
         case Directions::DIRECTION_FORWARD:
+            temp_node.pos = final_node.pos + Pos3(0, -1, 0);
             return wave_matrix.get(final_node.pos + Pos3(0, -1, 0)).condition == wave - 1;
         break;
         case Directions::DIRECTION_BACKWARD:
+            temp_node.pos = final_node.pos + Pos3(0, 1, 0);
             return wave_matrix.get(final_node.pos + Pos3(0, 1, 0)).condition == wave - 1;
         break;
         case Directions::DIRECTION_UP:
+            temp_node.pos = final_node.pos + Pos3(0, 0, -1);
             return wave_matrix.get(final_node.pos + Pos3(0, 0, -1)).condition == wave - 1;
         break;
         case Directions::DIRECTION_DOWN:
+            temp_node.pos = final_node.pos + Pos3(0, 0, 1);
             return wave_matrix.get(final_node.pos + Pos3(0, 0, 1)).condition == wave - 1;
         break;
         case Directions::DIRECTION_RIGHT:
+            temp_node.pos = final_node.pos + Pos3(1, 0, 0);
             return wave_matrix.get(final_node.pos + Pos3(1, 0, 0)).condition == wave - 1;
         break;
         case Directions::DIRECTION_LEFT:
+            temp_node.pos = final_node.pos + Pos3(-1, 0, 0);
             return wave_matrix.get(final_node.pos + Pos3(-1, 0, 0)).condition == wave - 1;
         default:
             throw std::runtime_error("WaveAlgorithm::initiate : unknown order.");
         }   
     };
 
+    auto mark_path_func = [&]() -> void {
+        matrix.set(Imatrix::Element { .symbol = wave_matrix.get(final_node.pos).symbol, 
+                                          .condition = wave_matrix.get(final_node.pos).condition | Conditions::MARK_AS_PATH_BIT },
+                       final_node.pos);
+        final_node.pos = temp_node.pos;
+    };
+
     for (uint32_t i = final_node.wave; i != 0; i--) {
         if (func(_order & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(0, -1, 0);
+            mark_path_func();
         } else if (func((_order >> 3) & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(0, 1, 0);
+            mark_path_func();
         } else if (func((_order >> 6) & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(0, 0, -1);
+            mark_path_func();
         } else if (func((_order >> 9) & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(0, 0, 1);
+            mark_path_func();
         } else if (func((_order >> 12) & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(1, 0, 0);
+            mark_path_func();
         } else if (func((_order >> 15) & 0b111, i)) {
-            final_node.pos = final_node.pos + Pos3(-1, 0, 0);
+            mark_path_func();
         } else {
             throw std::runtime_error("WaveAlgorithm::initiate : path not found.");
     }   }

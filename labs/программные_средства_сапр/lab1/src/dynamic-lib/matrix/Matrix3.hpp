@@ -103,6 +103,46 @@ public:
         return Pos3 { _size_x, _size_y, _size_z };
     }
     
+    Matrix3(const Matrix3& other) : _size_x(other._size_x), 
+                                    _size_y(other._size_y), 
+                                    _size_z(other._size_z) {
+        this->_mat = new Element**[_size_z];
+
+        for (uint32_t i = 0; i < _size_z; i++) { 
+            _mat[i] = new Element*[_size_x];
+            for (uint32_t j = 0; j < _size_x; j++) {
+                _mat[i][j] = new Element[_size_y];
+                for (uint32_t k = 0; k < _size_y; k++) {
+                    _mat[i][j][k] = other._mat[i][j][k];
+    }   }   }   }
+
+    Matrix3& operator=(const Matrix3& other) {
+        if (this == &other) return *this;
+
+        for (uint32_t i = 0; i < _size_z; i++) { 
+            delete[] _mat[i];                
+            for (uint32_t j = 0; j < _size_x; j++) {
+                delete[] _mat[i][j];                
+        }   }
+    
+        delete[] _mat;
+
+        this->_size_x = other._size_x;
+        this->_size_y = other._size_y;
+        this->_size_z = other._size_z;
+
+        this->_mat = new Element**[_size_z];
+
+        for (uint32_t i = 0; i < _size_z; i++) { 
+            _mat[i] = new Element*[_size_x];
+            for (uint32_t j = 0; j < _size_x; j++) {
+                _mat[i][j] = new Element[_size_y];
+                for (uint32_t k = 0; k < _size_y; k++) {
+                    _mat[i][j][k] = other._mat[i][j][k];
+        }   }   }   
+        return *this;
+    }
+
 };
 
 #endif // MATRIX3HPP
