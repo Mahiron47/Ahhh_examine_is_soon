@@ -17,7 +17,8 @@ int main() {
     std::ifstream file;
 
     auto func_z_layer_convert_to_int = [](std::string MZ) -> uint32_t {
-        return static_cast<uint32_t>(MZ[2] - '0');
+        if (MZ.front() != 'M') throw std::runtime_error("Invalid MZ format: " + MZ);
+        return MZ.back() - '0' - 1;
     };
 
     /* open the file */ {
@@ -51,6 +52,9 @@ int main() {
                 if (command == "BBOX") {
                     if (!(file >> shift.x >> shift.y >> shift_plus_size.x >> shift_plus_size.y)) throw std::runtime_error("Invalid BBOX command format.");
                     
+                    shift_plus_size.x += 1;
+                    shift_plus_size.y += 1;
+
                     matrix = Matrix3(shift_plus_size.x - shift.x, shift_plus_size.y - shift.y, SIZE_Z); // TODO: correct constructor
                     
                     for (uint32_t z = 0; z < SIZE_Z; z++) {
@@ -104,18 +108,18 @@ int main() {
                     std::string mz;
                     
                     if (!(file >> static_point.x >> static_point.y >> size.x >> size.y >> mz)) throw std::runtime_error("Invalid REC command format.");
-                    if (shift >= static_point || static_point + Pos3(size.x, size.y, 0) > shift_plus_size) throw std::runtime_error("Rectangle is out of bounds.");
+                    if (shift.x > static_point.x || static_point.x >= shift_plus_size.x) throw std::runtime_error("Rectangle is out of bounds.");
+                    if (shift.y > static_point.y || static_point.y >= shift_plus_size.y) throw std::runtime_error("Rectangle is out of bounds.");
                     
                     static_point.z = func_z_layer_convert_to_int(mz);
 
-                    for (uint32_t z = static_point.z; z < static_point.z + SIZE_Z; ++z) {
-                        for (uint32_t y = static_point.y; y < static_point.y + size.y; ++y) {
-                            for (uint32_t x = static_point.x; x < static_point.x + size.x; ++x) {
-                                matrix.set(Imatrix::Element { .symbol = '%',
-                                                              .condition = 0,
-                                                              .info = 0 },
-                                           Pos3(x, y, z) - shift);
-                }   }   }   } else {
+                    for (uint32_t y = static_point.y; y < static_point.y + size.y; y++) {
+                        for (uint32_t x = static_point.x; x < static_point.x + size.x; x++) {
+                            matrix.set(Imatrix::Element { .symbol = '%',
+                                                          .condition = 0,
+                                                          .info = 0 },
+                                       Pos3(x, y, static_point.z) - shift);
+                }   }   } else {
                     throw std::runtime_error("Unknown command: " + command);
                 } 
                 continue;

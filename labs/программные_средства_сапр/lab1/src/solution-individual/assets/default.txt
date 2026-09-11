@@ -1,6 +1,6 @@
 BBOX 0 0  11 14
-BGN  0 0  М1
-END  10   10 М1
+BGN  0 0  M1
+END  10   10 M1
 REC  3 0  6  1 M1
 REC  0 2  10 3 M1
 REC  6 3  2  8 M2
