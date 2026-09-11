@@ -290,8 +290,12 @@ inline uint32_t WaveAlgorithm::matrix2_solution(uint32_t& path_length) const {
                 return matrix->get(pos).condition & Conditions::POINT_B_BIT;
         })) break;
 
+        path_length = node.wave;
+
+
         queue.pop();
     }
+
 
     if (queue.empty()) {
         std::cout << "Path not found." << std::endl;
@@ -338,8 +342,6 @@ inline uint32_t WaveAlgorithm::matrix2_solution(uint32_t& path_length) const {
                    final_node.pos);
         final_node.pos = temp_node.pos;
     };
-
-    path_length = final_node.wave;
 
     for (uint32_t i = final_node.wave; i != 0; i--) {
         if (func(_order & 0b111, i)) {
@@ -402,6 +404,8 @@ inline uint32_t WaveAlgorithm::matrix3_solution(uint32_t& path_length) const {
                 return matrix->get(pos).condition & Conditions::POINT_B_BIT;
         })) break;
 
+    path_length = node.wave;
+
         queue.pop();
     }
 
@@ -458,8 +462,6 @@ inline uint32_t WaveAlgorithm::matrix3_solution(uint32_t& path_length) const {
                        final_node.pos);
         final_node.pos = temp_node.pos;
     };
-
-    path_length = final_node.wave;
 
     for (uint32_t i = final_node.wave; i != 0; i--) {
         if (func(_order & 0b111, i)) {

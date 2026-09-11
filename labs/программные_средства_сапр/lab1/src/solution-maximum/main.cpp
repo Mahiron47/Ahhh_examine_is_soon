@@ -54,6 +54,7 @@ int main() {
     uint32_t ax = 0, ay = 0, bx = 0, by = 0;
     uint32_t result = 0;
     uint32_t max_sector_length = 0;
+    uint32_t path_legth = 0;
 
     while (true) {
         std::cout << '\n' << "Enter 4 integers (coordinates Ax Ay Bx By from 1 to " << SIZE_X << "): ";
@@ -71,6 +72,7 @@ int main() {
                                                 DEFAULT_ORDER);
 
         result = algorithm.initiate();
+        path_legth = algorithm.get_path_length();
         max_sector_length = std::to_string(algorithm.get_path_length()).length() - 1;
 
         switch (result) {
@@ -108,6 +110,8 @@ int main() {
 
         return std::string(1, elem.symbol);
     });
+
+    std::cout << '\n' << "Path length: " << std::to_string(path_legth) << "\n\n";
 
     return 0;
 }
