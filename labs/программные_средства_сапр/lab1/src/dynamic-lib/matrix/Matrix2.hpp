@@ -7,6 +7,7 @@ class Matrix2 : public Imatrix {
     Element** _mat;
 
 public:
+    Matrix2() : _size_x(0), _size_y(0), _mat(nullptr) {}
     Matrix2(uint32_t size_x, uint32_t size_y) : _size_x(size_x), _size_y(size_y) {
         this->_mat = new Element*[_size_x];
 
@@ -15,6 +16,7 @@ public:
             for (uint32_t j = 0; j < _size_y; j++) {
                 _mat[i][j].symbol = '\0';
                 _mat[i][j].condition = 0;
+                _mat[i][j].info = 0;
     }   }   }
 
     template<typename... Args> requires (std::convertible_to<Args, char> && ...) && (sizeof...(Args) > 2)
@@ -35,10 +37,13 @@ public:
             for (uint32_t j = 0; j < _size_y; j++) {
                 _mat[i][j].symbol = mat[i * _size_x + j];
                 _mat[i][j].condition = 0;
+                _mat[i][j].info = 0;
         }   }
     }
 
    ~Matrix2() {
+        if (_mat == nullptr) return;
+
         for (uint32_t i = 0; i < _size_x; i++) { 
             delete[] _mat[i];
         }
@@ -46,7 +51,7 @@ public:
         delete[] _mat;
     }
 
-    void print(char(*print_func)(Element)) const noexcept override {
+    void print(std::function<std::string(Element)> print_func) const noexcept override {
         for (uint32_t i = 0; i < _size_x; i++) {
             for (uint32_t j = 0; j < _size_y; j++) {
                 if (j != _size_y - 1) {
@@ -62,7 +67,9 @@ public:
     using Imatrix::get;
 
     Element get(Pos2 pos) const noexcept {
-        if (pos.x >= _size_x || pos.y >= _size_y) return Element { .symbol = '\0', .condition = Conditions::OUT_OF_BOUNDS_BIT };
+        if (pos.x >= _size_x || pos.y >= _size_y) return Element { .symbol = '\0', 
+                                                                   .condition = Conditions::OUT_OF_BOUNDS_BIT, 
+                                                                   .info = 0 };
 
         return this->get(pos.x, pos.y);
     };

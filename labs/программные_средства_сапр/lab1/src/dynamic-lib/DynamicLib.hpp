@@ -1,11 +1,13 @@
 #ifndef DYNAMICLIBHPP
 #define DYNAMICLIBHPP
 
+#include <functional>
 #include <iostream>
 #include <concepts>
 #include <stdint.h>
 #include <assert.h>
 #include <math.h>
+#include <string>
 #include <queue>
 #include <span>
 
@@ -51,6 +53,8 @@ struct Ipos {
     virtual ~Ipos() noexcept = default;
 };
 
+struct Pos3;
+
 struct Pos2 : Ipos {
     uint32_t x;
     uint32_t y;
@@ -59,11 +63,6 @@ struct Pos2 : Ipos {
     constexpr ~Pos2() noexcept = default;
     constexpr Pos2(uint32_t x, uint32_t y) noexcept : x(x), y(y) {}
 
-    constexpr Pos2 operator+(Pos2 other) const noexcept {
-        return Pos2( this->x + other.x,
-                     this->y + other.y );
-    }
-
     constexpr bool operator==(Pos2 other) const noexcept {
         return other.x == this->x && other.y == this->y;
     }
@@ -71,6 +70,48 @@ struct Pos2 : Ipos {
     constexpr bool operator!=(Pos2 other) const noexcept {
         return !(other == *this);
     }
+
+    constexpr bool operator>(Pos2 other) const noexcept {
+        return this->x > other.x && this->y > other.y;
+    }
+
+    constexpr bool operator<(Pos2 other) const noexcept {
+        return this->x < other.x && this->y < other.y;
+    }
+
+    constexpr bool operator>=(Pos2 other) const noexcept {
+        return this->x >= other.x && this->y >= other.y;
+    }
+
+    constexpr bool operator<=(Pos2 other) const noexcept {
+        return this->x <= other.x && this->y <= other.y;
+    }
+
+    constexpr Pos2 operator+(Pos2 other) const noexcept {
+        return Pos2( this->x + other.x,
+                     this->y + other.y );
+    }
+
+    constexpr Pos2 operator-(Pos2 other) const noexcept {
+        return Pos2( this->x - other.x,
+                     this->y - other.y );
+    }
+
+    constexpr bool operator==(Pos3 other) const noexcept;
+
+    constexpr bool operator!=(Pos3 other) const noexcept;
+
+    constexpr bool operator>(Pos3 other) const noexcept;
+
+    constexpr bool operator<(Pos3 other) const noexcept;
+
+    constexpr bool operator>=(Pos3 other) const noexcept;
+
+    constexpr bool operator<=(Pos3 other) const noexcept;
+
+    constexpr Pos3 operator+(Pos3 other) const noexcept;
+
+    constexpr Pos3 operator-(Pos3 other) const noexcept;
 };
 
 struct Pos3 : Ipos {
@@ -82,12 +123,6 @@ struct Pos3 : Ipos {
     constexpr ~Pos3() noexcept = default;
     constexpr Pos3(uint32_t x, uint32_t y, uint32_t z) noexcept : x(x), y(y), z(z) {}
 
-    constexpr Pos3 operator+(Pos3 other) const noexcept {
-        return Pos3( this->x + other.x,
-                     this->y + other.y,
-                     this->z + other.z );
-    }
-
     constexpr bool operator==(Pos3 other) const noexcept {
         return other.x == this->x && other.y == this->y && other.z == this->z;
     }
@@ -95,7 +130,107 @@ struct Pos3 : Ipos {
     constexpr bool operator!=(Pos3 other) const noexcept {
         return !(other == *this);
     }
+
+    constexpr bool operator>(Pos3 other) const noexcept {
+        return this->x > other.x && this->y > other.y && this->z > other.z;
+    }
+
+    constexpr bool operator<(Pos3 other) const noexcept {
+        return this->x < other.x && this->y < other.y && this->z < other.z;
+    }
+
+    constexpr bool operator>=(Pos3 other) const noexcept {
+        return this->x >= other.x && this->y >= other.y && this->z >= other.z;
+    }
+
+    constexpr bool operator<=(Pos3 other) const noexcept {
+        return this->x <= other.x && this->y <= other.y && this->z <= other.z;
+    }
+
+    constexpr Pos3 operator+(Pos3 other) const noexcept {
+        return Pos3( this->x + other.x,
+                     this->y + other.y,
+                     this->z + other.z );
+    }
+
+    constexpr Pos3 operator-(Pos3 other) const noexcept {
+        return Pos3( this->x - other.x,
+                     this->y - other.y,
+                     this->z - other.z );
+    }
+
+    constexpr bool operator==(Pos2 other) const noexcept {
+        return other.x == this->x && other.y == this->y;
+    }
+
+    constexpr bool operator!=(Pos2 other) const noexcept {
+        return !(other == *this);
+    }
+
+    constexpr bool operator>(Pos2 other) const noexcept {
+        return this->x > other.x && this->y > other.y;
+    }
+
+    constexpr bool operator<(Pos2 other) const noexcept {
+        return this->x < other.x && this->y < other.y;
+    }
+
+    constexpr bool operator>=(Pos2 other) const noexcept {
+        return this->x >= other.x && this->y >= other.y;
+    }
+
+    constexpr bool operator<=(Pos2 other) const noexcept {
+        return this->x <= other.x && this->y <= other.y;
+    }
+
+    constexpr Pos3 operator+(Pos2 other) const noexcept {
+        return Pos3( this->x + other.x,
+                     this->y + other.y,
+                     this->z );
+    }
+
+    constexpr Pos3 operator-(Pos2 other) const noexcept {
+        return Pos3( this->x - other.x,
+                     this->y - other.y,
+                     this->z );
+    }
 };
+
+inline constexpr bool Pos2::operator==(Pos3 other) const noexcept {
+    return other.x == this->x && other.y == this->y;
+}
+
+constexpr bool Pos2::operator!=(Pos3 other) const noexcept {
+    return !(other == *this);
+}
+
+constexpr bool Pos2::operator>(Pos3 other) const noexcept {
+    return this->x > other.x && this->y > other.y;
+}
+
+constexpr bool Pos2::operator<(Pos3 other) const noexcept {
+    return this->x < other.x && this->y < other.y;
+}
+
+constexpr bool Pos2::operator>=(Pos3 other) const noexcept {
+    return this->x >= other.x && this->y >= other.y;
+}
+
+constexpr bool Pos2::operator<=(Pos3 other) const noexcept {
+    return this->x <= other.x && this->y <= other.y;
+}
+
+constexpr Pos3 Pos2::operator+(Pos3 other) const noexcept {
+    return Pos3(this->x + other.x,
+                this->y + other.y,
+                other.z);
+}
+
+constexpr Pos3 Pos2::operator-(Pos3 other) const noexcept {
+    return Pos3(this->x - other.x,
+                this->y - other.y,
+                other.z);
+}
 
 inline constexpr uint8_t operator|(uint8_t lhs, Conditions rhs) noexcept {
     return static_cast<uint8_t>(lhs | static_cast<uint8_t>(rhs));

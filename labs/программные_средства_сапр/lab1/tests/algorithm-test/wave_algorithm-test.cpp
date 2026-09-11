@@ -3,15 +3,27 @@
 #include "DynamicLib.hpp"
 
 TEST_CASE ("WaveAlgorithm::WaveAlgorithm", "[WaveAlgorithm]") {
-    SECTION ("WaveAlgorithm::WaveAlgorithm : simple test") {
-
+    SECTION ("WaveAlgorithm::WaveAlgorithm : simple test heap matrix") {
         WaveAlgorithm(new Matrix2(10, 10), 
+                      new Pos2(0, 0), 
+                      new Pos2(9, 9), 
+                      DEFAULT_ORDER, true);
+
+        REQUIRE(true);
+    }
+    
+    SECTION ("WaveAlgorithm::WaveAlgorithm : simple test stack matrix") {
+        Matrix2 matrix = Matrix2(10, 10);
+        
+        WaveAlgorithm(&matrix, 
                       new Pos2(0, 0), 
                       new Pos2(9, 9), 
                       DEFAULT_ORDER);
 
         REQUIRE(true);
-}   }
+    }
+
+}
 
 TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
     SECTION ("WaveAlgorithm::initiate : simple test") {
@@ -26,7 +38,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), new Pos2(0, 0), new Pos2(9, 9), DEFAULT_ORDER);
+        ), new Pos2(0, 0), new Pos2(9, 9), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }   
@@ -43,7 +55,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '%', '-', '%', '-', '%', '%', '%', '%', '-',
             '-', '%', '-', '-', '-', '-', '-', '-', '%', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), new Pos2(5, 4), new Pos2(7, 6), DEFAULT_ORDER);
+        ), new Pos2(5, 4), new Pos2(7, 6), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }
@@ -60,7 +72,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '%', '-', '%', '-', '-', '-', '-', '%', '-',
             '-', '%', '-', '-', '-', '-', '-', '-', '%', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), new Pos2(2, 8), new Pos2(5, 5), DEFAULT_ORDER);
+        ), new Pos2(2, 8), new Pos2(5, 5), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::PATH_NOT_FOUND);
     }
@@ -77,7 +89,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', 'B'
-        ), DEFAULT_ORDER);
+        ), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }   
@@ -94,7 +106,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '%', '-', '%', '-', '%', '%', '%', '%', '-',
             '-', '%', '-', '-', '-', '-', '-', '-', '%', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), DEFAULT_ORDER);
+        ), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }
@@ -111,7 +123,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '%', '-', '%', '-', '-', '-', '-', '%', '-',
             '-', '%', 'A', '-', '-', '-', '-', '-', '%', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), DEFAULT_ORDER);
+        ), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::PATH_NOT_FOUND);
     }
@@ -128,7 +140,7 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'
-        ), new Pos2(0, 0), new Pos2(10, 9), DEFAULT_ORDER);
+        ), new Pos2(0, 0), new Pos2(10, 9), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::INVALID_INPUT);
     }
@@ -144,16 +156,27 @@ TEST_CASE ("WaveAlgorithm::initiate", "[WaveAlgorithm]") {
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
             '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
-            '-', '-', '-', '-', '-', '-', '-', '-', '-', '#'
-        ), new Pos2(0, 0), new Pos2(9, 9), DEFAULT_ORDER);
+            '-', '-', '-', '-', '-', '-', '-', '-', '-', '%'
+        ), new Pos2(0, 0), new Pos2(9, 9), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::INVALID_INPUT);
     }
 }
 
 TEST_CASE ("WaveAlgorithm::WaveAlgorithm (3D)", "[WaveAlgorithm][3D]") {
-    SECTION ("WaveAlgorithm::WaveAlgorithm : 3D simple test") {
+    SECTION ("WaveAlgorithm::WaveAlgorithm : 3D simple test heap matrix") {
         WaveAlgorithm(new Matrix3(3, 3, 3), 
+                      new Pos3(0, 0, 0), 
+                      new Pos3(2, 2, 2), 
+                      DEFAULT_ORDER);
+
+        REQUIRE(true);
+    }
+
+    SECTION ("WaveAlgorithm::WaveAlgorithm : 3D simple test stack matrix") {
+        Matrix3 matrix = Matrix3(3, 3, 3);
+        
+        WaveAlgorithm(&matrix, 
                       new Pos3(0, 0, 0), 
                       new Pos3(2, 2, 2), 
                       DEFAULT_ORDER);
@@ -179,7 +202,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', '-'
-        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER);
+        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }   
@@ -201,7 +224,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', '-'
-        ), new Pos3(0, 0, 0), new Pos3(0, 0, 2), DEFAULT_ORDER);
+        ), new Pos3(0, 0, 0), new Pos3(0, 0, 2), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }
@@ -223,7 +246,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', '-'
-        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER);
+        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::PATH_NOT_FOUND);
     }
@@ -245,7 +268,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', 'B'
-        ), DEFAULT_ORDER);
+        ), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::SUCCESS);
     }
@@ -267,7 +290,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', 'B'
-        ), DEFAULT_ORDER);
+        ), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::PATH_NOT_FOUND);
     }
@@ -286,7 +309,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', '-'
-        ), new Pos3(0, 0, 0), new Pos3(3, 0, 0), DEFAULT_ORDER);
+        ), new Pos3(0, 0, 0), new Pos3(3, 0, 0), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::INVALID_INPUT);
     }
@@ -305,7 +328,7 @@ TEST_CASE ("WaveAlgorithm::initiate (3D)", "[WaveAlgorithm][3D]") {
             '-', '-', '-',
             '-', '-', '-',
             '-', '-', '#'
-        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER);
+        ), new Pos3(0, 0, 0), new Pos3(2, 2, 2), DEFAULT_ORDER, true);
 
         REQUIRE(algorithm.initiate() == Results::INVALID_INPUT);
     }

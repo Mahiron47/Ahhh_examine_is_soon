@@ -4,8 +4,9 @@
 class Imatrix {
 public:
     struct Element {
-        char    symbol;
-        uint8_t condition;
+        char     symbol;
+        uint8_t  condition;
+        uint32_t info;
     };
 
 protected:
@@ -26,7 +27,7 @@ protected:
 public:
     virtual ~Imatrix() noexcept = default;
 
-    virtual void print(char(*print_func)(Element)) const noexcept = 0;
+    virtual void print(std::function<std::string(Element)> print_func) const noexcept = 0;
     virtual uint8_t get_dimensions() const noexcept = 0;
     
 };

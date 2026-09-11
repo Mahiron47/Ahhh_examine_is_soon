@@ -8,17 +8,16 @@ int main() {
 
     for (uint32_t x = 0; x < SIZE_X; ++x) {
         for (uint32_t y = 0; y < SIZE_Y; ++y) {
-            std::cout << get_random(0, 99) << ' ';
-
             matrix.set(Imatrix::Element{ .symbol = (get_random(0, 99) < 20) ? '%' : '-', 
-                                         .condition = 0 }, 
+                                         .condition = 0, 
+                                         .info = 0 }, 
                        x, y);
         }
     }
 
     std::cout << "Discrete working field (24x24):\n\n";
-    matrix.print([](Imatrix::Element elem) -> char {
-        return elem.symbol;
+    matrix.print([](Imatrix::Element elem) -> std::string {
+        return std::string(1, elem.symbol);
     });
 
     return 0;

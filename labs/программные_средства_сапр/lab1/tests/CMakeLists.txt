@@ -11,3 +11,4 @@ include(Catch)
 
 add_subdirectory(matrix-test)
 add_subdirectory(algorithm-test)
+add_subdirectory(protocol-test)

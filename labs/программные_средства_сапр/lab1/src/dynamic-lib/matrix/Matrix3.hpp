@@ -8,6 +8,7 @@ class Matrix3 : public Imatrix {
     Element*** _mat;
 
 public:
+    Matrix3() : _size_x(0), _size_y(0), _size_z(0), _mat(nullptr) {}
     Matrix3(uint32_t size_x, 
             uint32_t size_y, 
             uint32_t size_z) : _size_x(size_x), 
@@ -15,13 +16,14 @@ public:
                                _size_z(size_z) {
         this->_mat = new Element**[_size_z];
 
-        for (uint32_t i = 0; i < _size_z; i++) {
-            _mat[i] = new Element*[_size_x];
-            for (uint32_t j = 0; j < _size_x; j++) {
-                _mat[i][j] = new Element[_size_y];
-                for (uint32_t k = 0; k < _size_y; k++) {
-                    _mat[i][j][k].symbol = '\0';
-                    _mat[i][j][k].condition = 0;
+        for (uint32_t z = 0; z < _size_z; z++) {
+            _mat[z] = new Element*[_size_y];
+            for (uint32_t y = 0; y < _size_y; y++) {
+                _mat[z][y] = new Element[_size_x];
+                for (uint32_t x = 0; x < _size_x; x++) {
+                    _mat[z][y][x].symbol = '\0';
+                    _mat[z][y][x].condition = 0;
+                    _mat[z][y][x].info = 0;
     }   }   }   }
 
     template<typename... Args> requires (std::convertible_to<Args, char> && ...) && (sizeof...(Args) > 3) 
@@ -37,41 +39,44 @@ public:
 
         char mat[sizeof...(args)]; 
         /* unpacking */ {
-            uint32_t i = 0; 
-        
-            ((mat[i++] = args), ...);
+            uint32_t idx = 0; 
+            ((mat[idx++] = args), ...);
         } /* unpacking */
 
-        for (uint32_t i = 0; i < _size_z; i++) { 
-            _mat[i] = new Element*[_size_x];
-            for (uint32_t j = 0; j < _size_x; j++) {
-                _mat[i][j] = new Element[_size_y];
-                for (uint32_t k = 0; k < _size_y; k++) {
-                    _mat[i][j][k].symbol = mat[i * _size_x * _size_y + j * _size_y + k];
-                    _mat[i][j][k].condition = 0;
+        for (uint32_t z = 0; z < _size_z; z++) { 
+            _mat[z] = new Element*[_size_y];
+            for (uint32_t y = 0; y < _size_y; y++) {
+                _mat[z][y] = new Element[_size_x];
+                for (uint32_t x = 0; x < _size_x; x++) {
+                    _mat[z][y][x].symbol = mat[z * _size_y * _size_x + y * _size_x + x];
+                    _mat[z][y][x].condition = 0;
+                    _mat[z][y][x].info = 0;
     }   }   }   }
 
    ~Matrix3() {
-        for (uint32_t i = 0; i < _size_z; i++) { 
-            delete[] _mat[i];                
-            for (uint32_t j = 0; j < _size_x; j++) {
-                delete[] _mat[i][j];                
-        }   }
-    
+        if (_mat == nullptr) return;
+
+        for (uint32_t z = 0; z < _size_z; z++) { 
+            for (uint32_t y = 0; y < _size_y; y++) {
+                delete[] _mat[z][y];
+            }
+            delete[] _mat[z];                
+        }
+
         delete[] _mat;
     }
 
-    void print(char(*print_func)(Element)) const noexcept override {
-        for (uint32_t i = 0; i < _size_z; i++) {
-            for (uint32_t j = 0; j < _size_x; j++) {
-                for (uint32_t k = 0; k < _size_y; k++) {
-                    if (k != _size_y - 1) {
-                        std::cout << print_func(_mat[i][j][k]) << ' ';
-                    } else if (j != _size_x - 1) {
-                        std::cout << print_func(_mat[i][j][k]) << '\n';
+    void print(std::function<std::string(Element)> print_func) const noexcept override {
+        for (uint32_t z = 0; z < _size_z; z++) {
+            for (uint32_t y = 0; y < _size_y; y++) {
+                for (uint32_t x = 0; x < _size_x; x++) {
+                    if (x != _size_x - 1) {
+                        std::cout << print_func(_mat[z][y][x]) << ' ';
+                    } else if (y != _size_y - 1) {
+                        std::cout << print_func(_mat[z][y][x]) << '\n';
                     } else {
-                        std::cout << print_func(_mat[i][j][k]) << "\n\n";
-    }   }   }   }   } 
+                        std::cout << print_func(_mat[z][y][x]) << "\n\n";
+    }   }   }   }   }
 
     uint8_t get_dimensions() const noexcept override {
         return 3;
@@ -80,7 +85,9 @@ public:
     using Imatrix::get;
 
     Element get(Pos3 pos) const {
-        if (pos.x >= _size_x || pos.y >= _size_y || pos.z >= _size_z) return Element { .symbol = '\0', .condition = Conditions::OUT_OF_BOUNDS_BIT };
+        if (pos.x >= _size_x || pos.y >= _size_y || pos.z >= _size_z) return Element { .symbol = '\0', 
+                                                                                       .condition = Conditions::OUT_OF_BOUNDS_BIT, 
+                                                                                       .info = 0 };
 
         return this->get(pos.x, pos.y, pos.z);
     }
@@ -88,6 +95,8 @@ public:
     using Imatrix::set;
 
     void set(Element elem, Pos3 pos) {
+        if (pos.x >= _size_x || pos.y >= _size_y || pos.z >= _size_z) return;
+
         this->set(elem, pos.x, pos.y, pos.z);
     }
 
@@ -106,40 +115,89 @@ public:
     Matrix3(const Matrix3& other) : _size_x(other._size_x), 
                                     _size_y(other._size_y), 
                                     _size_z(other._size_z) {
+        if (other._mat == nullptr) {
+            this->_mat = nullptr;
+            return;
+        }
+
         this->_mat = new Element**[_size_z];
 
-        for (uint32_t i = 0; i < _size_z; i++) { 
-            _mat[i] = new Element*[_size_x];
-            for (uint32_t j = 0; j < _size_x; j++) {
-                _mat[i][j] = new Element[_size_y];
-                for (uint32_t k = 0; k < _size_y; k++) {
-                    _mat[i][j][k] = other._mat[i][j][k];
+        for (uint32_t z = 0; z < _size_z; z++) { 
+            _mat[z] = new Element*[_size_y];
+            for (uint32_t y = 0; y < _size_y; y++) {
+                _mat[z][y] = new Element[_size_x];
+                for (uint32_t x = 0; x < _size_x; x++) {
+                    _mat[z][y][x] = other._mat[z][y][x];
     }   }   }   }
+
+    Matrix3(Matrix3&& other) noexcept
+        : _size_x(other._size_x), 
+          _size_y(other._size_y), 
+          _size_z(other._size_z), 
+          _mat(other._mat) {
+        other._size_x = 0;
+        other._size_y = 0;
+        other._size_z = 0;
+        other._mat = nullptr;
+    }
 
     Matrix3& operator=(const Matrix3& other) {
         if (this == &other) return *this;
 
-        for (uint32_t i = 0; i < _size_z; i++) { 
-            delete[] _mat[i];                
-            for (uint32_t j = 0; j < _size_x; j++) {
-                delete[] _mat[i][j];                
-        }   }
-    
-        delete[] _mat;
+        if (_mat != nullptr) {
+            for (uint32_t z = 0; z < _size_z; z++) { 
+                for (uint32_t y = 0; y < _size_y; y++) {
+                    delete[] _mat[z][y];                
+                }   
+                delete[] _mat[z];                
+            }
+            delete[] _mat;
+        }
 
         this->_size_x = other._size_x;
         this->_size_y = other._size_y;
         this->_size_z = other._size_z;
 
+        if (other._mat == nullptr) {
+            this->_mat = nullptr;
+            return *this;
+        }
+
         this->_mat = new Element**[_size_z];
 
-        for (uint32_t i = 0; i < _size_z; i++) { 
-            _mat[i] = new Element*[_size_x];
-            for (uint32_t j = 0; j < _size_x; j++) {
-                _mat[i][j] = new Element[_size_y];
-                for (uint32_t k = 0; k < _size_y; k++) {
-                    _mat[i][j][k] = other._mat[i][j][k];
+        for (uint32_t z = 0; z < _size_z; z++) { 
+            _mat[z] = new Element*[_size_y];
+            for (uint32_t y = 0; y < _size_y; y++) {
+                _mat[z][y] = new Element[_size_x];
+                for (uint32_t x = 0; x < _size_x; x++) {
+                    _mat[z][y][x] = other._mat[z][y][x];
         }   }   }   
+        return *this;
+    }
+
+    Matrix3& operator=(Matrix3&& other) noexcept {
+        if (this == &other) return *this;
+
+        if (_mat != nullptr) {
+            for (uint32_t z = 0; z < _size_z; z++) { 
+                for (uint32_t y = 0; y < _size_y; y++) {
+                    delete[] _mat[z][y];                
+                }   
+                delete[] _mat[z];                
+            }
+            delete[] _mat;
+        }
+
+        this->_size_x = other._size_x;
+        this->_size_y = other._size_y;
+        this->_size_z = other._size_z;
+        this->_mat    = other._mat;
+
+        other._size_x = 0;
+        other._size_y = 0;
+        other._size_z = 0;
+        other._mat = nullptr;
+
         return *this;
     }
 
