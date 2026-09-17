@@ -179,7 +179,7 @@ end
     электронами энергетического уровня ищется через распределение Ферми-Дирака
     {\begin{equation*}
         f(E) = \frac{1}{\exp{\frac{E - E_f}{kT}} + 1} \enskip \xrightarrow{E - E_f\ \ge\ 3kT}  
-        \enskip f(E) = \exp\left({-\frac{E - E_f}{kt}}\right)
+        \enskip f(E) = \exp\left({-\frac{E - E_f}{kT}}\right)
     \end{equation*}}
     \begin{figure}[H]
         \hspace{2em}
@@ -284,7 +284,7 @@ end
                 \hline
                 Вариант $1$ \\
                 \hline
-                тип дырок: $n_0$ \\
+                тип носителей: $n_0$ \\
                 $E_c - E_f = 1$ эВ \\
                 \hline
                 Найти \\
@@ -386,8 +386,8 @@ end
             \qquad Одно из решений отрицательное, поэтому отсекается
             \begin{equation*}
                 \begin{matrix}
-                    n_0 = \frac{10^{14} - \sqrt{\left(10^{14}\right)^2 + 4 \cdot 1.45 \cdot 10^{10}}}{2} = \luaexec{tex.sprint(value_with_mantice((10^(14) - ((10^(14))^2 + 4 * 1.45 * 10^(10))^(0.5)) / 2, 5, 0, 0))} & p_0 = \frac{{n_i}^2}{n_0} \\
-                    n_0 = \frac{10^{14} + \sqrt{\left(10^{14}\right)^2 + 4 \cdot 1.45 \cdot 10^{10}}}{2} = \luaexec{tex.sprint(value_with_mantice((10^(14) + ((10^(14))^2 + 4 * 1.45 * 10^(10))^(0.5)) / 2, 5, 0, 0))} & p_0 = \frac{\left(1.45 \cdot 10^{10}\right)^2}{10^{14}}=\luaexec{tex.sprint(value_with_mantice(((1.45 * 10^(10))^2)/(10^(14)), 3, 0, 0))}
+                    n_0 = \frac{10^{14} - \sqrt{\left(10^{14}\right)^2 + 4 \cdot \left(1.45 \cdot 10^{10}\right)^2}}{2} = \luaexec{tex.sprint(value_with_mantice((10^(14) - ((10^(14))^2 + 4 * (1.45 * 10^(10))^2)^(0.5)) / 2, 5, 0, 0))} & p_0 = \frac{{n_i}^2}{n_0} \\
+                    n_0 = \frac{10^{14} + \sqrt{\left(10^{14}\right)^2 + 4 \cdot \left(1.45 \cdot 10^{10}\right)^2}}{2} = \luaexec{tex.sprint(value_with_mantice((10^(14) + ((10^(14))^2 + 4 * (1.45 * 10^(10))^2)^(0.5)) / 2, 5, 0, 0))} & p_0 = \frac{\left(1.45 \cdot 10^{10}\right)^2}{10^{14}}=\luaexec{tex.sprint(value_with_mantice(((1.45 * 10^(10))^2)/(10^(14)), 3, 0, 0))}
                 \end{matrix}
             \end{equation*}
         \end{minipage}
@@ -445,7 +445,7 @@ end
                     (n_0)_2 = \frac{{N_d}^+ - \sqrt{\left({N_d}^+\right)^2 + 4{n_i}^2}}{2}
                 \end{aligned}
             \end{equation*}
-            Ответ: концентрация электронов $n_0 = 10^{14}$ и дырок $p_0 = \luaexec{tex.sprint(value_with_mantice(((2.4 * 10^(13))^2)/(10^(14)), 3, 0, 0))}$.
+            Ответ: концентрация электронов $n_0 = \luaexec{tex.sprint(value_with_mantice((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2, 5, 0, 0))}$ и дырок $p_0 = \luaexec{tex.sprint(value_with_mantice(((2.4 * 10^(13))^2)/((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2), 3, 0, 0))}$.
         \end{minipage}
         \begin{minipage}[t]{0.7\textwidth}
             \vspace{0em}
@@ -454,13 +454,13 @@ end
             \qquad Одно из решений отрицательное, поэтому отсекается
             \begin{equation*}
                 \begin{aligned}
-                    n_0 = \frac{10^{14} - \sqrt{\left(10^{14}\right)^2 + 4 \cdot 2.4 \cdot 10^{13}}}{2} = \luaexec{tex.sprint(value_with_mantice((10 ^ 14 - ((10 ^ 14) ^ 2 + 4 * 2.4 * 10^(13))^(0.5)) / 2, 5, -1, 0))} \\
-                    n_0 = \frac{10^{14} + \sqrt{\left(10^{14}\right)^2 + 4 \cdot 2.4 \cdot 10^{13}}}{2} = \luaexec{tex.sprint(value_with_mantice((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * 2.4 * 10^(13))^(0.5)) / 2, 5, 0, 0))} 
+                    n_0 = \frac{10^{14} - \sqrt{\left(10^{14}\right)^2 + 4 \cdot \left(2.4 \cdot 10^{13}\right)^2}}{2} = \luaexec{tex.sprint(value_with_mantice((10 ^ 14 - ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2, 5, 0, 0))} \\
+                    n_0 = \frac{10^{14} + \sqrt{\left(10^{14}\right)^2 + 4 \cdot \left(2.4 \cdot 10^{13}\right)^2}}{2} = \luaexec{tex.sprint(value_with_mantice((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2, 5, 0, 0))} 
                 \end{aligned}
             \end{equation*}
             концентрация дырок ищется из концентрации электронов
             \begin{equation*}
-                p_0 = \frac{{n_i}^2}{n_0} \qquad p_0 = \frac{\left(2.4 \cdot 10^{13}\right)^2}{10^{14}}=\luaexec{tex.sprint(value_with_mantice(((2.4 * 10^(13))^2)/(10^(14)), 3, 0, 0))}
+                p_0 = \frac{{n_i}^2}{n_0} \qquad p_0 = \frac{\left(2.4 \cdot 10^{13}\right)^2}{\luaexec{tex.sprint(value_with_mantice((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2, 5, 0, 0))}}=\luaexec{tex.sprint(value_with_mantice(((2.4 * 10^(13))^2)/((10 ^ 14 + ((10 ^ 14) ^ 2 + 4 * (2.4 * 10^(13))^2)^(0.5)) / 2), 3, 0, 0))}
             \end{equation*}
         \end{minipage}
     \end{figure}
