@@ -1,0 +1,635 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+\setmainfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\newfontfamily\cyrillicfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+\usepackage{graphicx}        					% Графика
+\usepackage{amsmath, amsfonts, amssymb, amsthm}	% Математика
+\usepackage{mathtools}
+\usepackage{chemfig}
+\usepackage[version=4,arrows=pgf-filled,
+            textfontname=sffamily,
+            mathfontname=mathsf]{mhchem}
+\usepackage[protrusion=false]{microtype}       % Микротипографика
+\usepackage{braket} 						% Braket нотация для квантовой механики
+\usepackage{unicode-math} 					% Современный пакет для математики в LuaLaTeX
+\usepackage{longtable}       				% Таблицы с разрывом страниц
+\usepackage{tikz}           				% Рисование
+\usepackage[europeanresistors]{circuitikz}	% Рисование электрических схем в европейском стиле
+\usepackage{listings}						% Для отображения кода
+\usepackage{tabularx}       				% Для таблиц во всю ширину
+\usepackage{array}		  					% Для расширенных возможностей таблиц
+\usepackage{float}          				% Для точного позиционирования фигур
+\usepackage{pgfplots}                          % Для построения графиков
+\usepackage{caption}                           % Для настройки подписей к рисункам и таблицам
+\usepackage{xfp}                               % Для вычислений в LaTeX
+\usepackage{luacode}                           % Для выполнения Lua-кода в документе    
+\pgfplotsset{compat=1.18}
+\usepackage[paper=letterpaper,
+            top=20mm,
+            bottom=20mm,
+            left=10mm,
+            right=10mm,
+            footskip=0.4in 
+]{geometry}
+
+\usetikzlibrary{arrows.meta}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+% --- Теоремы и окружения ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand\lstlistingname{Исходный код}
+
+\lstdefinestyle{main}{
+	backgroundcolor=\color{gray!8},   
+	commentstyle=\color{green!50!black},
+	keywordstyle=\color{blue!80!black},
+	numberstyle=\small\color{darkgray},
+	stringstyle=\rmfamily\color{orange!90!black},
+	basicstyle=\ttfamily\small,
+	breakatwhitespace=false,         
+	breaklines=true,                   
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=8pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}	
+
+\lstset{style=main}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+% =========================================================
+%         СЛУЖЕБНЫЕ КОМАНДЫ ДЛЯ ВЫЧИСЛЕНИЙ
+% =========================================================
+\newcommand{\CalcZero} [1]{\fpeval{round((#1),0)}}
+\newcommand{\CalcOne}  [1]{\fpeval{round((#1),1)}}
+\newcommand{\CalcTwo}  [1]{\fpeval{round((#1),2)}}
+\newcommand{\CalcThree}[1]{\fpeval{round((#1),3)}}
+\newcommand{\CalcFour} [1]{\fpeval{round((#1),4)}}
+\newcommand{\CalcFive} [1]{\fpeval{round((#1),5)}}
+
+\begin{luacode*}
+-- безопасная версия value_with_mantice
+local function round_fallback(x)
+  if x >= 0 then return math.floor(x + 0.5) else return math.ceil(x - 0.5) end
+end
+local round = math.round or round_fallback
+
+function value_with_mantice(value, precision, shift, scale)
+  precision = precision or 5
+  shift = shift or 0
+  scale = scale or 0
+
+  if value == nil or value ~= value then
+    return "\\fpeval{0}"
+  end
+  if value == 0 then
+    return "\\fpeval{0}"
+  end
+
+  local sign = ""
+  if value < 0 then
+    sign = "-"
+    value = math.abs(value)
+  end
+
+  local logv = math.log10(value)
+  if not (logv == logv) then -- проверка на NaN
+    return "\\fpeval{0}"
+  end
+
+  local floorlog = math.floor(logv)
+  local mantissa = round(value * 10^(precision - 1 - floorlog)) * 10^(-(precision - 1) + shift - scale)
+  local exponent = floorlog - shift
+
+  if exponent == 0 then
+    return sign .. "\\fpeval{" .. mantissa .. "}"
+  else
+    return sign .. "\\fpeval{" .. mantissa .. "} \\cdot 10^{" .. exponent .. "}"
+  end
+end
+
+\end{luacode*}
+
+\begin{document}
+
+Булеан — множество $\mathcal{B} = \{0,\,1\}$.
+
+Булева функция — является отображением булевого пространства c размерностью $n$ и 
+количеством переменных $n$ в аргументе функции
+\begin{equation*}
+  f: \mathcal{B}^n \rightarrow \mathcal{B} \qquad f(x_1,\,x_2,\,\dots,\,x_n)
+\end{equation*}
+
+Сигма нотация булеана — определяется как 
+\begin{equation*}
+  x^\sigma =
+  \begin{cases}
+    \overline{x}, \text{ if } \sigma = 0 \\
+    x, \text{ if } \sigma = 1 
+  \end{cases}
+\end{equation*}
+
+СДНФ — Совершенная Дизъюнктивная Нормальная Форма, задаётся уравнением
+\begin{equation*}
+  f(x_1,\,x_2,\,\dots,\,x_n) = \bigvee\limits_{\left(\sigma_1,\,\sigma_2,\,\dots,\,\sigma_n\right)} x_1^{\sigma_1} \land x_2^{\sigma_2} \land \dots \land x_n^{\sigma_n} \land f(\sigma_1,\,\sigma_2,\,\dots,\,\sigma_n)
+\end{equation*}
+
+СКНФ — Совершенная Конъюктивная Нормальная Форма, задаётся уравнением 
+\begin{equation*}
+  f(x_1,\,x_2,\,\dots,\,x_n) = \bigwedge\limits_{\left(\sigma_1,\,\sigma_2,\,\dots,\,\sigma_n\right)} x_1^{\overline{\sigma}_1} \lor x_2^{\overline{\sigma}_2} \lor \dots \lor x_n^{\overline{\sigma}_n} \lor f(\sigma_1,\,\sigma_2,\,\dots,\,\sigma_n)
+\end{equation*}
+
+\section{Найти СДНФ и СКНФ для $f_1(x,\,y,\,z) = x \implies (y \lor \overline{z})$}
+
+\subsection{СДНФ для $f_1$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.38\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $y \lor \overline{z}$ & $x \implies (y \lor \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}    
+    
+    \vspace{0.5em}
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.6\textwidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 1 \implies \overline{xyz} \cdot 1 = \overline{xyz}$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 1 \implies \overline{xy}z \cdot 1 = \overline{xy}z$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x}y\overline{z} \cdot 1 = \overline{x}y\overline{z}$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 1 \implies \overline{x}yz \cdot 1 = \overline{x}yz$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 1 \implies x\overline{yz} \cdot 1 = x\overline{yz}$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies x\overline{y}z \cdot 0 = 0$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 1 \implies xy\overline{z} \cdot 1 = xy\overline{z}$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 1 \implies xyz \cdot 1 = xyz$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+\noindent Ответ: $f(x,\,y,\,z) = \overline{xyz} \lor \overline{xy}z \lor \overline{x}y\overline{z} \lor \overline{x}yz \lor x\overline{yz} \lor xy\overline{z} \lor xyz$.
+
+\subsection{СКНФ для $f_1$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.38\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $y \lor \overline{z}$ & $x \implies (y \lor \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}    
+    
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = \overline x \lor y \lor \overline z$.
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.6\textwidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 1 \implies x \lor y \lor z \lor 1 = 1$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 1 \implies x \lor y \lor \overline{z} \lor 1 = 1$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 1 \implies x\lor \overline{y} \lor z \lor 1 = 1$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 1 \implies x \lor \overline{y} \lor \overline z \lor 1 = 1$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 1 \implies \overline{x} \lor y \lor z \lor 1 = 1$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies \overline{x} \lor y \lor \overline{z} \lor 0 = \overline{x} \lor y \lor \overline{z}$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x} \lor \overline{y} \lor z \lor 1 = 1$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 1 \implies \overline{x} \lor \overline y \lor \overline z \lor 1 = 1$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+
+\subsection{Мн. Жегалкина для $f_1$ I способом}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.38\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $y \lor \overline{z}$ & $x \implies (y \lor \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}    
+    
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = 1 + xz + xyz$.
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.6\textwidth}
+    \vspace{0em}
+    \begin{equation*}
+      \begin{aligned}
+        f(x,\,y,\,z) = a_0 &+ a_1x + a_2y + a_3z + a_{12}xy \ + \\ 
+                           &+ \ a_{13}xz + a_{23}yz + a_{123}xyz
+      \end{aligned}
+    \end{equation*}
+    \begin{equation*}
+      \begin{cases}
+        a_0 = 1 \\
+        a_0 + a_3 = 1 \\
+        a_0 + a_2 = 1 \\
+        a_0 + a_2 + a_3 + a_{23} = 1 \\
+        a_0 + a_1 = 1 \\ 
+        a_0 + a_1 + a_3 + a_{13} = 0 \\
+        a_0 + a_1 + a_2 + a_{12} = 1 \\
+        a_0 + a_1 + a_2 + a_3 + a_{12} + a_{13} + a_{23} + a_{123} = 1
+      \end{cases} \;
+      \begin{cases}
+        a_0 = 1 \\
+        a_3 = 0 \\
+        a_2 = 0 \\
+        a_{23} = 0 \\
+        a_1 = 0 \\ 
+        a_{13} = 1 \\
+        a_{12} = 0 \\
+        a_{123} = 1
+      \end{cases} 
+    \end{equation*}
+  \end{minipage}
+\end{figure}
+
+\subsection{Мн. Жегалкина II способом}
+
+\begin{equation*}
+  \begin{aligned}
+    f(x,\,y,\,z) = x \implies (y \lor \overline{z}) = \overline{x} \lor 
+    (y \lor \overline z) = \overline{x} \lor \overline{\overline{y}z} = \overline{x y\overline{z}} = xy(z + 1) + 1 = 1 + xz + xyz 
+  \end{aligned}
+\end{equation*}
+\noindent Ответ: $f(x,\,y,\,z) = 1 + xz + xyz$.
+
+\section{Найти СДНФ и СКНФ для $f_2(x,\,y,\,z) = (x \implies y) \lor (y \implies z)$}
+
+\subsection{СДНФ для $f_2$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.55\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $x \implies y$ & $y \implies z$ & $(x \implies y) \lor (y \implies z)$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $1$ & $1$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $0$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}
+    
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = \overline{xyz} \lor \overline{xy}z \lor \overline{x}y\overline{z} \lor \overline{x}yz \lor x\overline{yz} \lor x\overline{y}z \lor xy\overline{z} \lor xyz$.
+
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.5\textwidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 1 \implies \overline{xyz} \cdot 1 = \overline{xyz}$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 1 \implies \overline{xy}z \cdot 1 = \overline{xy}z$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x}y\overline{z} \cdot 1 = \overline{x}y\overline{z}$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 1 \implies \overline{x}yz \cdot 1 = \overline{x}yz$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 1 \implies x\overline{yz} \cdot 1 = x\overline{yz}$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies x\overline{y}z \cdot 1 = x\overline{y}z$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 1 \implies xy\overline{z} \cdot 1 = xy\overline{z}$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 1 \implies xyz \cdot 1 = xyz$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+
+\subsection{СКНФ для $f_2$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.53\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $x \implies y$ & $y \implies z$ & $(x \implies y) \lor (y \implies z)$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $1$ & $1$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $0$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}
+    
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = 1$.
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.47\textwidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 1 \implies x \lor y \lor z \lor 1 = 1$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 1 \implies x \lor y \lor \overline{z} \lor 1 = 1$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 1 \implies x\lor \overline{y} \lor z \lor 1 = 1$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 1 \implies x \lor \overline{y} \lor \overline z \lor 1 = 1$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 1 \implies \overline{x} \lor y \lor z \lor 1 = 1$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies \overline{x} \lor y \lor \overline{z} \lor 1 = 1$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x} \lor \overline{y} \lor z \lor 1 = 1$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 1 \implies \overline{x} \lor \overline y \lor \overline z \lor 1 = 1$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+
+\subsection{Мн. Жегалкина для $f_2$ I способом}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.55\textwidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $x \implies y$ & $y \implies z$ & $(x \implies y) \lor (y \implies z)$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $1$ & $1$ \\
+      $0$ & $0$ & $1$ & $1$ & $1$ & $1$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $0$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $0$ & $0$ & $0$ & $1$ & $1$ \\
+      $1$ & $0$ & $1$ & $0$ & $1$ & $1$ \\
+      $1$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+      $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+      \hline  
+    \end{tabularx}
+    
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = 1$.
+  \end{minipage} \hfill 
+  \begin{minipage}[t]{0.5\textwidth}
+    \vspace{0em}
+    \begin{equation*}
+      \begin{aligned}
+        f(x,\,y,\,z) = a_0 &+ a_1x + a_2y + a_3z + a_{12}xy \ + \\ 
+                           &+ \ a_{13}xz + a_{23}yz + a_{123}xyz
+      \end{aligned}
+    \end{equation*}
+    \begin{equation*}
+      \begin{cases}
+        a_0 = 1 \\
+        a_0 + a_3 = 1 \\
+        a_0 + a_2 = 1 \\
+        a_0 + a_2 + a_3 + a_{23} = 1 \\
+        a_0 + a_1 = 1 \\ 
+        a_0 + a_1 + a_3 + a_{13} = 1 \\
+        a_0 + a_1 + a_2 + a_{12} = 1 \\
+        a_0 + a_1 + a_2 + a_3 \ + \\ + \ a_{12} + a_{13} + a_{23} + a_{123} = 1
+      \end{cases} \;
+      \begin{cases}
+        a_0 = 1 \\
+        a_3 = 0 \\
+        a_2 = 0 \\
+        a_{23} = 0 \\
+        a_1 = 0 \\ 
+        a_{13} = 0 \\
+        a_{12} = 0 \\
+        a_{123} = 0
+      \end{cases} 
+    \end{equation*}
+  \end{minipage}
+\end{figure}
+
+\subsection{Мн. Жегалкина для $f_2$ II способом}
+
+\begin{equation*}
+  f(x,\,y,\,z) = (x \implies y) \lor (y \implies z) = (\overline{x} \lor y) \lor (\overline{y} \lor z) = \overline{x\overline{y}} \lor \overline{y\overline{z}} = \overline{x\overline yy\overline{z}} = \overline 0 = 1
+\end{equation*}
+
+\noindent Ответ: $f(x,\,y,\,z) = 1$.
+
+\section{Найти СДНФ и СКНФ для $f_3(x,\,y,\,z) = (x \land y) \iff (x \implies \overline{z})$}
+
+\subsection{СДНФ для $f_3$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.55\linewidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $x \land y$ & $y \implies \overline{z}$ & $(x \land y) \iff (y \implies \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $1$ & $1$ & $0$ & $0$ & $0$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ \\
+      \hline  
+    \end{tabularx}
+
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = \overline{x}yz \lor xy\overline{z}$.
+  \end{minipage} \hfill
+  \begin{minipage}[t]{0.46\linewidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 0 \implies \overline{xyz} \cdot 0 = 0$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 0 \implies \overline{xy}z \cdot 0 = 0$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x}y\overline{z} \cdot 0 = 0$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 0 \implies \overline{x}yz \cdot 1 = \overline{x}yz$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 0 \implies x\overline{yz} \cdot 0 = 0$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies x\overline{y}z \cdot 0 = 0$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 0 \implies xy\overline{z} \cdot 1 = xy\overline{z}$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 1 \implies xyz \cdot 0 = 0$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+
+\subsection{СКНФ для $f_3$}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.55\linewidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $x \land y$ & $y \implies \overline{z}$ & $(x \land y) \iff (y \implies \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $1$ & $1$ & $0$ & $0$ & $0$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ \\
+      \hline  
+    \end{tabularx}
+
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = x \lor y \lor z \land x \lor y \lor \overline{z} \land x\lor \overline{y} \lor z \land \overline{x} \lor y \lor z \land \overline{x} \lor y \lor \overline{z} \land \overline{x} \lor \overline y \lor \overline z$.
+  \end{minipage} \hfill
+  \begin{minipage}[t]{0.46\linewidth}
+    \vspace{0em}
+    \begin{enumerate}
+      \item $\sigma = \{0,\,0,\,0\},\ f_1(\sigma) = 0 \implies x \lor y \lor z \lor 0 = x \lor y \lor z$
+      \item $\sigma = \{0,\,0,\,1\},\ f_1(\sigma) = 0 \implies x \lor y \lor \overline{z} \lor 0 = x \lor y \lor \overline{z}$
+      \item $\sigma = \{0,\,1,\,0\},\ f_1(\sigma) = 0 \implies x\lor \overline{y} \lor z \lor 0 = x\lor \overline{y} \lor z$
+      \item $\sigma = \{0,\,1,\,1\},\ f_1(\sigma) = 1 \implies x \lor \overline{y} \lor \overline z \lor 1 = 1$
+      \item $\sigma = \{1,\,0,\,0\},\ f_1(\sigma) = 0 \implies \overline{x} \lor y \lor z \lor 0 = \overline{x} \lor y \lor z$
+      \item $\sigma = \{1,\,0,\,1\},\ f_1(\sigma) = 0 \implies \overline{x} \lor y \lor \overline{z} \lor 0 = \overline{x} \lor y \lor \overline{z}$
+      \item $\sigma = \{1,\,1,\,0\},\ f_1(\sigma) = 1 \implies \overline{x} \lor \overline{y} \lor z \lor 1 = 1$
+      \item $\sigma = \{1,\,1,\,1\},\ f_1(\sigma) = 0 \implies \overline{x} \lor \overline y \lor \overline z \lor 0 = \overline{x} \lor \overline y \lor \overline z$
+    \end{enumerate}
+  \end{minipage}
+\end{figure}
+
+\subsection{Мн. Жегалкина для $f_3$ I способом}
+
+\begin{figure}[H]
+  \begin{minipage}[t]{0.55\linewidth}
+    \vspace{0em}
+    \begin{tabularx}{\textwidth}{|c|c|c|c|c|c|C|}
+      \hline
+      $x$ & $y$ & $z$ & $\overline{z}$ & $x \land y$ & $y \implies \overline{z}$ & $(x \land y) \iff (y \implies \overline{z})$ \\
+      \hline
+      $0$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\  
+      $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $0$ & $1$ & $1$ & $0$ & $0$ & $0$ & $1$ \\
+      $1$ & $0$ & $0$ & $1$ & $0$ & $1$ & $0$ \\
+      $1$ & $0$ & $1$ & $0$ & $0$ & $1$ & $0$ \\
+      $1$ & $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+      $1$ & $1$ & $1$ & $0$ & $1$ & $0$ & $0$ \\
+      \hline  
+    \end{tabularx}
+
+    \vspace{0.5em}
+    \noindent Ответ: $f(x,\,y,\,z) = xy + yz$.
+  \end{minipage} \hfill
+  \begin{minipage}[t]{0.46\linewidth}
+    \vspace{-1em}
+    \begin{equation*}
+      \begin{aligned}
+        f(x,\,y,\,z) = a_0 &+ a_1x + a_2y + a_3z + a_{12}xy \ + \\ 
+                           &+ \ a_{13}xz + a_{23}yz + a_{123}xyz
+      \end{aligned}
+    \end{equation*}
+    \begin{equation*}
+      \begin{cases}
+        a_0 = 0 \\
+        a_0 + a_3 = 0 \\
+        a_0 + a_2 = 0 \\
+        a_0 + a_2 + a_3 + a_{23} = 1 \\
+        a_0 + a_1 = 0 \\ 
+        a_0 + a_1 + a_3 + a_{13} = 0 \\
+        a_0 + a_1 + a_2 + a_{12} = 1 \\
+        a_0 + a_1 + a_2 + a_3 \ + \\ + \ a_{12} + a_{13} + a_{23} + a_{123} = 0
+      \end{cases} \;
+      \begin{cases}
+        a_0 = 0 \\
+        a_3 = 0 \\
+        a_2 = 0 \\
+        a_{23} = 1 \\
+        a_1 = 0 \\ 
+        a_{13} = 0 \\
+        a_{12} = 1 \\
+        a_{123} = 0
+      \end{cases}
+    \end{equation*}
+  \end{minipage}
+\end{figure}
+
+\vspace{-1.7em}
+
+\subsection{Мн. Жегалкина для $f_3$ II способом}
+
+\begin{equation*}
+\begin{aligned}
+    f(x,\,y,\,z) &= (x \land y) \iff (y \implies \overline z) = xy \iff \overline{yz} = (xy \implies \overline{yz})(xy \impliedby \overline{yz}) = \overline{xyyz} \cdot \overline{\overline{xy} \cdot \overline{yz}} = 
+    \\ 
+    &= (xyz + 1)((xy + 1)(yz + 1) + 1) = xyz(xy + 1)(yz + 1) + xyz + (xy + 1)(yz + 1) + 1 = 
+    \\
+    &= xyz(xyz + xy + yz + 1) + xyz + xyz + xy + yz + 1 + 1 = 
+    \\ 
+    &= xyz + xyz + xyz + xyz + xy + yz = xy + yz
+\end{aligned}
+\end{equation*}
+
+\noindent Ответ: $f(x,\,y,\,z) = xy + yz$.
+
+\end{document}
