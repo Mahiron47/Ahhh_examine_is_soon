@@ -299,4 +299,283 @@ $\phi_3$ и $\phi_5$ принадлежат всем классам Поста, 
 
 \subsection{Выразите все булевы функции двух переменных в базисе $\phi_8$}
 
+\begin{equation*}
+  \begin{matrix}
+    x \downarrow y = \phi_8 &
+    x \downarrow (x \downarrow y) = \phi_4  &
+    (x \downarrow y) \downarrow y = \phi_2 &
+    (x \downarrow y) \downarrow (x \downarrow y) = \phi_7 \\
+    \phi_4 \downarrow y = \phi_{10} &
+    x \downarrow \phi_2 = \phi_{12} &
+    \phi_4 \downarrow \phi_4 = \phi_{11} &
+    \phi_2 \downarrow \phi_2 = \phi_{13} \\
+    \phi_2 \downarrow \phi_4 = \phi_9 &
+    \phi_9 \downarrow \phi_{12} = \phi_1 &
+    \phi_8 \downarrow \phi_7 = \phi_0 &
+    \phi_0 \downarrow \phi_0 = \phi_{15} \\
+    \phi_{12} \downarrow \phi_0 = \phi_3 &
+    \phi_8 \downarrow \phi_2 = \phi_5 &
+    \phi_8 \downarrow \phi_1 = \phi_6 & 
+    \phi_1 \downarrow \phi_0 = \phi_{14}
+  \end{matrix}
+\end{equation*}
+
+\subsection{Выразите функции $\{\phi_0,\,\phi_2,\,\phi_3\}$ в базисе $\{\land,\,\phi_{10}\}$} 
+
+\begin{equation*}
+  \begin{matrix}
+    \phi_{10} \land y = \phi_0 & 
+    x \land \phi_{10} = \phi_2 & 
+    \phi_{10}(x, \phi_{2}) = \phi_{13} \\
+    \phi_{13} \land \phi_{2} = \phi_{12} \\
+    \phi_{10}(x,\, \phi_{12}) = \phi_3
+  \end{matrix}
+\end{equation*}
+
+\section{Булева алгебра}
+
+\subsection{}
+\begin{equation*}
+  \begin{aligned}
+    \begin{cases}
+      (x \lor y)z = 1 \\
+      (x \lor \overline y)z = 1 \\
+      \overline x \lor y \lor \overline z = 1
+    \end{cases}
+    \xRightarrow{z\ =\ 1}
+    \left(\begin{cases}
+      x \lor y = 1 \\
+      x \lor \overline y = 1 \\
+      \overline x \lor y = 1
+    \end{cases}\right)
+    \equiv
+    x \land y = 1
+  \end{aligned}
+  \end{equation*}
+
+\noindent Ответ: $x=1,\,y=1,\,z=1$.
+
+\subsection{}
+ \begin{equation*}
+    \begin{cases}
+      (x \lor y)\overline z = 1 \\
+      (x \lor \overline z)y = 0 \\
+      x \lor \overline y \lor \overline z = 1
+    \end{cases}
+    \xRightarrow{\overline z\ =\ 1}
+    \left(\begin{cases}
+      x \lor y = 1 \\
+      y = 0 \\
+      1 = 1
+    \end{cases}\right)
+    \equiv
+    \begin{cases}
+      x = 1 \\
+      y = 0
+    \end{cases}
+  \end{equation*}
+
+\noindent Ответ: $x = 1,\, y = 0,\, z = 0$.
+
+\subsection{}
+  \begin{equation*}
+    \begin{aligned}
+    \begin{cases}
+      (x \lor y) \implies z = 1 \\
+      (x \lor z)y = 1 \\
+      x \lor \overline y \lor \overline z = 1
+    \end{cases} 
+    \xRightarrow{y\ =\ 1}
+    \begin{cases}
+      1 \implies z = 1 \\
+      x \lor z = 1 \\
+      1 = 1
+    \end{cases}
+    \xRightarrow{z\ =\ 1}
+    \begin{cases}
+      1 = 1 \\
+      1 = 1 \\
+    \end{cases}
+    \end{aligned}
+  \end{equation*}
+
+\noindent Ответ: $x=\{0,\,1\},\,y=1,\,z=1$. 
+
+\subsection{}
+  \begin{equation*}
+    \begin{aligned}
+      \left(\begin{cases}
+        (x \lor y) \implies z = 1 \\
+        (x \lor y)z = 0 \\
+        x \lor y \lor z = 1
+      \end{cases}\right)
+      \equiv
+      \left(\begin{cases}
+        (x \lor y) \implies z = 1 \\
+        (x \lor y) \iff z = 0
+      \end{cases}\right)
+      \equiv
+      \left(\begin{cases}
+        (x \lor y) \implies z = 1 \\
+        ((x \lor y) \implies z) \land ((x \lor y) \impliedby z) = 0   
+      \end{cases}\right) 
+      \equiv \\ \equiv
+      (x \lor y) \impliedby z = 0
+    \end{aligned}
+  \end{equation*}
+
+  \noindent Ответ: $x=0,\,y=0,\,z=1$.
+
+\subsection{}
+  \begin{equation*}
+    \begin{cases}
+      (x \lor y) \implies z = 1 \\
+      (x \lor \overline y) \implies z = 1 \\
+      x \lor y \lor z = 1
+    \end{cases}
+    \xRightarrow{z\ =\ 1}
+    \begin{cases}
+      1 = 1 \\
+      1 = 1 \\
+      1 = 1
+    \end{cases}
+  \end{equation*}
+
+  \noindent Ответ: $x=\{0,\,1\},\,y=\{0,\,1\},z=1$.
+
+\subsection{}
+  \begin{equation*}
+  \begin{aligned}
+  &\left(\begin{cases}
+  (x \iff \overline y) \implies z = 1 \\
+  (x \implies y) \iff z = 1 \\
+  (x \iff y)z = 0
+  \end{cases}\right)
+  \equiv
+  \left(\begin{cases}
+  ((x \implies \overline y) \land (x \impliedby \overline y)) \implies z = 1 \\
+  ((x \implies y) \implies z) \land ((x \implies y) \impliedby z) = 1 \\
+  (x \implies y) \land (x \impliedby y) \land z = 0
+  \end{cases}\right)
+  \equiv \\ \equiv
+  &\left(\begin{cases}
+  \overline{(\overline x \lor \overline y) \land (x \lor y)} \lor z = 1 \\
+  (\overline{\overline x \lor y} \lor z) \land (\overline x \lor y \lor \overline z) = 1 \\
+  (\overline x \lor y) \land (x \lor \overline y) \land z = 0
+  \end{cases}\right)
+  \equiv
+  \left(\begin{cases}
+  \overline{\overline{x \land y} \land \overline{\overline x \land \overline y} \land \overline z} = 1 \\
+  \overline{\overline{ x \land \overline y} \land \overline z} \land \overline{ x \land \overline y \land z} = 1 \\
+  \overline{x \land \overline y} \land \overline{\overline x \land y} \land z = 0
+  \end{cases}\right)
+  \equiv \\ \equiv
+  &\left(\begin{cases}
+  (xy + 1)((x + 1)(y + 1) + 1)(z + 1) + 1 = 1 \\
+  ((x(y + 1) + 1)(z + 1) + 1)(x(y + 1)z + 1) = 1 \\
+  (x(y + 1) + 1)((x + 1) y + 1)z = 0
+  \end{cases}\right)
+  \equiv \\ \equiv
+  &\left(\begin{cases}
+  (xy + xy + xy + xy + x + y)(z + 1) + 1 = 1 \\
+  (xyz + xy + xz + x + z)(xyz + xz + 1) = 1 \\
+  (xy + xy + xy + xy + xy + xy + x + y + 1)z = 0
+  \end{cases}\right)
+  \equiv \\ \equiv
+  &\left(\begin{cases}
+  (x + y)(z + 1) + 1 = 1 \\
+  xy + x + z = 1 \\
+  (x + y + 1)z = 0
+  \end{cases}\right)
+  \equiv
+  \left(\begin{cases}
+  xz + yz + x + y = 0 \\
+  xy + x + z + 1 = 0 \\
+  xz + yz + z = 0
+  \end{cases}\right)
+  \equiv
+  \left(\begin{cases}
+  x + y + z = 0 \\
+  xy + y + 1 = 0
+  \end{cases}\right)
+  \end{aligned}
+  \end{equation*}
+
+  \noindent Ответ:
+  \begin{equation*}
+  \left(\begin{matrix}
+  x \\
+  y \\
+  z
+  \end{matrix}\right) =
+  \left\{
+  \begin{matrix}
+  \left(\begin{matrix}
+  0 \\
+  1 \\
+  1
+  \end{matrix}\right)
+  \end{matrix}
+  \right\}
+  \end{equation*}
+
+  \noindent\begin{tabularx}{\textwidth}{|c|c|c|c|X|}
+    \hline
+    $x$ & $y$ & $z$ & $x + y + z$ & $xy + y + 1$ \\
+    \hline
+    $0$ & $0$ & $0$ & $0$ & $1$ \\
+    $0$ & $0$ & $1$ & $1$ & $1$ \\
+    $0$ & $1$ & $0$ & $1$ & $0$ \\
+    $0$ & $1$ & $1$ & $0$ & $0$ \\
+    $1$ & $0$ & $0$ & $1$ & $1$ \\
+    $1$ & $0$ & $1$ & $0$ & $1$ \\
+    $1$ & $1$ & $0$ & $0$ & $1$ \\
+    $1$ & $1$ & $1$ & $1$ & $1$ \\
+    \hline
+  \end{tabularx}
+
+\subsection{}
+  \begin{equation*}
+    \begin{cases}
+      (x \iff y) \iff z = 0 \\
+      (x \implies y) \iff \overline z = 1 \\
+      (\overline x \iff \overline y) \implies z = 1
+    \end{cases}
+  \end{equation*}
+
+  \noindent Ответ:
+  \begin{equation*}
+  \left(\begin{matrix}
+  x \\
+  y \\
+  z
+  \end{matrix}\right) =
+  \left\{
+  \begin{matrix}
+  \left(\begin{matrix}
+  1 \\
+  0 \\
+  1
+  \end{matrix}\right)
+  \end{matrix}
+  \right\}
+  \end{equation*}
+
+  \vspace{0.5em}
+
+  \noindent\begin{tabularx}{\textwidth}{|c|c|c|c|c|X|}
+    \hline
+    $x$ & $y$ & $z$ & $(x \iff y) \iff z + 1$ & $(x \implies y) \iff \overline z$ & $(\overline x \iff \overline y) \implies z$ \\
+    \hline
+    $0$ & $0$ & $0$ & $1$ & $1$ & $0$ \\
+    $0$ & $0$ & $1$ & $0$ & $0$ & $1$ \\
+    $0$ & $1$ & $0$ & $0$ & $1$ & $1$ \\
+    $0$ & $1$ & $1$ & $1$ & $0$ & $1$ \\
+    $1$ & $0$ & $0$ & $0$ & $0$ & $1$ \\
+    $1$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+    $1$ & $1$ & $0$ & $1$ & $1$ & $0$ \\
+    $1$ & $1$ & $1$ & $0$ & $0$ & $1$ \\
+    \hline
+  \end{tabularx}
+
 \end{document}
