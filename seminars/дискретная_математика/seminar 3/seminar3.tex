@@ -47,6 +47,7 @@
 \usepackage{listings}						% Для отображения кода
 \usepackage{tabularx}       				% Для таблиц во всю ширину
 \usepackage{array}		  					% Для расширенных возможностей таблиц
+\usepackage{cancel}                % Перечёркивать
 \usepackage{float}          				% Для точного позиционирования фигур
 \usepackage{pgfplots}                          % Для построения графиков
 \usepackage{caption}                           % Для настройки подписей к рисункам и таблицам
@@ -60,6 +61,7 @@
             right=10mm,
             footskip=0.4in 
 ]{geometry}
+\usepackage{colortbl}
 
 \usetikzlibrary{arrows.meta}
 
@@ -163,3 +165,138 @@ function value_with_mantice(value, precision, shift, scale)
 end
 
 \end{luacode*}
+
+\begin{document}
+
+\section{Критерий Поста}
+
+\noindent Полный набор функций от двух переменных
+
+\vspace{0.5em}
+
+\noindent\begin{tabularx}{\linewidth}{|C|C|C|C|C|C|C|C|C|C|C|c|C|c|C|c|C|C|}
+  \hline
+  $x$ & $y$ & $\phi_0$ & $\land$ & $\phi_2$ & $\phi_3$ & $\phi_4$ & $\phi_5$ & $+$ & $\lor$ & $\downarrow$ & $\iff$ & $\phi_{10}$ & $\impliedby$ & $\phi_{12}$ & $\implies$ & $|$ & $\phi_{15}$ \\
+  \hline
+  $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ \\
+  $0$ & $1$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ & $0$ & $0$ & $0$ & $0$ & $1$ & $1$ & $1$ & $1$ \\
+  $1$ & $0$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ & $0$ & $0$ & $1$ & $1$ \\
+  $1$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ & $0$ & $1$ \\
+  \hline
+\end{tabularx} 
+
+\vspace{0.5em}
+
+\noindent Классы Поста для функций двух переменных
+
+\vspace{0.5em}
+
+\noindent\begin{tabularx}{\linewidth}{|c|c|c|c|c|c|X|}
+  \hline
+               & $T_0$ & $T_1$ & $S$ & $M$ & $L$ & Мн. Жегалкина \\
+  \hline
+  $\phi_0$     &  $1$  &  $0$  & $0$ & $1$ & $1$ & $0$ \\
+  $\land$      &  $1$  &  $1$  & $0$ & $1$ & $0$ & $xy$ \\
+  $\phi_2$     &  $1$  &  $0$  & $0$ & $0$ & $0$ & $x + xy$ \\
+  $\phi_3$     &  $1$  &  $1$  & $1$ & $1$ & $1$ & $x$ \\
+  $\phi_4$     &  $1$  &  $0$  & $0$ & $0$ & $0$ & $y + xy$ \\
+  $\phi_5$     &  $1$  &  $1$  & $1$ & $1$ & $1$ & $y$ \\
+  $+$          &  $1$  &  $0$  & $0$ & $0$ & $1$ & $x + y$ \\
+  $\lor$       &  $1$  &  $1$  & $0$ & $1$ & $0$ & $x + y + xy$ \\
+  $\downarrow$ &  $0$  &  $0$  & $0$ & $0$ & $0$ & $1 + x + y + xy$ \\
+  $\iff$       &  $0$  &  $1$  & $0$ & $0$ & $1$ & $1 + x + y$ \\
+  $\phi_{10}$  &  $0$  &  $0$  & $1$ & $0$ & $1$ & $1 + y$ \\
+  $\impliedby$ &  $0$  &  $1$  & $0$ & $0$ & $0$ & $1 + y + xy$ \\
+  $\phi_{12}$  &  $0$  &  $0$  & $1$ & $0$ & $1$ & $1 + x$ \\
+  $\implies$   &  $0$  &  $1$  & $0$ & $0$ & $0$ & $1 + x + xy$ \\
+  $\phi_{14}$  &  $0$  &  $0$  & $0$ & $0$ & $0$ & $1 + xy$ \\
+  $\phi_{15}$  &  $0$  &  $1$  & $0$ & $1$ & $1$ & $1$ \\
+  \hline
+\end{tabularx}
+
+\subsection{Образуют ли системы булевых функций базис?}
+\begin{enumerate}
+  \renewcommand{\labelenumi}{\asbuk{enumi})}
+  \item $\mathcal{B} = \{\phi_0,\,\phi_1,\,\phi_{15}\}$
+  \item $\mathcal{B} = \{\phi_2,\,\phi_{10},\,\phi_{11}\}$
+  \item $\mathcal{B} = \{\phi_6,\,\phi_7,\,\phi_{9}\}$
+\end{enumerate}
+
+\subsubsection{Образует ли система булевых функций а) базис?}
+
+\noindent\begin{tabularx}{\linewidth}{|c|c|c|c|c|c|X|}
+  \hline
+               & $T_0$ & $T_1$ & \textcolor{red}{$S$} & \textcolor{red}{$M$} & $L$ & Мн. Жегалкина \\
+  \hline
+  $\phi_0$     &  $1$  &  $0$  & $0$ & $1$ & $1$ & $0$ \\
+  $\land$      &  $1$  &  $1$  & $0$ & $1$ & $0$ & $xy$ \\
+  $\phi_{15}$  &  $0$  &  $1$  & $0$ & $1$ & $1$ & $1$ \\
+  \hline
+\end{tabularx}
+
+\vspace{0.5em}
+\noindent Ответ: система не образует базис.
+
+\subsubsection{Образует ли система булевых функций б) базис?}
+
+\noindent\begin{tabularx}{\linewidth}{|c|c|c|c|c|c|X|}
+  \hline
+               & \textcolor{red}{$T_0$} & \textcolor{red}{$T_1$} & \textcolor{red}{$S$} & \textcolor{red}{$M$} & \textcolor{red}{$L$} & Мн. Жегалкина \\
+  \hline
+  $\phi_2$     &  $1$  &  $0$  & $0$ & $0$ & $0$ & $x + xy$ \\
+  $\phi_{10}$  &  $0$  &  $0$  & $1$ & $0$ & $1$ & $1 + y$ \\
+  $\impliedby$ &  $0$  &  $1$  & $0$ & $0$ & $0$ & $1 + y + xy$ \\
+  \hline
+\end{tabularx}
+
+\vspace{0.5em}
+\noindent Ответ: система не образует базис.
+
+\subsubsection{Образует ли система булевых функций в) базис?}
+
+\noindent\begin{tabularx}{\linewidth}{|c|c|c|c|c|c|X|}
+  \hline
+               & $T_0$ & $T_1$ & \textcolor{red}{$S$} & \textcolor{red}{$M$} & $L$ & Мн. Жегалкина \\
+  \hline
+  $+$          &  $1$  &  $0$  & $0$ & $0$ & $1$ & $x + y$ \\
+  $\lor$       &  $1$  &  $1$  & $0$ & $1$ & $0$ & $x + y + xy$ \\
+  $\iff$       &  $0$  &  $1$  & $0$ & $0$ & $1$ & $1 + x + y$ \\
+  \hline
+\end{tabularx}
+
+\vspace{0.5em}
+\noindent Ответ: система не образует базис.
+
+\subsection{Найдите все базисы, состоящие из двух булевых функций двух переменных.}
+
+Так как необходимо из двух булевых функций получить по одному исключению каждого 
+класса Поста, то исключаются функции самобазисы $\downarrow$ и $\phi_{14}$. Функции
+$\phi_3$ и $\phi_5$ принадлежат всем классам Поста, поэтому с ними невозможно
+образовать минимальную систему, какой является базис. Для функций $\phi_0$, 
+$\phi_2$, $\phi_4$, $+$, $\iff$, $\phi_{15}$, $\implies$ и $\impliedby$ нет пар 
+функций. Остаются $\land$ и $\lor$ с $\phi_{10}$ и $\phi_{12}$.  
+\begin{enumerate}
+  \item $\mathcal{B} = \{\phi_{10},\,\land\}$
+  \item $\mathcal{B} = \{\phi_{10},\,\lor\}$
+  \item $\mathcal{B} = \{\phi_{12},\,\land\}$
+  \item $\mathcal{B} = \{\phi_{12},\,\lor\}$
+\end{enumerate}  
+
+\subsection{Найдите все базисы, состоящие их трёх булевых функций двух переменных.}
+
+Так как необходимо из двух булевых функций получить по одному исключению каждого 
+класса Поста, то исключаются функции самобазисы $\downarrow$ и $\phi_{14}$. Функции
+$\phi_3$ и $\phi_5$ принадлежат всем классам Поста, поэтому с ними невозможно
+образовать минимальную систему, какой является базис. Сами комбинации ищутся перебором
+\begin{enumerate}
+  \item $\mathcal{B} = \{\land,\,+,\,\iff\}$
+  \item $\mathcal{B} = \{\land,\,+,\,\phi_{15}\}$
+  \item $\mathcal{B} = \{\land,\,\phi_0,\,\iff\}$
+  \item $\mathcal{B} = \{\lor,\,+,\,\iff\}$
+  \item $\mathcal{B} = \{\lor,\,+,\,\phi_{15}\}$
+  \item $\mathcal{B} = \{\lor,\,\phi_0,\,\iff\}$
+\end{enumerate}
+
+\subsection{Выразите все булевы функции двух переменных в базисе $\phi_8$}
+
+\end{document}
