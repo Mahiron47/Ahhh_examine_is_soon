@@ -1,0 +1,12 @@
+3
+Quadratic plot inverse
+Exponent plot inverse
+Linear function
+0 
+1 0 0
+1
+-1 -3 1
+2 
+1 -7 2
+3 
+-1 -20 3

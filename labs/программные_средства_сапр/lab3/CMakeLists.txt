@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic -Werror")
 
 add_subdirectory(src)
-add_subdirectory(instance)
+add_subdirectory(instance/solution-maximum)
 
 enable_testing()
 

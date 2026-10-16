@@ -1,93 +1,155 @@
-#ifndef WINDOWHPP
-#define WINDOWHPP
+#ifndef WINDOW_HPP
+#define WINDOW_HPP
 
-#include "window/strategy/InitWindowStrategy.hpp"
+#include "window/strategy/IinitWindowStrategy.hpp"
 
-#define Window Window_T*
 
 class Window_T {
+    static const LPCTSTR window_class_name;
     static bool window_class_registred;
 
-    HWND      _hwnd;
-    HINSTANCE _hinstance;
-    int       _n_cmd_show;
-    bool      _is_showed;
+    HINSTANCE            _h_instance;
+    HWND                 _h_wnd;
+    IinitWindowStrategy* _i_strategy;
 
-    static int64_t __stdcall WindowProtocol(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+    Window_T(HINSTANCE h_instance, 
+             IinitWindowStrategy* init_window_strategy) : _h_instance(h_instance),
+                                                          _i_strategy(init_window_strategy) {}
 
-    }
 public: 
-    static Window Init(HINSTANCE hinstance);
-    static void Destroy(Window instance);
+    static Window init(HINSTANCE, IinitWindowStrategy*);
+    static void destroy(Window);
 
-    void show(std::function<void(const MSG&)> func = [](const MSG&) -> void {}) {
-        ShowWindow(_hwnd, _n_cmd_show);
-        UpdateWindow(_hwnd);
+    constexpr void set_h_wnd(HWND h_wnd) noexcept {
+        _h_wnd = h_wnd;
+    }
+
+    constexpr std::deque<Igraphic*>& get_graphics() const noexcept {
+        return _i_strategy->get_graphics();
+    }
+    constexpr std::deque<Igraphic*>& get_graphics() noexcept {
+        return _i_strategy->get_graphics();
+    }
+    constexpr std::deque<IhotKey*>& get_hot_key() const noexcept {
+        return _i_strategy->get_hot_key();
+    }
+    constexpr std::deque<IhotKey*>& get_hot_key() noexcept {
+        return _i_strategy->get_hot_key();
+    }
+    WindowExtentPackage get_extent() const noexcept {
+        RECT client_rect = {};
+        GetClientRect(_h_wnd, &client_rect);
+
+        return WindowExtentPackage {
+            .width  = sc<u32>(client_rect.right - client_rect.left),
+            .height = sc<u32>(client_rect.bottom - client_rect.top)
+        };
+    }
+
+    // Execute the window
+    // @param func function to execute on each message received by the window:
+    // - handle the non hwnd messages (PostThreadMessage where hwnd is NULL) in the function
+    // - handle messages from other HWNDs in the function
+    void execute_window(std::function<void(HWND, const MSG&)> func = [](HWND, const MSG&) -> void {}) {
+        ShowWindow(_h_wnd, _i_strategy->get_n_cmd_show());
+        UpdateWindow(_h_wnd);
 
         MSG msg;
+        BOOL b_ret;
 
-        while (GetMessage(&msg, NULL, 0, 0)) {
-            func(msg);
+        while ((b_ret = GetMessage(&msg, NULL, 0, 0)) != 0) {
+            if (b_ret == -1) throw std::runtime_error("Window_T::execute_window : return error of window.");
+            
+            func(_h_wnd, msg);
 
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
     }
 
-    Window_T(Window_T&& other) noexcept {
-
+    template<typename... Args> requires (GET_HANDLER(Igraphic) && ...)
+    Window add_graphic(Args*... graphic_stack) {
+        ([this](auto* arg) -> void {
+            _i_strategy->get_graphics().push_back(arg);
+        }(graphic_stack), ...);    
+        PostMessage(_h_wnd, WM_APP | MESSAGE_ID_INIT, 0, 0);
+        return this;
     }
-    Window_T& operator=(Window_T&& other) noexcept {
-        if (this == &other) return *this;
-
-        return *this;
+    template<typename... Args> requires (GET_HANDLER(IhotKey) && ...)
+    Window add_hotkey(Args*... hotkey_stack) {
+        ([this](auto* arg) -> void {
+            _i_strategy->get_hot_key().push_back(arg);
+        }(hotkey_stack), ...);      
+        PostMessage(_h_wnd, WM_APP | MESSAGE_ID_INIT, 0, 0);
+        return this;
     }
+
+   ~Window_T() {
+        if (_h_wnd) DestroyWindow(_h_wnd);
+        if (_i_strategy) delete _i_strategy;
+    }
+    Window_T(Window_T&& other) noexcept : _h_instance(other._h_instance),
+                                          _h_wnd(other._h_wnd),
+                                          _i_strategy(other._i_strategy) {
+        other._i_strategy = nullptr;
+        other._h_instance = nullptr;
+        other._h_wnd = nullptr;
+    }
+    Window_T& operator=(Window_T&& other) noexcept = delete;
     Window_T(const Window_T&) = delete;
     Window_T& operator=(const Window_T&) = delete;
 };
 
+inline const LPCTSTR Window_T::window_class_name = TEXT("PlotDrawer");
 inline bool Window_T::window_class_registred = false;
 
-inline Window Window_T::Init(HINSTANCE hinstance) {
+inline Window Window_T::init(HINSTANCE h_instance, IinitWindowStrategy* i_strategy) {
     if (!window_class_registred) {
         WNDCLASSEX wcex = {
             .cbSize = sizeof(WNDCLASSEX),
-            .style = CS_HREDRAW | CS_VREDRAW,
-            .lpfnWndProc = Window_T::WindowProtocol,
+            .style = i_strategy->get_window_style(),
+            .lpfnWndProc = i_strategy->get_window_protocol(),
             .cbClsExtra = 0,
             .cbWndExtra = 0,
-            .hInstance = hinstance,
-            .hIcon = LoadIcon(hinstance, MAKEINTRESOURCE(IDI_APPLICATION)),
+            .hInstance = h_instance,
+            .hIcon = LoadIcon(h_instance, IDI_APPLICATION),
             .hCursor = LoadCursor(NULL, IDC_ARROW),
             .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
             .lpszMenuName = NULL,
-            .lpszClassName = "ClassName",
-            .hIconSm = LoadIcon(hinstance, MAKEINTRESOURCE(IDI_APPLICATION))
+            .lpszClassName = window_class_name,
+            .hIconSm = LoadIcon(h_instance, IDI_APPLICATION)
         };
     
         if (!RegisterClassEx(&wcex)) {
-            MessageBox(NULL, "Can’t register window class!", "Win32 API Test", NULL);
+            MessageBox(NULL, "Can’t register window class!", "Win32 API Test", 0);
             throw std::runtime_error("Window::Init : can’t register window class.");
         }
 
         window_class_registred = true;
     }
 
-    HWND hwnd = CreateWindow("ClassName", "WindowName", 
-                             WS_OVERLAPPEDWINDOW, 
-                             CW_USEDEFAULT, CW_USEDEFAULT, 500, 400, 
-                             NULL, NULL, hinstance, NULL);
+    Window window = new Window_T(h_instance, i_strategy);
+
+    HWND hwnd = CreateWindow(window_class_name, i_strategy->get_class_name(), 
+                             i_strategy->get_instance_style(), 
+                             i_strategy->get_window_position_package().pos_x, i_strategy->get_window_position_package().pos_y, 
+                             i_strategy->get_window_position_package().width, i_strategy->get_window_position_package().height, 
+                             NULL, NULL, h_instance, window);
+
+    window->set_h_wnd(hwnd);
 
     if (!hwnd) {
-      MessageBox(NULL, "Can’t create window!", "Win32 API Test", NULL);
-      throw std::runtime_error("Window::Init : can’t create window.");
+        MessageBox(NULL, "Can’t create window!", "Win32 API Test", 0);
+        throw std::runtime_error("Window::Init : can’t create window.");
     }
 
-    return nullptr;
+    return window;
 }
 
-inline void Window_T::Destroy(Window instance) {
+inline void Window_T::destroy(Window instance) {
     delete instance;
 }
 
-#endif // WINDOWHPP
+#include "window/strategy/realization/InitMainWindow.hpp"
+
+#endif // WINDOW_HPP

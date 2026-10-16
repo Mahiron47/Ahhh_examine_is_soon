@@ -1,0 +1,157 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+\setmainfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\newfontfamily\cyrillicfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+
+\usepackage{graphicx}        					% Графика
+\usepackage{amsmath, amsfonts, amssymb, amsthm}	% Математика
+\usepackage{mathtools}
+\usepackage{chemfig}
+\usepackage[version=4,arrows=pgf-filled,
+            textfontname=sffamily,
+            mathfontname=mathsf]{mhchem}
+\usepackage[protrusion=false]{microtype}       % Микротипографика
+\usepackage{braket} 						% Braket нотация для квантовой механики
+\usepackage{unicode-math} 					% Современный пакет для математики в LuaLaTeX
+\usepackage{longtable}       				% Таблицы с разрывом страниц
+\usepackage{tikz}           				% Рисование
+\usepackage[europeanresistors]{circuitikz}	% Рисование электрических схем в европейском стиле
+\usepackage{listings}						% Для отображения кода
+\usepackage{tabularx}       				% Для таблиц во всю ширину
+\usepackage{array}		  					% Для расширенных возможностей таблиц
+\usepackage{float}          				% Для точного позиционирования фигур
+\usepackage{pgfplots}                          % Для построения графиков
+\usepackage{caption}                           % Для настройки подписей к рисункам и таблицам
+\usepackage{xfp}                               % Для вычислений в LaTeX
+\usepackage{luacode}                           % Для выполнения Lua-кода в документе    
+\pgfplotsset{compat=1.18}
+\usepackage[paper=letterpaper,
+            top=20mm,
+            bottom=20mm,
+            left=10mm,
+            right=10mm,
+            footskip=0.4in 
+]{geometry}
+
+\usetikzlibrary{arrows.meta}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+% --- Теоремы и окружения ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand\lstlistingname{Исходный код}
+
+\lstdefinestyle{main}{
+	backgroundcolor=\color{gray!8},   
+	commentstyle=\color{green!50!black},
+	keywordstyle=\color{blue!80!black},
+	numberstyle=\small\color{darkgray},
+	stringstyle=\rmfamily\color{orange!90!black},
+	basicstyle=\ttfamily\small,
+	breakatwhitespace=false,         
+	breaklines=true,                   
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=8pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=4
+}	
+
+\lstset{style=main}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{luacode*}
+    data = require("data")
+    include = require("include")
+    handle = require("handle")
+\end{luacode*}
+
+\begin{document}
+
+\section{\large\textnormal{В объеме полупроводникового прибора генерируются 
+электронно-дырочные пары. В момент времени $t = 0$ генерация прекращается. \\
+- В момент времени $t_1$ концентрация избыточных носителей $\Delta n(t_1)$ \\
+- В момент времени $t_2$ концентрация избыточных носителей $\Delta n(t_2)$ \\
+Избыточные носители распределены равномерно по объему полупроводника. \\
+Значения $t_1$, $t_2$, $\Delta n(t_1)$, $\Delta n(t_2)$ заданы в соответствии с вариантом. \\
+Найти: $\Delta n(0)$ и $\tau_n$ (время жизни носителей заряда – электронов)}}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.3\textwidth}
+    \begin{tabularx}{\textwidth}{|X|}
+        \hline
+        \multicolumn{1}{|C|}{Дано} \\
+        \hline
+        $t_1 = 10^{-7}$ с \\
+        $t_2 = 10^{-6}$ с \\
+        $\Delta n(t_1) = 10^{18}$ см$^{-3}$ \\
+        $\Delta n(t_2) = 10^{17}$ см$^{-3}$ \\
+        $t = 0$ с — генерация прекращается \\
+        \hline
+        \multicolumn{1}{|C|}{Найти} \\
+        \hline
+        $\Delta n(0)$ — ? \\
+        $\tau_n$ — ? \\
+        \hline
+    \end{tabularx}
+\end{minipage}\hfill\begin{minipage}[t]{0.59\textwidth}
+    
+\end{minipage}
+
+
+
+\end{figure}
+
+\end{document}
