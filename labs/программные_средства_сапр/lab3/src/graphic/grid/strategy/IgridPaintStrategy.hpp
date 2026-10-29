@@ -4,14 +4,15 @@
 class IgridPaintStrategy {
 protected:
     u16 _line_width;
+    COLORREF _color;
 
 public:
-    constexpr IgridPaintStrategy(u16 line_width = 1) : _line_width(line_width) {}
+    constexpr IgridPaintStrategy(u16 line_width = 1, COLORREF color = RGB(0, 0, 0)) : _line_width(line_width), _color(color) {}
     
     virtual void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, 
-                            CellSizeType cell_factor, COLORREF color) = 0;
+                            CellSizeType cell_factor) = 0;
     virtual void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, 
-                            CellCountType cell_factor, COLORREF color) = 0;
+                            CellCountType cell_factor) = 0;
 
     virtual ~IgridPaintStrategy() = default;
 };

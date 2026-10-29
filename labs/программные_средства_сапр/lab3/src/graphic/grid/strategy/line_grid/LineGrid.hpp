@@ -5,9 +5,9 @@ class LineGrid : public IgridPaintStrategy {
 public:
     constexpr LineGrid(u16 line_width) : IgridPaintStrategy(line_width) {}
 
-    void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, CellSizeType cell_factor, COLORREF color) override {
+    void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, CellSizeType cell_factor) override {
         HPEN old_pen;
-        HPEN pen = PaintTools::TakePen(h_dc, color, old_pen);
+        HPEN pen = PaintTools::TakePen(h_dc, this->_color, old_pen);
 
         f64 width  = position_extent_package.width - 0.5f;
         f64 height = position_extent_package.height - 0.5f;
@@ -24,9 +24,9 @@ public:
      
         PaintTools::ResetPen(h_dc, old_pen, pen);
     }
-    void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, CellCountType cell_factor, COLORREF color) override {
+    void paint_grid(HDC h_dc, const GraphicPositionExtentPackage& position_extent_package, CellCountType cell_factor) override {
         HPEN old_pen;
-        HPEN pen = PaintTools::TakePen(h_dc, color, old_pen);
+        HPEN pen = PaintTools::TakePen(h_dc, this->_color, old_pen);
 
         f64 width  = position_extent_package.width - 0.5f;
         f64 height = position_extent_package.height - 0.5f;

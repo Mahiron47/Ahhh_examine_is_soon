@@ -42,11 +42,17 @@ function include.value_with_mantice(value, precision, shift, scale)
   end
 end
 
-function include.pgf_plot_wrap(title, 
-                               xlabel, ylabel, 
+function include.pgf_plot_wrap(title,
+                               xlabel, ylabel, legend_pos,
                                multiplicator_x, multiplicator_y,
                                ...)
   local args = {...}
+
+  if legend_pos == nil then
+    legend_pos = "north west"
+  end
+
+  
 
   local function compare_func(array, literal, func)
     local val = 0
@@ -76,9 +82,29 @@ function include.pgf_plot_wrap(title,
     return compare_func(array, literal, math.max)
   end
 
+  -- Определение, появится ли вынесенный множитель шкалы (scaled y ticks) в левом верхнем углу
+  local max_abs_y = math.max(math.abs(max(args, "y")), math.abs(min(args, "y")))
+  local has_y_scale = (max_abs_y >= 1e4) or (max_abs_y > 0 and max_abs_y <= 1e-3)
+
+  -- Оценка длины заголовка (в символах UTF-8)
+  local title_len = 0
+  if title and title ~= "" then
+    local ok, len = pcall(function() return utf8.len(title) end)
+    title_len = (ok and len) or math.floor(string.len(title) / 2)
+  end
+
+  -- Если есть множитель шкалы и заголовок достаточно длинный, сдвигаем заголовок вверх (yshift)
+  local title_shift_opt = ""
+  if has_y_scale and title_len > 12 * (multiplicator_x or 1) then
+    title_shift_opt = "    title style={yshift=1.5em}, "
+  end
+
   tex.sprint("\\begin{tikzpicture}")
   tex.sprint("\\begin{axis}[")
   tex.sprint("    title={" .. title .. "}, ")
+  if title_shift_opt ~= "" then
+    tex.sprint(title_shift_opt)
+  end
   tex.sprint("    xlabel={" .. xlabel .. "}, ")
   tex.sprint("    ylabel={" .. ylabel .. "}, ")
   tex.sprint("    width=" .. multiplicator_x .. "\\textwidth, ")
@@ -87,7 +113,7 @@ function include.pgf_plot_wrap(title,
   tex.sprint("    grid style={dashed, gray!30}, ")
   tex.sprint("    xmin=" .. -0.1 * max(args, "x") + min(args, "x") .. ", xmax=" .. 1.1 * max(args, "x") .. ", ")
   tex.sprint("    ymin=" .. -0.1 * max(args, "y") + min(args, "y") .. ", ymax=" .. 1.1 * max(args, "y") .. ", ")
-  tex.sprint("    legend pos=north west ")
+  tex.sprint("    legend pos=" .. legend_pos .. ", ")
   tex.sprint("]")
 
   for i = 1, #args do

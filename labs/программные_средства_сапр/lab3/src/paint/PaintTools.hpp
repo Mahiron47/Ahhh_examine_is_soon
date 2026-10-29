@@ -61,8 +61,9 @@ public:
         Polyline(h_dc, points, num_points);
     }
     static void PaintCross(HDC h_dc, i32 x, i32 y, u32 size) {
-        PaintLine(h_dc, x - sc<i32>(size / 2), y, x + sc<i32>(size / 2), y);
-        PaintLine(h_dc, x, y - sc<i32>(size / 2), x, y + sc<i32>(size / 2));
+        i32 s = sc<i32>(size);
+        PaintLine(h_dc, x - s, y - s, x + s + 1, y + s + 1);
+        PaintLine(h_dc, x - s, y + s, x + s + 1, y - s - 1);
     }
 
 };

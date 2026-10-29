@@ -121,8 +121,8 @@
 
 \section{\large\textnormal{В объеме полупроводникового прибора генерируются 
 электронно-дырочные пары. В момент времени $t = 0$ генерация прекращается. \\
-- В момент времени $t_1$ концентрация избыточных носителей $\Delta n(t_1)$ \\
-- В момент времени $t_2$ концентрация избыточных носителей $\Delta n(t_2)$ \\
+- В момент времени $t_1$ концентрация избыточных носителей $\Delta n(t_1)$, \\
+- В момент времени $t_2$ концентрация избыточных носителей $\Delta n(t_2)$. \\
 Избыточные носители распределены равномерно по объему полупроводника. \\
 Значения $t_1$, $t_2$, $\Delta n(t_1)$, $\Delta n(t_2)$ заданы в соответствии с вариантом. \\
 Найти: $\Delta n(0)$ и $\tau_n$ (время жизни носителей заряда – электронов)}}
@@ -130,6 +130,7 @@
 \begin{figure}[H]
 \centering
 \begin{minipage}[t]{0.3\textwidth}
+    \vspace{0em}
     \begin{tabularx}{\textwidth}{|X|}
         \hline
         \multicolumn{1}{|C|}{Дано} \\
@@ -146,12 +147,457 @@
         $\tau_n$ — ? \\
         \hline
     \end{tabularx}
-\end{minipage}\hfill\begin{minipage}[t]{0.59\textwidth}
+
+    \begin{equation*}
+        \begin{cases}
+            \Delta n(t_1) = \Delta n(0) e^{-\frac{t_1}{\tau_n}} \\
+            \Delta n(t_2) = \Delta n(0) e^{-\frac{t_2}{\tau_n}}
+        \end{cases}
+    \end{equation*}
     
-\end{minipage}
+    $\tau_n$ легко выразить как
+    \begin{equation*}
+        \begin{aligned}
+            \frac{\Delta n(t_1)}{\Delta n(t_2)} = e^{\frac{t_2 - t_1}{\tau_n}} \Longrightarrow 
+            \\ 
+            \Longrightarrow \tau_n = \frac{t_2 - t_1}{\ln\left(\frac{\Delta n(t_1)}{\Delta n(t_2)}\right)}
+        \end{aligned}
+    \end{equation*}
+    из известного $\tau_n$ можно найти
+    \begin{equation*}
+        \Delta n(0) = \Delta n(t_1) e^{\frac{t_1}{\tau_n}} = \Delta n(t_2) e^{\frac{t_2}{\tau_n}}
+    \end{equation*}
 
+    \begin{equation*}
+        \tau_n = \frac{10^{-6} - 10^{-7}}{\ln\left(\frac{10^{18}}{10^{17}}\right)} = 
+        \directlua{
+            tau_n = (10^(-6) - 10^(-7)) / math.log(10^(18) / 10^(17))
+        
+            tex.sprint(include.value_with_mantice(tau_n, 2, 0, 0))
+        }
+        \text{ с}
+    \end{equation*}
+    \begin{equation*}
+        \displaystyle{\Delta n(0) = 10^{18} e^{\frac{10^{-7}}{\directlua{
+            tex.sprint(include.value_with_mantice(tau_n, 2, 0, 0))
+        }}} = \directlua{
+            delta_n_0 = 10^(18) * math.exp(10^(-7) / tau_n)
 
+            tex.sprint(include.value_with_mantice(delta_n_0, 2, 0, 0))
+        }
+        \text{ см$^{-3}$}}
+    \end{equation*}
+\end{minipage}\hfill\begin{minipage}[t]{0.7\textwidth}
+\vspace{0em}
+\begin{tabularx}{\textwidth}{C|}
+    \hline
+    Решение \\
+    \hline
+\end{tabularx}
 
+\vspace{0.5em}
+\hspace{0.5em}
+\begin{minipage}[t]{0.95\textwidth}
+$n_0$ — концентрация носителей заряда в состоянии равновесия (в отсутствии генерации) 
+
+\begin{equation*}
+    \frac{d(\Delta n)}{dt} = -\frac{\Delta n}{\tau_n} \Longrightarrow \Delta n(t) = \Delta n(0) e^{-\frac{t}{\tau_n}}
+\end{equation*}
+
+\directlua{
+    local func = handle.delta_n:new(delta_n_0, tau_n)
+    local x = { 0.1e-7, 1e-7, 5e-7, 1e-6, 2e-6, 5e-6 }
+    local table_delta_n = {
+        "red!70!black",
+        "*",
+        "2pt",
+        nil,
+        x, func:get_values(x)
+    }
+
+    include.pgf_plot_wrap("График зависимости концентрации избыточных носителей от времени", 
+        "Время, с", "Концентрация избыточных носителей, см$^{-3}$", "north east", 1, 1, table_delta_n)
+    
+}
+
+\end{minipage}\end{minipage}
+
+\end{figure}
+
+Ответ: $\Delta n(0) = \directlua{
+    tex.sprint(include.value_with_mantice(delta_n_0, 2, 0, 0))
+}$ см$^{-3}$, $\tau_n = \directlua{
+    tex.sprint(include.value_with_mantice(tau_n, 2, 0, 0))
+}$ с
+
+\pagebreak
+
+\section{\large\textnormal{В соответствии с предыдущим заданием построить график зависимости
+$\frac{\Delta n}{\Delta n(0)}$ от $\frac{t}{\tau_n}$}}
+
+\directlua{
+    local func = handle.delta_n:new(delta_n_0, tau_n)
+    local x_norm = {}
+    local x = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+    for _, v in ipairs(x) do
+        table.insert(x_norm, v * tau_n)
+    end
+    local y = func:get_values(x_norm)
+    for i, v in ipairs(y) do
+        y[i] = v / delta_n_0
+    end
+    local table_delta_n = {
+        "blue!70!black",
+        "*",
+        "2pt",
+        nil,
+        x, y
+    }
+
+    include.pgf_plot_wrap("График зависимости $\\frac{\\Delta n}{\\Delta n(0)}\\left(\\frac{t}{\\tau_n}\\right)$", 
+        "$\\frac{t}{\\tau_n}$", "$\\frac{\\Delta n}{\\Delta n(0)}$", "north east", 0.9, 1.1, table_delta_n)
+}
+
+\pagebreak
+
+\section{\large\textnormal{Полупроводник \protect\chemfig{n-Si} освещается, заданы в соответствии с вариантом:\\
+- Скорость генерации электронно-дырочных пар $G$, \\
+- Время жизни электронов $\tau_n$, \\
+- Равновесная концентрация электронов $n_0$, \\
+- $T = 300$ К. \\
+Найти: $\frac{\Delta n}{n_0}$ и $\frac{\Delta p}{p_0}$ в установившемся режиме}}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.3\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{|X|}
+            \hline
+            \multicolumn{1}{|C|}{Дано} \\
+            \hline
+            $G = 10^{19}$ см$^{-3}$ с$^{-1}$ \\
+            $\tau_n = 10^{-7}$ с \\
+            $n_0 = 10^{18}$ см$^{-3}$ \\
+            $T = 300$ К \\
+            $n_i = 1.45 \cdot 10^{10}$ см$^{-3}$ \\
+            \hline
+            \multicolumn{1}{|C|}{Найти} \\
+            \hline
+            $\frac{\Delta n}{n_0}$ — ? \\
+            $\frac{\Delta p}{p_0}$ — ? \\
+            \hline
+        \end{tabularx}
+
+        \vspace{0.5em}
+        
+        В установившемся режиме:
+        \begin{equation*}
+            G = R_n = R_p
+        \end{equation*}
+        где $R_n$ и $R_p$ — скорости рекомбинации электронов и дырок соответственно.
+
+        Тогда
+        \begin{equation*}
+            \begin{aligned}
+                R_n = \frac{\Delta n}{\tau_n} \Longrightarrow \Delta n = G \tau_n \\
+                R_p = \frac{\Delta p}{\tau_n} \Longrightarrow \Delta p = G \tau_n
+            \end{aligned}
+        \end{equation*}
+    \end{minipage}\hfill\begin{minipage}[t]{0.7\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{C|}
+            \hline
+            Решение \\
+            \hline
+        \end{tabularx}
+
+        \vspace{0.5em}
+        \hspace{0.5em}
+        \begin{minipage}[t]{0.95\textwidth}
+            $n_i$ — собственная концентрация носителей заряда в 
+            полупроводнике \chemfig{Si} при температуре $T = 300$ К.
+            
+            Воспользуемся законом действующих масс:
+            \begin{equation*}
+                n_0 p_0 = n_i^2 \Longrightarrow p_0 = \frac{n_i^2}{n_0} = \directlua{
+                    n_0 = 10^(18)
+                    n_i = 1.45 * 10^(10)
+                
+                    p_0 = (n_i)^2 / n_0
+
+                    tex.sprint("\\frac{(" 
+                               .. include.value_with_mantice(n_i, 2, 0, 0) .. 
+                               ")^2}{" 
+                               .. include.value_with_mantice(n_0, 2, 0, 0) .. 
+                               "} = " 
+                               .. include.value_with_mantice(p_0, 2, 2, 0))
+                } \text{ см$^{-3}$}
+            \end{equation*}
+
+            Так как режим установившийся, то
+            \begin{equation*}
+                \Delta n = \Delta p = G \tau_n = \directlua{
+                    G = 10^(19)
+                    tau_n = 10^(-7)
+                
+                    delta_n = G * tau_n
+                
+                    tex.sprint(include.value_with_mantice(delta_n, 2, 0, 0))
+                } \text{ см$^{-3}$} 
+            \end{equation*}
+
+            Тогда
+            \begin{equation*}
+                \begin{aligned}
+                    \frac{\Delta n}{n_0} = \frac{G \tau_n}{n_0} = \directlua{
+                        d_delta_n = delta_n / n_0
+
+                        tex.sprint("\\frac{" 
+                                   .. include.value_with_mantice(delta_n, 2, 0, 0) .. 
+                                   "}{" 
+                                   .. include.value_with_mantice(n_0, 2, 0, 0) .. 
+                                   "} = " 
+                                   .. include.value_with_mantice(d_delta_n, 2, 0, 0))
+                    } \text{ см$^{-3}$} \\
+                    \frac{\Delta p}{p_0} = \frac{G \tau_n}{p_0} = \directlua{
+                        d_delta_p = delta_n / p_0
+
+                        tex.sprint("\\frac{" 
+                                   .. include.value_with_mantice(delta_n, 2, 0, 0) .. 
+                                   "}{" 
+                                   .. include.value_with_mantice(p_0, 2, 2, 0) .. 
+                                   "} = " 
+                                   .. include.value_with_mantice(d_delta_p, 2, 0, 0))
+                    } \text{ см$^{-3}$}
+                    \end{aligned}
+            \end{equation*}
+    
+            \vspace{2em}
+            Ответ: $\frac{\Delta n}{n_0} = \directlua{
+                tex.sprint(include.value_with_mantice(d_delta_n, 2, 0, 0))
+            }$ и $\frac{\Delta p}{p_0} = \directlua{
+                tex.sprint(include.value_with_mantice(d_delta_p, 2, 0, 0))
+            }$.
+    \end{minipage}\end{minipage}
+\end{figure}
+
+\pagebreak
+
+\section{\large\textnormal{Дан параллелепипед из \protect\chemfig{Si}. В соответствии 
+с вариантом заданы: \\
+- Тип полупроводника, \\
+- Концентрация примеси, \\
+- Длина и площадь поперечного сечения полупроводника. \\
+Найти: удельное сопротивление $\rho$, полное сопротивление $R$.}}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.3\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{|X|}
+            \hline
+            \multicolumn{1}{|C|}{Дано} \\
+            \hline
+            Полупроводник $n$-типа \\
+            $N_D = 10^{20}$ см$^{-3}$ \\
+            $\frac{L}{S} = 10^{-3}$ мкм$^{-1}$ \\
+            \hline
+            \multicolumn{1}{|C|}{Найти} \\
+            \hline
+            $\rho$ — ? \\
+            $R$ — ? \\
+            \hline
+        \end{tabularx}
+
+        \directlua{
+            N_D = 10^(20)
+            L_S = 10 
+            q = 1.6 * 10^(-19)
+        }
+
+        \vspace{0.5em}
+        Полное сопротивление проводника определяется как
+        \begin{equation*}
+            R = \frac{\rho L}{S}
+        \end{equation*}
+
+        Удельное сопротивление определяется как
+        \begin{equation*}
+            \rho = \frac{1}{q n_0 \mu_n}
+        \end{equation*}
+        
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.7\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{C|}
+            \hline
+            Решение \\
+            \hline            
+        \end{tabularx}
+
+        \vspace{0.5em}
+        \hspace{0.025\textwidth}
+        \begin{minipage}[t]{0.95\textwidth}
+            \indent При комнатной температуре $T = 300$ К мелкая донорная примесь полностью ионизирована,
+            поэтому концентрация электронов в полупроводнике $n$-типа равна концентрации донорной примеси
+            \begin{equation*}
+                n_0 = N_D = 10^{20} \text{ см$^{-3}$}
+            \end{equation*}
+            Подвижность электронов в кремнии при сильной легированности примеси $N_D = 10^{20}$ см$^{-3}$ 
+            и соотвественно преобладанию рассеяния на примеси, равна
+            \begin{equation*}
+                \mu_n = 80 \text{ см$^2$/(В·с)}
+            \end{equation*}
+            Соответственно, удельное сопротивление 
+            \begin{equation*}
+                \rho = \frac{1}{q n_0 \mu_n} = \directlua{
+                    mu_n = 80
+
+                    rho = 1 / (q * N_D * mu_n)
+
+                    tex.sprint("\\frac{1}{(" 
+                               .. include.value_with_mantice(q, 2, 0, 0) .. 
+                               ") \\cdot (" 
+                               .. include.value_with_mantice(N_D, 2, 0, 0) .. 
+                               ") \\cdot (" 
+                               .. include.value_with_mantice(mu_n, 2, 1, 0) .. 
+                               ")} = " 
+                               .. include.value_with_mantice(rho, 2, 0, 0))
+                } \text{ Ом·см}
+            \end{equation*}
+
+            Полное сопротивление проводника
+            \begin{equation*}
+                R = \frac{\rho L}{S} = \directlua{
+                    R = rho * L_S
+
+                    tex.sprint(include.value_with_mantice(rho, 2, 0, 0) .. " \\cdot " 
+                               .. include.value_with_mantice(L_S, 2, 1, 0) .. 
+                               " = " 
+                               .. include.value_with_mantice(R, 2, 0, 0))
+                } \text{ Ом}
+            \end{equation*}
+        \end{minipage}
+    \end{minipage}
+
+    Ответ: $\rho = \directlua{
+        tex.sprint(include.value_with_mantice(rho, 2, 0, 0))
+    }$ Ом·см и $R = \directlua{
+        tex.sprint(include.value_with_mantice(R, 2, 0, 0))
+    }$ Ом
+\end{figure}
+
+\pagebreak
+
+\section{\large\textnormal{Для \protect\chemfig{Si}, $n$-типа ($T=300К$), длиной $L$ (см. вариант), 
+заданы распределения примеси: \\
+а) $N_{D1}(x) = N_{Ds}$, \\
+б) $N_{D2}(x) = N_{Ds} \cdot e^{-x/L}$, \\
+в) $N_{D3}(x) = N_{Ds} \cdot e^{-x^2/L^2}$. \\
+Найти напряжённость электрического поля $E(x=L)$ для случаев а-в.}}
+
+\begin{figure}[H]
+    \begin{minipage}[t]{0.3\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{|X|}
+            \hline
+            \multicolumn{1}{|C|}{Дано} \\
+            \hline
+            Полупроводник $n$-типа \\
+            $T = 300$ К \\
+            $L = 10$ мкм \\
+            \hline
+            \multicolumn{1}{|C|}{Найти} \\
+            \hline
+            $E(x=L)$ — ? \\
+            \hline
+        \end{tabularx}
+
+        \vspace{0.5em}
+        Формлула напряжённости электрического поля в полупроводнике с градиентом концентрации примеси
+        \begin{equation*}
+            E(x) = -\frac{kT}{q} \cdot \frac{1}{N_D(x)} \cdot 
+                \frac{dN_D(x)}{dx}
+        \end{equation*}
+        
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.7\textwidth}
+        \vspace{0em}
+        \begin{tabularx}{\textwidth}{C|}
+            \hline
+            Решение \\
+            \hline            
+        \end{tabularx}
+
+        \vspace{0.5em}
+        \hspace{0.025\textwidth}
+        \begin{minipage}[t]{0.95\textwidth}
+            \indent Для случая а) $N_{D1}(x) = N_{Ds}$, тогда
+            \begin{equation*}
+                E(x=L) = -\frac{kT}{q} \cdot \frac{1}{N_{Ds}} \cdot 0 = 0
+            \end{equation*}
+
+            Для случая б) $N_{D2}(x) = N_{Ds} \cdot e^{-x/L}$, тогда
+            \begin{equation*}
+                \begin{aligned}
+                    E(x=L) &= -\frac{kT}{q} \cdot \frac{1}{N_{Ds} e^{-L/L}} \cdot 
+                        (-\frac{N_{Ds}}{L} e^{-L/L}) = -\frac{kT}{qL} \\
+                    E(x=L) &= \directlua{
+                        k = 1.38 * 10^(-23)
+                        T = 300
+                        q = 1.6 * 10^(-19)
+                        L = 10 * 10^(-6)
+
+                        E = -k * T / (q * L)
+
+                        tex.sprint("-\\frac{" 
+                                   .. include.value_with_mantice(k, 2, 0, 0) ..
+                                   "\\cdot" 
+                                   .. include.value_with_mantice(T, 2, 0, 0) .. 
+                                   "}{"
+                                   .. include.value_with_mantice(q, 2, 0, 0) ..
+                                   "\\cdot" 
+                                   .. include.value_with_mantice(L, 2, 0, 0) .. 
+                                   "} = "
+                                   .. include.value_with_mantice(E, 2, 0, 0) .. 
+                                   "\\text{ В/м}")
+                    }
+                \end{aligned}
+            \end{equation*}
+
+            Для случая в) $N_{D3}(x) = N_{Ds} \cdot e^{-x^2/L^2}$, тогда
+            \begin{equation*}
+                \begin{aligned}    
+                E(x=L) &= -\frac{kT}{q} \cdot \frac{1}{N_{Ds} e^{-L^2/L^2}} \cdot 
+                    (-\frac{2L}{L^2} N_{Ds} e^{-L^2/L^2}) = -\frac{2kT}{qL} \\
+                E(x=L) &= \directlua{
+                        k = 1.38 * 10^(-23)
+                        T = 300
+                        q = 1.6 * 10^(-19)
+                        L = 10 * 10^(-6)
+
+                        E = -2 * k * T / (q * L)
+
+                        tex.sprint("-\\frac{2 \\cdot " 
+                                   .. include.value_with_mantice(k, 2, 0, 0) ..
+                                   "\\cdot" 
+                                   .. include.value_with_mantice(T, 2, 0, 0) .. 
+                                   "}{"
+                                   .. include.value_with_mantice(q, 2, 0, 0) ..
+                                   "\\cdot" 
+                                   .. include.value_with_mantice(L, 2, 0, 0) .. 
+                                   "} = "
+                                   .. include.value_with_mantice(E, 2, 0, 0) .. 
+                                   "\\text{ В/м}")
+                }
+                \end{aligned}
+            \end{equation*}
+    \end{minipage}\end{minipage}
+
+    \vspace{1em}
+    Ответ: для случая а $E(x=L) = 0$ В/м, для случая б $E(x=L) = \directlua{
+        tex.sprint(include.value_with_mantice(E, 2, 0, 0))
+    }$ В/м, для случая в $E(x=L) = \directlua{
+        tex.sprint(include.value_with_mantice(E, 2, 0, 0))
+    }$ В/м.
 \end{figure}
 
 \end{document}

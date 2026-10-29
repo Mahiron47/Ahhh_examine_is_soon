@@ -1,16 +1,24 @@
 #ifndef PLOT_BOX_HPP
 #define PLOT_BOX_HPP
 
+struct MathVisualFeatures {
+    bool is_mark_min_x = false;
+    bool is_mark_max_x = false;
+};
+
 template<typename LayoutT> requires SUPPORT_PACKAGE(GraphicPositionExtentPackage) || SUPPORT_PACKAGE(GraphicShiftPackage)
 class PlotBox : public IgraphicLayout<LayoutT> {
     Grid<LayoutT, CellCountType>* _grid;
     Plot<LayoutT>*                _plot;
+    MathVisualFeatures            _math_visual_features;
+    i32                           _name_height;
+    Point<i32>                    _marks_width;
 
     void draw_name(HDC h_dc, const GraphicPositionExtentPackage& position_extent) {
         SIZE ts;
 
         GetTextExtentPoint32A(h_dc, _plot->get_data_original().name.c_str(), sc<int>(_plot->get_data_original().name.size()), &ts);
-
+        
         PaintTools::PaintText(h_dc, _plot->get_data_original().name, position_extent.pos_x + 0.5f * (position_extent.width - ts.cx), position_extent.pos_y + 2);
     }
 
@@ -36,10 +44,56 @@ class PlotBox : public IgraphicLayout<LayoutT> {
             PaintTools::PaintText(h_dc, std::to_string(points[i].y), position_extent.pos_x + position_extent.width - 0.5f * ts2.cx - 8, normalised_points[i].y - 0.5f * ts2.cy);
     }   }
 
+    void draw_math_marks(HDC h_dc) {
+        const POINT* __restrict points            = _plot->get_data_original().points;
+        const POINT* __restrict normalised_points = _plot->get_data_normalised().points;
+
+        for (u32 i = 0; i < _plot->get_data_original().num_points; ++i) {
+            PaintTools::PaintCross(h_dc, normalised_points[i].x, normalised_points[i].y, 5);
+        }
+
+        if (_math_visual_features.is_mark_min_x) {
+            SIZE ts;
+
+            GetTextExtentPoint32A(h_dc, "min", 3, &ts);
+
+            POINT min_point = points[0];
+
+            for (u32 i = 1; i < _plot->get_data_original().num_points; ++i) {
+                if (points[i].x < min_point.x) {
+                    min_point = points[i];
+                }
+            }
+
+            for (u32 i = 0; i < _plot->get_data_original().num_points; ++i) {
+                if (points[i].x != min_point.x) continue;
+
+                PaintTools::PaintText(h_dc, "min", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5);
+        }   }
+        if (_math_visual_features.is_mark_max_x) {
+            SIZE ts;
+            GetTextExtentPoint32A(h_dc, "max", 3, &ts);
+
+            POINT max_point = points[0];
+
+            for (u32 i = 1; i < _plot->get_data_original().num_points; ++i) {
+                if (points[i].x > max_point.x) {
+                    max_point = points[i];
+                }
+            }
+
+            for (u32 i = 0; i < _plot->get_data_original().num_points; ++i) {
+                if (points[i].x != max_point.x) continue;
+
+                PaintTools::PaintText(h_dc, "max", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5);
+    }   }   }
+
 public:
     constexpr PlotBox(const LayoutT& layout,
                       PlotData plot_data,
-                      COLORREF color = RGB(0, 0, 0)) : IgraphicLayout<LayoutT>(layout, color) {
+                      MathVisualFeatures math_visual_features = MathVisualFeatures {},
+                      COLORREF color = RGB(0, 0, 0)) : IgraphicLayout<LayoutT>(layout, color),
+                                                       _math_visual_features(math_visual_features) {
         this->_grid = new Grid(layout, CellCountType {
             .cell_count = plot_data->get_data().num_points + 1
         }, false, RGB(0, 0, 0), new LineGrid(3));
@@ -91,17 +145,23 @@ public:
 
         ReleaseDC(h_wnd, h_dc);
 
+        _name_height = ts_name.cy + 6;
+        _marks_width = Point<i32> {
+            .x = sc<i32>(max_lenght.x) + 10,
+            .y = sc<i32>(max_lenght.y) + 10
+        };
+
         _grid->set_layout(GraphicShiftPackage {
             .left_border_shift = shifts.left_border_shift,
-            .right_border_shift = shifts.right_border_shift + max_lenght.x + 10,
-            .top_border_shift = shifts.top_border_shift + ts_name.cy + 6,
-            .bottom_border_shift = shifts.bottom_border_shift + max_lenght.y + 10
+            .right_border_shift = shifts.right_border_shift + _marks_width.x,
+            .top_border_shift = shifts.top_border_shift + _name_height,
+            .bottom_border_shift = shifts.bottom_border_shift + _marks_width.y
         }, window_extent);
         _plot->set_layout(GraphicShiftPackage {
             .left_border_shift = shifts.left_border_shift,
-            .right_border_shift = shifts.right_border_shift + max_lenght.x + 10,
-            .top_border_shift = shifts.top_border_shift + ts_name.cy + 6,
-            .bottom_border_shift = shifts.bottom_border_shift + max_lenght.y + 10
+            .right_border_shift = shifts.right_border_shift + _marks_width.x,
+            .top_border_shift = shifts.top_border_shift + _name_height,
+            .bottom_border_shift = shifts.bottom_border_shift + _marks_width.y
         }, window_extent);
 
         _grid->init_runtime(h_wnd, window_extent);
@@ -131,12 +191,6 @@ public:
     void draw(HDC h_dc, const WindowExtentPackage& actual_paint_window_extent) override {
         const auto& position_extent = this->template get_position_extent<GraphicPositionExtentPackage>(actual_paint_window_extent);
 
-        int save_dc = SaveDC(h_dc);
-
-        IntersectClipRect(h_dc, position_extent.pos_x, position_extent.pos_y, 
-                                position_extent.pos_x + position_extent.width, 
-                                position_extent.pos_y + position_extent.height);
-
         HPEN old_pen;
         HPEN pen = PaintTools::TakePen(h_dc, RGB(255, 255, 255), old_pen);
         HBRUSH old_brush;
@@ -156,7 +210,27 @@ public:
         brush = PaintTools::TakeBrush(h_dc, RGB(0, 0, 0), old_brush);
 
         this->draw_name(h_dc, position_extent);
+
+        
+        int save_dc = SaveDC(h_dc);
+
+        IntersectClipRect(h_dc, position_extent.pos_x, position_extent.pos_y + _name_height, 
+                                position_extent.pos_x + position_extent.width, 
+                                position_extent.pos_y + position_extent.height);
+
         this->draw_marks(h_dc, position_extent);
+
+        RestoreDC(h_dc, save_dc);
+        
+        save_dc = SaveDC(h_dc);
+
+        IntersectClipRect(h_dc, position_extent.pos_x, position_extent.pos_y + _name_height, 
+                                position_extent.pos_x + position_extent.width - _marks_width.x, 
+                                position_extent.pos_y + position_extent.height - _marks_width.y);
+
+        this->draw_math_marks(h_dc);
+
+        RestoreDC(h_dc, save_dc);
 
         PaintTools::ResetBrush(h_dc, old_brush, brush);
         PaintTools::ResetPen(h_dc, old_pen, pen);

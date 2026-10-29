@@ -23,6 +23,9 @@ public:
     constexpr void set_h_wnd(HWND h_wnd) noexcept {
         _h_wnd = h_wnd;
     }
+    constexpr COLORREF get_window_background_color() const noexcept {
+        return _i_strategy->get_window_background_color();
+    } 
 
     constexpr std::deque<Igraphic*>& get_graphics() const noexcept {
         return _i_strategy->get_graphics();

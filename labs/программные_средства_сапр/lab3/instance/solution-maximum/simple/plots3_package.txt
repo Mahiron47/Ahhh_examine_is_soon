@@ -1,5 +1,5 @@
 3
-Quadratic plot inverse
+Triangles
 Exponent plot inverse
 Linear function
 0 

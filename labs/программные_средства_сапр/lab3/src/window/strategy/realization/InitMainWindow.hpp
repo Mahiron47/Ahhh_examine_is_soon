@@ -3,13 +3,21 @@
 
 class InitMainWindow : public IinitWindowStrategy {
     int _n_cmd_show;
+    COLORREF _window_background_color;
 
 public: 
-    template<class... Args> requires ((std::derived_from<Args, Igraphic> || std::derived_from<Args, IhotKey>) && ...)
-    constexpr InitMainWindow(int n_cmd_show, Args*... args) : IinitWindowStrategy(args...), _n_cmd_show(n_cmd_show) {}
+    template<class... Args> requires ((GET_HANDLER(Igraphic) || GET_HANDLER(IhotKey)) && ...)
+    constexpr InitMainWindow(int n_cmd_show, 
+                             COLORREF color = RGB(0, 0, 0), 
+                             Args*... args) : IinitWindowStrategy(args...), 
+                                              _n_cmd_show(n_cmd_show), 
+                                              _window_background_color(color) {}
 
     int get_n_cmd_show() override {
         return _n_cmd_show;
+    }
+    COLORREF get_window_background_color() override {
+        return _window_background_color;
     }
     LPCTSTR get_class_name() override {
         return TEXT("MainWindow");
@@ -85,6 +93,16 @@ inline WNDPROC InitMainWindow::get_window_protocol() {
             PAINTSTRUCT ps;
         
             h_dc = BeginPaint(h_wnd, &ps);
+
+            HBRUSH old_brush;
+            HBRUSH h_brush = PaintTools::TakeBrush(h_dc, window->get_window_background_color(), old_brush);
+
+            PaintTools::PaintFilledRectangle(h_dc, 0, 0, 
+                                             window->get_extent().width, 
+                                             window->get_extent().height);
+
+
+            PaintTools::ResetBrush(h_dc, old_brush, h_brush);
 
             for (auto& graphic : window->get_graphics()) {
                 graphic->draw(h_dc, window->get_extent());

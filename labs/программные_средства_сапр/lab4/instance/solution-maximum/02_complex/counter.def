@@ -1,0 +1,187 @@
+VERSION 5.8 ;
+DESIGN counter ;
+UNITS DISTANCE MICRONS 1000 ;
+DIEAREA ( 0 0 ) ( 80670 91390 ) ;
+COMPONENTS 18 ;
+    - _14_ sky130_fd_sc_hd__inv_2 + PLACED ( 47380 38080 ) N ;
+    - _15_ sky130_fd_sc_hd__inv_2 + PLACED ( 44620 38080 ) FN ;
+    - _16_ sky130_fd_sc_hd__inv_2 + PLACED ( 35420 38080 ) FN ;
+    - _17_ sky130_fd_sc_hd__inv_2 + PLACED ( 38180 38080 ) FN ;
+    - _18_ sky130_fd_sc_hd__inv_2 + PLACED ( 27600 43520 ) FN ;
+    - _19_ sky130_fd_sc_hd__xor2_1 + PLACED ( 32200 38080 ) N ;
+    - _20_ sky130_fd_sc_hd__a21oi_1 + PLACED ( 41860 48960 ) FN ;
+    - _21_ sky130_fd_sc_hd__and3_1 + PLACED ( 40940 38080 ) N ;
+    - _22_ sky130_fd_sc_hd__nor2_1 + PLACED ( 39560 38080 ) N ;
+    - _23_ sky130_fd_sc_hd__xor2_1 + PLACED ( 51060 46240 ) FS ;
+    - _24__1 sky130_fd_sc_hd__inv_2 + SOURCE TIMING + PLACED ( 28980 43520 ) N ;
+    - _25__2 sky130_fd_sc_hd__inv_2 + SOURCE TIMING + PLACED ( 33120 46240 ) FS ;
+    - _26__3 sky130_fd_sc_hd__inv_2 + SOURCE TIMING + PLACED ( 36800 38080 ) FN ;
+    - _27__4 sky130_fd_sc_hd__inv_2 + SOURCE TIMING + PLACED ( 53820 43520 ) N ;
+    - _28_ sky130_fd_sc_hd__dfrtp_1 + PLACED ( 30360 43520 ) N ;
+    - _29_ sky130_fd_sc_hd__dfrtp_1 + PLACED ( 32660 48960 ) N ;
+    - _30_ sky130_fd_sc_hd__dfrtp_1 + PLACED ( 38180 40800 ) FS ;
+    - _31_ sky130_fd_sc_hd__dfrtp_1 + PLACED ( 44620 43520 ) FN ;
+END COMPONENTS
+NETS 33 ;
+    - _00_ ( _28_ D ) ( _18_ Y ) + USE SIGNAL
+      + ROUTED met1 ( 28290 44370 ) ( 31970 * ) ;
+    - _01_ ( _29_ D ) ( _19_ X ) + USE SIGNAL
+      + ROUTED met1 ( 35190 38930 ) ( * 39610 )
+      NEW met1 ( 35190 38930 ) ( 37030 * )
+      NEW met1 ( 37030 38930 ) ( * 39270 )
+      NEW met2 ( 37030 39270 ) ( * 50490 )
+      NEW met1 ( 34270 50490 ) ( 37030 * ) ;
+    - _02_ ( _30_ D ) ( _22_ Y ) + USE SIGNAL
+      + ROUTED met2 ( 39790 40290 ) ( * 41990 ) ;
+    - _03_ ( _31_ D ) ( _23_ X ) + USE SIGNAL
+      + ROUTED met1 ( 52210 45050 ) ( 53130 * )
+      NEW met1 ( 53130 45050 ) ( * 45730 )
+      NEW met1 ( 53130 45730 ) ( 54050 * )
+      NEW met2 ( 54050 45730 ) ( * 46750 ) ;
+    - _04_ ( _28_ RESET_B ) ( _17_ Y ) + USE SIGNAL
+      + ROUTED met2 ( 38870 40290 ) ( * 44370 )
+      NEW met1 ( 37950 44370 ) ( 38870 * ) ;
+    - _06_ ( _29_ RESET_B ) ( _16_ Y ) + USE SIGNAL
+      + ROUTED met1 ( 36110 40290 ) ( 36570 * )
+      NEW met2 ( 36570 40290 ) ( * 49810 ) ;
+    - _08_ ( _30_ RESET_B ) ( _15_ Y ) + USE SIGNAL
+      + ROUTED met2 ( 45310 40290 ) ( * 42330 ) ;
+    - _10_ ( _31_ RESET_B ) ( _14_ Y ) + USE SIGNAL
+      + ROUTED met1 ( 47150 40290 ) ( 48070 * )
+      NEW met2 ( 47150 40290 ) ( * 44370 ) ;
+    - _12_ ( hold5 A ) ( _20_ Y ) + USE SIGNAL
+      + ROUTED met1 ( 43470 50490 ) ( * 51170 )
+      NEW met2 ( 43470 45050 ) ( * 50490 ) ;
+    - _13_ ( _23_ B ) ( _22_ B ) ( _21_ X ) + USE SIGNAL
+      + ROUTED met1 ( 43010 39950 ) ( 50830 * )
+      NEW met1 ( 50830 39950 ) ( * 40290 )
+      NEW met2 ( 50830 40290 ) ( * 44540 )
+      NEW met2 ( 50830 44540 ) ( 51290 * )
+      NEW met2 ( 51290 44540 ) ( * 47430 )
+      NEW met1 ( 51290 47430 ) ( 51750 * )
+      NEW met1 ( 39790 39270 ) ( * 39950 )
+      NEW met1 ( 39790 39950 ) ( 43010 * ) ;
+    - clk ( PIN clk ) ( clkbuf_0_clk A ) + USE CLOCK
+      + ROUTED met2 ( 38410 44540 ) ( * 47770 )
+      NEW met3 ( 3220 44540 ) ( 38410 * ) ;
+    - clknet_0_clk ( clkbuf_1_1__f_clk A ) ( clkbuf_1_0__f_clk A ) ( clkbuf_0_clk X ) + USE CLOCK
+      + ROUTED met1 ( 32430 49470 ) ( * 49810 )
+      NEW met1 ( 44850 47090 ) ( * 47430 )
+      NEW met1 ( 41170 47430 ) ( 44850 * )
+      NEW met2 ( 41170 47430 ) ( * 49470 )
+      NEW met1 ( 48070 42670 ) ( * 43010 )
+      NEW met1 ( 41170 43010 ) ( 48070 * )
+      NEW met1 ( 41170 42670 ) ( * 43010 )
+      NEW met2 ( 41170 42670 ) ( * 47430 )
+      NEW met1 ( 32430 49470 ) ( 41170 * ) ;
+    - clknet_1_0__leaf_clk ( _24__1 A ) ( _25__2 A ) ( clkbuf_1_0__f_clk X ) + USE CLOCK
+      + ROUTED met2 ( 29210 44710 ) ( * 49470 )
+      NEW met1 ( 25990 49470 ) ( 29210 * )
+      NEW met1 ( 29210 47770 ) ( 33350 * ) ;
+    - clknet_1_1__leaf_clk ( _26__3 A ) ( _27__4 A ) ( clkbuf_1_1__f_clk X ) + USE CLOCK
+      + ROUTED met1 ( 46690 41650 ) ( 54510 * )
+      NEW met1 ( 46690 41310 ) ( * 41650 )
+      NEW met1 ( 37950 41310 ) ( 46690 * )
+      NEW met2 ( 37950 39270 ) ( * 41310 )
+      NEW met1 ( 54050 44030 ) ( * 44710 )
+      NEW met2 ( 54050 41650 ) ( * 44030 ) ;
+    - net1 ( input1 X ) ( _17_ A ) ( _16_ A ) ( _15_ A ) ( _14_ A ) + USE SIGNAL
+      + ROUTED met1 ( 47610 39270 ) ( * 39610 )
+      NEW met1 ( 47610 39610 ) ( 71990 * )
+      NEW met2 ( 71990 39610 ) ( * 41650 )
+      NEW met1 ( 45770 39270 ) ( 47610 * )
+      NEW met1 ( 39330 38930 ) ( * 39270 )
+      NEW met1 ( 39330 38930 ) ( 39790 * )
+      NEW met1 ( 39790 38590 ) ( * 38930 )
+      NEW met1 ( 39790 38590 ) ( 41630 * )
+      NEW met1 ( 41630 38590 ) ( * 39270 )
+      NEW met1 ( 41630 39270 ) ( 45770 * )
+      NEW met1 ( 36570 39270 ) ( * 39610 )
+      NEW met1 ( 36570 39610 ) ( 37490 * )
+      NEW met1 ( 37490 38930 ) ( * 39610 )
+      NEW met1 ( 37490 38930 ) ( 39330 * ) ;
+    - net10 ( _19_ A ) ( _18_ A ) ( hold1 X ) + USE SIGNAL
+      + ROUTED met1 ( 28750 43010 ) ( 33810 * )
+      NEW met2 ( 28750 43010 ) ( * 44710 )
+      NEW met2 ( 33350 39270 ) ( * 43010 ) ;
+    - net11 ( _23_ A ) ( hold2 X ) + USE SIGNAL
+      + ROUTED met1 ( 49910 47770 ) ( 52210 * )
+      NEW met2 ( 49910 47770 ) ( * 49470 ) ;
+    - net12 ( _19_ B ) ( hold3 X ) + USE SIGNAL
+      + ROUTED met1 ( 33810 39610 ) ( 34500 * )
+      NEW met1 ( 34500 39610 ) ( * 39950 )
+      NEW met1 ( 34500 39950 ) ( 36110 * )
+      NEW met1 ( 36110 39610 ) ( * 39950 )
+      NEW met2 ( 36110 39610 ) ( * 46750 )
+      NEW met1 ( 34730 46750 ) ( 36110 * ) ;
+    - net13 ( _20_ B1 ) ( hold4 X ) + USE SIGNAL
+      + ROUTED met2 ( 47610 48450 ) ( * 49810 )
+      NEW met1 ( 43470 49810 ) ( 47610 * ) ;
+    - net14 ( _22_ A ) ( hold5 X ) + USE SIGNAL
+      + ROUTED met2 ( 40710 39270 ) ( * 44030 ) ;
+    - net2 ( hold1 A ) ( output2 A ) ( _28_ Q ) ( _21_ A ) ( _20_ A1 ) + USE SIGNAL
+      + ROUTED met1 ( 39330 45730 ) ( 42550 * )
+      NEW met2 ( 42550 45730 ) ( * 49470 )
+      NEW met1 ( 37030 42330 ) ( * 42670 )
+      NEW met1 ( 37030 42670 ) ( 39330 * )
+      NEW met1 ( 39330 42670 ) ( * 43010 )
+      NEW met2 ( 39330 43010 ) ( * 45730 )
+      NEW met1 ( 40250 38930 ) ( 41170 * )
+      NEW met2 ( 40250 38930 ) ( * 42670 )
+      NEW met1 ( 39330 42670 ) ( 40250 * )
+      NEW met1 ( 8970 42330 ) ( 37030 * ) ;
+    - net3 ( hold3 A ) ( output3 A ) ( _29_ Q ) ( _21_ B ) ( _20_ A2 ) + USE SIGNAL
+      + ROUTED met1 ( 8970 50150 ) ( * 51170 )
+      NEW met1 ( 41630 49470 ) ( 42090 * )
+      NEW met2 ( 42090 40290 ) ( * 49470 )
+      NEW met1 ( 42090 49470 ) ( * 50150 )
+      NEW met1 ( 37950 47770 ) ( * 48450 )
+      NEW met1 ( 37950 48450 ) ( 42090 * )
+      NEW met1 ( 42090 50150 ) ( * 51170 )
+      NEW met1 ( 8970 51170 ) ( 42090 * ) ;
+    - net4 ( hold4 A ) ( output4 A ) ( _30_ Q ) ( _21_ C ) + USE SIGNAL
+      + ROUTED met1 ( 50830 47090 ) ( * 47430 )
+      NEW met1 ( 50830 47090 ) ( 71990 * )
+      NEW met1 ( 71990 46750 ) ( * 47090 )
+      NEW met2 ( 71990 44710 ) ( * 46750 )
+      NEW met1 ( 47150 41310 ) ( 47610 * )
+      NEW met2 ( 47610 41310 ) ( * 47090 )
+      NEW met1 ( 47610 47090 ) ( 50830 * )
+      NEW met1 ( 42250 38930 ) ( 47610 * )
+      NEW met1 ( 47610 38590 ) ( * 38930 )
+      NEW met2 ( 47610 38590 ) ( * 41310 ) ;
+    - net5 ( hold2 A ) ( output5 A ) ( _31_ Q ) + USE SIGNAL
+      + ROUTED met1 ( 47150 50150 ) ( 71530 * )
+      NEW met1 ( 44850 45730 ) ( 47150 * )
+      NEW met2 ( 47150 45730 ) ( * 50150 ) ;
+    - net6 ( _28_ CLK ) ( _24__1 Y ) + USE CLOCK
+      + ROUTED met1 ( 29670 44710 ) ( 30590 * ) ;
+    - net7 ( _29_ CLK ) ( _25__2 Y ) + USE CLOCK
+      + ROUTED met1 ( 32890 48450 ) ( 33810 * )
+      NEW met2 ( 32890 48450 ) ( * 50150 ) ;
+    - net8 ( _30_ CLK ) ( _26__3 Y ) + USE CLOCK
+      + ROUTED met1 ( 37490 40290 ) ( 38410 * )
+      NEW met2 ( 38410 40290 ) ( * 41990 ) ;
+    - net9 ( _31_ CLK ) ( _27__4 Y ) + USE CLOCK
+      + ROUTED met1 ( 53590 45050 ) ( 54510 * ) ;
+    - out[0] ( PIN out[0] ) ( output2 X ) + USE SIGNAL
+      + ROUTED met3 ( 3220 41140 ) ( 7590 * )
+      NEW met2 ( 7590 41140 ) ( * 41650 ) ;
+    - out[1] ( PIN out[1] ) ( output3 X ) + USE SIGNAL
+      + ROUTED met3 ( 3220 47940 ) ( 7590 * )
+      NEW met2 ( 7590 47940 ) ( * 49470 ) ;
+    - out[2] ( PIN out[2] ) ( output4 X ) + USE SIGNAL
+      + ROUTED met2 ( 72910 44540 ) ( * 45390 )
+      NEW met3 ( 72910 44540 ) ( 76820 * ) ;
+    - out[3] ( PIN out[3] ) ( output5 X ) + USE SIGNAL
+      + ROUTED met1 ( 72910 49470 ) ( 76130 * )
+      NEW met1 ( 76130 48450 ) ( * 49470 )
+      NEW met2 ( 76130 47940 ) ( * 48450 )
+      NEW met3 ( 76130 47940 ) ( 76820 * ) ;
+    - rst ( PIN rst ) ( input1 A ) + USE SIGNAL
+      + ROUTED met1 ( 72910 42330 ) ( 74750 * )
+      NEW met1 ( 74750 41650 ) ( * 42330 )
+      NEW met2 ( 74750 41140 ) ( * 41650 )
+      NEW met3 ( 74750 41140 ) ( 76820 * ) ;
+END NETS
+END DESIGN

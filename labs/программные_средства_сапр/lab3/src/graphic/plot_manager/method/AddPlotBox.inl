@@ -11,9 +11,9 @@ inline PlotManager<LayoutT>* PlotManager<LayoutT>::add_plot_box(Window window, H
         .height = sc<u32>(window_rect.bottom - window_rect.top)
     };
 
-    const auto& window_extent = this->template get_position_extent<GraphicShiftPackage>(client_extent);
+    const auto& shift_extent = this->template get_position_extent<GraphicShiftPackage>(client_extent);
 
-    auto* plot_box = new PlotBox(window_extent, plot_data, color);
+    auto* plot_box = new PlotBox(shift_extent, plot_data, _math_visual_features, color);
     _plot_boxes.push_back(plot_box);
     const u32 plot_idx = _plot_boxes.size() - 1;
 

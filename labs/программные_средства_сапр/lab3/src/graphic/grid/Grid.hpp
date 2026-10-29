@@ -36,9 +36,9 @@ public:
 
     void draw(HDC h_dc, const WindowExtentPackage& actual_paint_window_extent) override {
         HPEN old_pen;
-        HPEN pen = PaintTools::TakePen(h_dc, RGB(255, 255, 255), old_pen);
+        HPEN pen = PaintTools::TakePen(h_dc, this->_color, old_pen);
         HBRUSH old_brush;
-        HBRUSH brush = PaintTools::TakeBrush(h_dc, RGB(255, 255, 255), old_brush);
+        HBRUSH brush = PaintTools::TakeBrush(h_dc, this->_color, old_brush);
 
         const auto& position_extent = this->template get_position_extent<GraphicPositionExtentPackage>(actual_paint_window_extent);
         
@@ -49,7 +49,7 @@ public:
         PaintTools::ResetPen(h_dc, old_pen, pen);
         PaintTools::ResetBrush(h_dc, old_brush, brush);
         
-        _paint_strategy->paint_grid(h_dc, position_extent, _cell_factor, this->_color);
+        _paint_strategy->paint_grid(h_dc, position_extent, _cell_factor);
     }
 
     ~Grid() {

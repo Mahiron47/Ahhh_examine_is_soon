@@ -1,6 +1,7 @@
 out
 build
 .vscode
+labs/методы_обработки_и_анализа_больших_данных/lab*/data
 
 *.aux
 *.fdb_latexmk

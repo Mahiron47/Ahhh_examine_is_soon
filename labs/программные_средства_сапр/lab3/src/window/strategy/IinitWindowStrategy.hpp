@@ -32,6 +32,7 @@ public:
     }
 
     virtual int get_n_cmd_show() = 0;
+    virtual COLORREF get_window_background_color() = 0;
     virtual LPCTSTR get_class_name() = 0;
     virtual UINT get_window_style() = 0;
     virtual WNDPROC get_window_protocol() = 0;
