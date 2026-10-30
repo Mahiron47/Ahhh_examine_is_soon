@@ -60,17 +60,12 @@ struct DieArea {
     Point<u32> top_left;
     Point<u32> bottom_right;
 
-    u32 width() const noexcept { return bottom_right.x - top_left.x; }
-    u32 height() const noexcept { return bottom_right.y - top_left.y; }
+    constexpr u32 width() const noexcept { return bottom_right.x - top_left.x; }
+    constexpr u32 height() const noexcept { return bottom_right.y - top_left.y; }
 };
 
-struct ChipStatistics {
-    u32 total_macros = 0;
+struct ChipStatistic {
     u32 total_components = 0;
-    u32 unique_components = 0;
-    u32 occupied_rows = 0;
-    u32 total_nets = 0;
-    u32 clock_nets = 0;
     std::deque<std::string> signal_net_names;
 };
 
@@ -85,7 +80,6 @@ struct DefDataPackage {
     DieArea die_area;
     std::deque<DefComponent> components;
     std::deque<DefNet> nets;
-    ChipStatistics stats;
 };
 
 class ChipData_T {
@@ -96,9 +90,9 @@ class ChipData_T {
     u32                             _def_units;
     std::deque<DefComponent>        _components;
     std::deque<DefNet>              _nets;
-    ChipStatistics                  _stats;
+    ChipStatistic                   _stats;
 
-    ChipData_T(DefDataPackage def_data, LefDataPackage lef_data)
+    ChipData_T(DefDataPackage def_data, LefDataPackage lef_data, ChipStatistic stats)
         : _database_microns(lef_data.database_microns),
           _layers(lef_data.layers),
           _macros(lef_data.macros),
@@ -106,32 +100,35 @@ class ChipData_T {
           _def_units(def_data.def_units),
           _components(def_data.components),
           _nets(def_data.nets),
-          _stats(def_data.stats) {}
+          _stats(stats) {}
 
 public:
-    static ChipData_T* init(DefDataPackage def_data, LefDataPackage lef_data) {
-        return new ChipData_T(def_data, lef_data);
+    static ChipData_T* init(DefDataPackage def_data, LefDataPackage lef_data, ChipStatistic stats) {
+        return new ChipData_T(def_data, lef_data, stats);
     }
     static void destroy(ChipData_T* data) {
         delete data;
     }
 
-    constexpr const DefDataPackage& get_def_data() const {
+    constexpr DefDataPackage get_def_data() const {
         return DefDataPackage {
             .def_units = _def_units,
             .die_area = _die_area,
             .components = _components,
             .nets = _nets,
-            .stats = _stats
         };
     }
 
-    constexpr const LefDataPackage& get_lef_data() const {
+    constexpr LefDataPackage get_lef_data() const {
         return LefDataPackage {
             .database_microns = _database_microns,
             .layers = _layers,
             .macros = _macros
         };
+    }
+
+    constexpr const ChipStatistic& get_stats() const {
+        return _stats;
     }
 
     ChipData_T(const ChipData_T&) = delete;

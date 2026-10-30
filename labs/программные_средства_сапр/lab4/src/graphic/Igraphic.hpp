@@ -125,8 +125,9 @@ public:
 
 };
 
-#include "chip_segment/macros/Macros.hpp"
+#include "chip_segment/component/Component.hpp"
 #include "chip_segment/net/Net.hpp"
 #include "chip_box/ChipBox.hpp"
+#include "chip_segment/net/method/send_message.inl"
 
 #endif // IGRAPHIC_HPP

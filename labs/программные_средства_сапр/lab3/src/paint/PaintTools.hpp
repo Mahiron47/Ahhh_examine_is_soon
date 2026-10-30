@@ -34,7 +34,9 @@ public:
     static void PaintFilledRectangle(HDC h_dc, i32 x1, i32 y1, i32 x2, i32 y2) {
         Rectangle(h_dc, x1, y1, x2, y2);
     }
-    static void PaintText(HDC h_dc, const std::string& text, i32 x, i32 y) {
+    static void PaintText(HDC h_dc, const std::string& text, i32 x, i32 y, COLORREF color) {
+        SetBkMode(h_dc, TRANSPARENT);
+        SetTextColor(h_dc, color);
         TextOutA(h_dc, x, y, text.c_str(), sc<int>(text.size()));
     }
     static void PaintTextFilledRectangle(HDC h_dc, const std::string& text, i32 x1, i32 y1, i32 x2, i32 y2) {

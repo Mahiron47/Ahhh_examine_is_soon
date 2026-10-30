@@ -11,20 +11,26 @@ int WINAPI WinMain(HINSTANCE h_instance, HINSTANCE, LPSTR, int n_cmd_show) {
                                    new InitMainWindow(n_cmd_show, RGB(255, 255, 255),
                                                       new FilePicker(file_handler, VK_INSERT)));
 
-    window->execute_window([file_handler, window](HWND h_wnd, const MSG& msg) -> void {
+    u32 counter = 0;
+
+    window->execute_window([file_handler, window, &counter](HWND h_wnd, const MSG& msg) -> void {
         if (msg.hwnd != h_wnd) return;
 
         switch (msg.message) {
         case WM_APP | APP_FILE_PICKER: {
-            window->pop_graphic();
-            window->pop_hotkey();
+            if (counter != 0) {
+                window->pop_graphic();
+                window->pop_hotkey();
+            }
+
+            counter++;
 
             auto* chip_box = new ChipBox(GraphicShiftPackage {
                 .left_border_shift   = 30,
                 .right_border_shift  = 30,
                 .top_border_shift    = 30,
                 .bottom_border_shift = 50
-            }, file_handler->get_chip_data());
+            }, file_handler->get_chip_data(), RGB(172, 172, 172));
 
             window->add_graphic(chip_box)
                   ->add_hotkey(new Click(MK_LBUTTON, chip_box));

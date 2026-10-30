@@ -19,7 +19,7 @@ class PlotBox : public IgraphicLayout<LayoutT> {
 
         GetTextExtentPoint32A(h_dc, _plot->get_data_original().name.c_str(), sc<int>(_plot->get_data_original().name.size()), &ts);
         
-        PaintTools::PaintText(h_dc, _plot->get_data_original().name, position_extent.pos_x + 0.5f * (position_extent.width - ts.cx), position_extent.pos_y + 2);
+        PaintTools::PaintText(h_dc, _plot->get_data_original().name, position_extent.pos_x + 0.5f * (position_extent.width - ts.cx), position_extent.pos_y + 2, RGB(50, 50, 50));
     }
 
     void draw_marks(HDC h_dc, const GraphicPositionExtentPackage& position_extent) {
@@ -38,10 +38,10 @@ class PlotBox : public IgraphicLayout<LayoutT> {
             
             PaintTools::PaintFilledRectangle(h_dc, normalised_points[i].x + line_width, position_extent.pos_y + position_extent.height - ts1.cy - 10 + line_lenght,
                                                    normalised_points[i].x - line_width, position_extent.pos_y + position_extent.height - ts1.cy - 10 - line_lenght);
-            PaintTools::PaintText(h_dc, std::to_string(points[i].x), normalised_points[i].x - 0.5f * ts1.cx, position_extent.pos_y + position_extent.height - 0.5f * ts1.cy - 12);
-            PaintTools::PaintFilledRectangle(h_dc, position_extent.pos_x + position_extent.width - ts2.cx - 10 + line_lenght, normalised_points[i].y + line_width,
-                                                   position_extent.pos_x + position_extent.width - ts2.cx - 10 - line_lenght, normalised_points[i].y - line_width);
-            PaintTools::PaintText(h_dc, std::to_string(points[i].y), position_extent.pos_x + position_extent.width - 0.5f * ts2.cx - 8, normalised_points[i].y - 0.5f * ts2.cy);
+            PaintTools::PaintText(h_dc, std::to_string(points[i].x), normalised_points[i].x - 0.5f * ts1.cx, position_extent.pos_y + position_extent.height - 0.5f * ts1.cy - 12, RGB(50, 50, 50));
+            PaintTools::PaintFilledRectangle(h_dc, position_extent.pos_x + position_extent.width - _marks_width.x + line_lenght, normalised_points[i].y + line_width,
+                                                   position_extent.pos_x + position_extent.width - _marks_width.x - line_lenght, normalised_points[i].y - line_width);
+            PaintTools::PaintText(h_dc, std::to_string(points[i].y), position_extent.pos_x + position_extent.width - ts2.cx - 4, normalised_points[i].y - 0.5f * ts2.cy, RGB(50, 50, 50));
     }   }
 
     void draw_math_marks(HDC h_dc) {
@@ -68,7 +68,7 @@ class PlotBox : public IgraphicLayout<LayoutT> {
             for (u32 i = 0; i < _plot->get_data_original().num_points; ++i) {
                 if (points[i].x != min_point.x) continue;
 
-                PaintTools::PaintText(h_dc, "min", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5);
+                PaintTools::PaintText(h_dc, "min", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5, RGB(50, 50, 50));
         }   }
         if (_math_visual_features.is_mark_max_x) {
             SIZE ts;
@@ -85,22 +85,23 @@ class PlotBox : public IgraphicLayout<LayoutT> {
             for (u32 i = 0; i < _plot->get_data_original().num_points; ++i) {
                 if (points[i].x != max_point.x) continue;
 
-                PaintTools::PaintText(h_dc, "max", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5);
+                PaintTools::PaintText(h_dc, "max", normalised_points[i].x - 0.5f * ts.cx, normalised_points[i].y - ts.cy - 5, RGB(50, 50, 50));
     }   }   }
 
 public:
     constexpr PlotBox(const LayoutT& layout,
                       PlotData plot_data,
                       MathVisualFeatures math_visual_features = MathVisualFeatures {},
-                      COLORREF color = RGB(0, 0, 0)) : IgraphicLayout<LayoutT>(layout, color),
-                                                       _math_visual_features(math_visual_features) {
+                      COLORREF color_background = RGB(255, 255, 255),
+                      COLORREF color_plot = RGB(0, 0, 0)) : IgraphicLayout<LayoutT>(layout, color_background),
+                                                            _math_visual_features(math_visual_features) {
         this->_grid = new Grid(layout, CellCountType {
             .cell_count = plot_data->get_data().num_points + 1
         }, false, RGB(0, 0, 0), new LineGrid(3));
         this->_plot = new Plot(layout, plot_data, Point<f32> {
             .x = 0.05f,
             .y = 0.05f
-        }, color);
+        }, color_plot);
     }
 
     void init_runtime(HWND h_wnd, const WindowExtentPackage& window_extent) override {
@@ -192,9 +193,9 @@ public:
         const auto& position_extent = this->template get_position_extent<GraphicPositionExtentPackage>(actual_paint_window_extent);
 
         HPEN old_pen;
-        HPEN pen = PaintTools::TakePen(h_dc, RGB(255, 255, 255), old_pen);
+        HPEN pen = PaintTools::TakePen(h_dc, this->_color, old_pen);
         HBRUSH old_brush;
-        HBRUSH brush = PaintTools::TakeBrush(h_dc, RGB(255, 255, 255), old_brush);
+        HBRUSH brush = PaintTools::TakeBrush(h_dc, this->_color, old_brush);
 
         PaintTools::PaintFilledRectangle(h_dc, position_extent.pos_x, position_extent.pos_y, 
                                                position_extent.pos_x + position_extent.width, 
@@ -211,7 +212,6 @@ public:
 
         this->draw_name(h_dc, position_extent);
 
-        
         int save_dc = SaveDC(h_dc);
 
         IntersectClipRect(h_dc, position_extent.pos_x, position_extent.pos_y + _name_height, 

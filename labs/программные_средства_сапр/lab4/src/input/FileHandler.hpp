@@ -14,28 +14,27 @@ class FileHandler_T {
                                                               _chip_data(nullptr) {}
 
 public:
-    bool parse_def(const std::filesystem::path& file_path, DefDataPackage& def_data, const std::filesystem::path& log_dir = "") {
+    bool parse_def(const std::filesystem::path& file_path, DefDataPackage& def_data, ChipStatistic& stat_data, const std::filesystem::path& log_dir = "") {
         std::ifstream file(file_path);
         if (!file.is_open()) {
             std::cerr << "FileHandler_T::parse : не удалось открыть файл " << file_path.string() << std::endl;
             return false;
         }
 
-        def_data = {
+        def_data = DefDataPackage {
             .def_units = 0,
             .die_area = DieArea {
-                .top_left = Point<i32>{ 
+                .top_left = Point<u32> { 
                     .x = 0, 
                     .y = 0 
                 },
-                .bottom_right = Point<i32>{ 
+                .bottom_right = Point<u32> { 
                     .x = 0, 
                     .y = 0 
                 }
             },
             .components = {},
-            .nets = {},
-            .stats = {}
+            .nets = {}
         };
 
         std::string token;
@@ -57,11 +56,11 @@ public:
                 }
             } else if (token == "DIEAREA") {
                 DieArea die_area = DieArea {
-                    .top_left = Point<i32>{ 
+                    .top_left = Point<u32>{ 
                         .x = 0, 
                         .y = 0 
                     },
-                    .bottom_right = Point<i32>{ 
+                    .bottom_right = Point<u32>{ 
                         .x = 0, 
                         .y = 0 
                     }
@@ -116,7 +115,7 @@ public:
                         DefComponent comp = {
                             .instance_name = "INSTANCE_NAME",
                             .macro_name = "MACRO_NAME",
-                            .position = Point<i32>{ 
+                            .position = Point<u32>{ 
                                 .x = 0, 
                                 .y = 0 
                             },
@@ -146,11 +145,6 @@ public:
                                     }
                                     
                                     file >> comp.orientation;
-
-                                    if (file >> token4 && token4 != ";") {
-                                        std::cerr << "FileHandler_T::parse : ожидается ';' после ориентации, найдено '" << token4 << "'" << std::endl;
-                                        return false;
-                                    }   
                         }   }   }
                         def_data.components.push_back(comp);
                 }   }
@@ -208,14 +202,14 @@ public:
 
                                 if (token4 == "USE") {
                                     file >> net.type;
-                                } else if (token4 == "ROUTED" || token4 == "NEW") {
+                                } else if (token4 == "ROUTED") {
                                     DefNet::Routing segment = DefNet::Routing {
                                         .layer = "metal1",
-                                        .source = Point<i32>{ 
+                                        .source = Point<u32>{ 
                                             .x = 0, 
                                             .y = 0 
                                         },
-                                        .target = Point<i32>{ 
+                                        .target = Point<u32>{ 
                                             .x = 0, 
                                             .y = 0 
                                         }
@@ -243,14 +237,83 @@ public:
                                             .procedure_name = token5
                                         });
                                     } else {
-                                        file >> segment.target.x >> segment.target.y;
+                                        std::string token6;
+
+                                        if (file >> token6 && token6 == "*") {
+                                            segment.target.x = segment.source.x;
+                                        } else {
+                                            segment.target.x = std::stoul(token6);
+                                        }
+
+                                        if (file >> token6 && token6 == "*") {
+                                            segment.target.y = segment.source.y;
+                                        } else {
+                                            segment.target.y = std::stoul(token6);
+                                        }
 
                                         while (file >> token5 && token5 != ")") {
                                             std::cout << "FileHandler_T::parse : найдено extension value '" << token5 << "' после координат конца сегмента, игнорируется" << std::endl;
                                         }
 
                                         net.segments.push_back(segment);
-                        }   }   }   }
+                                    }   
+                                }   
+                            } else if (token3 == "NEW") {
+                                DefNet::Routing segment = DefNet::Routing {
+                                    .layer = "metal1",
+                                    .source = Point<u32> {
+                                        .x = 0,
+                                        .y = 0
+                                    },
+                                    .target = Point<u32> {
+                                        .x = 0, 
+                                        .y = 0
+                                    }
+                                };
+
+                                std::string token5;
+
+                                file >> segment.layer;
+
+                                if (file >> token5 && token5 != "(") {
+                                    std::cerr << "FileHandler_T::parse : ожидается '(' после 'ROUTED' и имени слоя, найдено '" << token5 << "'" << std::endl;
+                                    return false;
+                                }
+
+                                file >> segment.source.x >> segment.source.y;
+
+                                while (file >> token5 && token5 != ")") {
+                                    std::cout << "FileHandler_T::parse : найдено extension value '" << token5 << "' после координат начала сегмента, игнорируется" << std::endl;
+                                }
+
+                                if (file >> token5 && token5 != "(") {
+                                    net.segments.push_back(DefNet::Contact{
+                                        .layer = segment.layer,
+                                        .source = segment.source,
+                                        .procedure_name = token5});
+                                } else {
+                                    std::string token6;
+                                    
+                                    if (file >> token6 && token6 == "*") {
+                                        segment.target.x = segment.source.x;
+                                    } else {
+                                        segment.target.x = std::stoul(token6);
+                                    }
+                                    
+                                    if (file >> token6 && token6 == "*") {
+                                        segment.target.y = segment.source.y;
+                                    } else {
+                                        segment.target.y = std::stoul(token6);
+                                    }
+
+                                    while (file >> token5 && token5 != ")") {
+                                        std::cout << "FileHandler_T::parse : найдено extension value '" << token5 << "' после координат конца сегмента, игнорируется" << std::endl;
+                                    }
+
+                                    net.segments.push_back(segment);
+                                }
+                            } 
+                        }
                         def_data.nets.push_back(net);
                 }   }
                 
@@ -263,50 +326,25 @@ public:
 
         file.close();
 
-        std::set<std::string> unique_macro_set;
-        std::set<i32> occupied_rows_set;
-
-        for (const auto& comp : def_data.components) {
-            unique_macro_set.insert(comp.macro_name);
-            if (comp.status == "PLACED" || comp.status == "FIXED") {
-                occupied_rows_set.insert(comp.position.y);
-            }
-        }
-
-        ChipStatistics stats = ChipStatistics {
-            .total_macros = unique_macro_set.size(),
-            .total_components = def_data.components.size(),
-            .unique_components = unique_macro_set.size(),
-            .occupied_rows = occupied_rows_set.size(),
-            .total_nets = def_data.nets.size(),
-            .clock_nets = 0,
+        stat_data = ChipStatistic {
+            .total_components = sc<u32>(def_data.components.size()),
             .signal_net_names = {}
         };
 
         for (const auto& net : def_data.nets) {
-            if (net.type == "CLOCK") {
-                stats.clock_nets++;
-            }
-            if (net.type == "SIGNAL") {
-                stats.signal_net_names.push_back(net.name);
-            }
+            if (net.type == "SIGNAL") stat_data.signal_net_names.push_back(net.name);
         }
 
         SetConsoleOutputCP(CP_UTF8);
         SetConsoleCP(CP_UTF8);
 
         std::cout << "\n=================== STAT_DEF ===================\n";
-        std::cout << "Всего компонентов: " << stats.total_components << "\n";
-        std::cout << "Количество сигнальных цепей: " << stats.signal_net_names.size() << "\n";
+        std::cout << "Всего компонентов: " << stat_data.total_components << "\n";
+        std::cout << "Количество сигнальных цепей: " << stat_data.signal_net_names.size() << "\n";
         std::cout << "Имена сигнальных цепей:\n";
-        for (const auto& name : stats.signal_net_names) {
+        for (const auto& name : stat_data.signal_net_names) {
             std::cout << "  - " << name << "\n";
         }
-        std::cout << "Дополнительная статистика:\n";
-        std::cout << "  * Всего цепей: " << stats.total_nets << "\n";
-        std::cout << "  * Количество тактовых цепей: " << stats.clock_nets << "\n";
-        std::cout << "  * Количество уникальных компонентов: " << stats.unique_components << "\n";
-        std::cout << "  * Количество занятых строк: " << stats.occupied_rows << "\n";
         std::cout << "================================================\n\n";
 
         if (log_dir.empty()) {
@@ -316,17 +354,12 @@ public:
 
         std::ofstream log_file(log_dir / "stat_def.log");
         if (log_file.is_open()) {
-            log_file << "Всего компонентов: " << stats.total_components << "\n";
-            log_file << "Количество сигнальных цепей: " << stats.signal_net_names.size() << "\n";
+            log_file << "Всего компонентов: " << stat_data.total_components << "\n";
+            log_file << "Количество сигнальных цепей: " << stat_data.signal_net_names.size() << "\n";
             log_file << "Имена сигнальных цепей:\n";
-            for (const auto& name : stats.signal_net_names) {
+            for (const auto& name : stat_data.signal_net_names) {
                 log_file << name << "\n";
             }
-            log_file << "\nДополнительная статистика:\n";
-            log_file << "Всего цепей: " << stats.total_nets << "\n";
-            log_file << "Количество тактовых цепей: " << stats.clock_nets << "\n";
-            log_file << "Количество уникальных компонентов: " << stats.unique_components << "\n";
-            log_file << "Количество занятых строк: " << stats.occupied_rows << "\n";
             log_file.close();
             std::cout << "FileHandler_T: статистика сохранена в " << (log_dir / "stat_def.log").string() << std::endl;
         }
@@ -337,7 +370,7 @@ public:
     bool parse_lef(const std::filesystem::path& file_path, LefDataPackage& lef_data, const std::filesystem::path& log_dir = "") {
         std::ifstream file(file_path);
         if (!file.is_open()) {
-            std::cerr << "LefParser::parse : не удалось открыть файл " << file_path.string() << std::endl;
+            std::cerr << "FileHandler_T::parse : не удалось открыть файл " << file_path.string() << std::endl;
             return false;
         }
 
@@ -357,12 +390,17 @@ public:
             }
 
             if (token == "UNITS") {
-                std::string dist, mic;
-                file >> dist >> mic;
-                if (dist == "DATABASE" && mic == "MICRONS") {
-                    f64 u = 0.0;
-                    file >> u;
-                    lef_data.database_microns = u;
+                std::string token2;
+                while (file >> token2 && token2 != "END") {
+                    if (token2 == "DATABASE") {
+                        std::string token3;
+                        file >> token3;
+                        if (token3 == "MICRONS") {
+                            u32 microns = 0;
+                            file >> microns;
+                            lef_data.database_microns = microns;
+                        }
+                    }
                 }
             } else if (token == "LAYER") {
                 LefLayer layer = LefLayer {
@@ -373,7 +411,16 @@ public:
                     .thickness = 0.0
                 };
 
-                if (file >> layer.name && (layer.name == ";" || layer.name == "STRING")) {
+                if (file >> layer.name && [&file]() -> bool {
+                    char token[256];
+                    file.getline(token, 256);
+
+                    for (u32 i = 0; token[i] != '\0'; ++i) {
+                        if (token[i] == ';') return true;
+                    }
+
+                    return false;
+                }()) {
                     file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                     continue;
                 }
@@ -381,23 +428,19 @@ public:
                 std::string token2;
 
                 while (file >> token2 && token2 != "END") {
-                    std::string token3;
-
-                    file >> token3;
-
-                    if (token3 == "TYPE") {
+                    if (token2 == "TYPE") {
                         file >> layer.type;
-                    } else if (token3 == "WIDTH") {
+                    } else if (token2 == "WIDTH") {
                         file >> layer.width;
-                    } else if (token3 == "PITCH") {
+                    } else if (token2 == "PITCH") {
                         file >> layer.pitch;
-                    } else if (token3 == "THICKNESS") {
+                    } else if (token2 == "THICKNESS") {
                         file >> layer.thickness;
                     } 
                 }
 
                 if (file >> token2 && token2 != layer.name) {
-                    std::cerr << "LefParser::parse : ожидается 'END " << layer.name << "', найдено '" << token2 << "'" << std::endl;
+                    std::cerr << "FileHandler_T::parse : ожидается 'END " << layer.name << "', найдено '" << token2 << "'" << std::endl;
                     return false;
                 }
 
@@ -414,18 +457,14 @@ public:
 
                 std::string token2;
 
-                while (file >> token2) {
-                    if (token2 == "END" && file >> token2 && token2 == macro.name) {
-                        break;
-                    }
-
+                while (file >> token2 && token2 != "END") {
                     if (token2 == "SIZE") {
                         file >> macro.width;
                         
                         std::string token3;
 
                         if (file >> token3 && token3 != "BY") {
-                            std::cerr << "LefParser::parse : ожидается 'BY' после ширины MACRO, найдено '" << token3 << "'" << std::endl;
+                            std::cerr << "FileHandler_T::parse : ожидается 'BY' после ширины MACRO, найдено '" << token3 << "'" << std::endl;
                             return false;
                         }
 
@@ -440,17 +479,39 @@ public:
 
                         file >> pin.name;
 
-                        while (file >> token3) {
-                            if (token3 == "END" && file >> token3 && token3 == pin.name) {
-                                break;
-                            }
-                            
+                        while (file >> token3 && token3 != "END") {
                             if (token3 == "DIRECTION") {
                                 file >> pin.direction;
+                            } else if (token3 == "PORT") {
+                                std::string token4;
+                                
+                                while (file >> token4 && token4 != "END") {
+                                    // EMPTY
+                                }
                             }
                         }
+
+                        if (file >> token3 && token3 != pin.name) {
+                            std::cerr << "FileHandler_T::parse : ожидается 'END " << pin.name << "', найдено '" << token3 << "'" << std::endl;
+                            return false;
+                        } 
+
                         macro.pins.push_back(pin);
-                }   }
+                    } else if (token2 == "OBS") {
+                        std::string token3;
+
+                        while (file >> token3 && token3 != "END") {
+                            // EMPTY
+                        }
+                    }
+                }
+        
+
+                if (file >> token2 && token2 != macro.name) {
+                    std::cerr << "FileHandler_T::parse : ожидается 'END " << macro.name << "', найдено '" << token2 << "'" << std::endl;
+                    return false;
+                }
+
                 lef_data.macros[macro.name] = macro;
         }   }
 
@@ -460,21 +521,18 @@ public:
         SetConsoleCP(CP_UTF8);
 
         if (log_dir.empty()) {
-            std::cout << "LefParser: логирование статистики отключено (log_dir пустой)" << std::endl;
+            std::cout << "FileHandler_T: логирование статистики отключено (log_dir пустой)" << std::endl;
             return true;
         }
 
         std::ofstream log_file(log_dir / "stat_lef.log");
         if (log_file.is_open()) {
             for (const auto& [name, macro] : lef_data.macros) {
-                f64 area = macro.width * macro.height;
-                log_file << "Cell: " << name 
-                         << ", Pins: " << macro.pins.size() 
-                         << ", Size: " << macro.width << " x " << macro.height 
-                         << ", Area: " << area << "\n";
+                log_file << "Имя ячейки: " << name << "\t" 
+                         << "Количество пинов: " << macro.pins.size() << "\n";
             }
             log_file.close();
-            std::cout << "LefParser: статистика сохранена в " << (log_dir / "stat_lef.log").string() << std::endl;
+            std::cout << "FileHandler_T: статистика сохранена в " << (log_dir / "stat_lef.log").string() << std::endl;
         }
 
         return true;
@@ -567,14 +625,15 @@ public:
 
         DefDataPackage def_data;
         LefDataPackage lef_data;
+        ChipStatistic stat_data;
 
         bool ok_lef = parse_lef(selected_lef, lef_data, selected_lef.parent_path());
-        bool ok_def = parse_def(selected_def, def_data, selected_def.parent_path());
+        bool ok_def = parse_def(selected_def, def_data, stat_data, selected_def.parent_path());
 
         if (_chip_data != nullptr) {
             ChipData_T::destroy(_chip_data);
         }
-        this->_chip_data = ChipData_T::init(def_data, lef_data);
+        this->_chip_data = ChipData_T::init(def_data, lef_data, stat_data);
 
         return ok_lef && ok_def;
     }

@@ -31,7 +31,7 @@ public:
                                                            _math_visual_features(math_visual_features),
                                                            _active_plot_index(0) {}
 
-    PlotManager<LayoutT>* add_plot_box(Window, HWND h_wnd, PlotData plot_data, COLORREF color = RGB(0, 0, 0));
+    PlotManager<LayoutT>* add_plot_box(Window, HWND, PlotData, COLORREF, COLORREF);
 
     void set_active_plot(u32 index) {
         if (index < _plot_boxes.size()) {

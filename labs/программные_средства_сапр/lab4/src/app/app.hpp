@@ -36,7 +36,8 @@ typedef std::float64_t f64;
 #define MESSAGE_ID_CLICK   4
 
 typedef struct ClickMessagePackage {
-    u16 key;
+    u16   key;
+    void* self;
 } ClickMessagePackage;
 
 #define MESSAGE_ID_MOVE    5

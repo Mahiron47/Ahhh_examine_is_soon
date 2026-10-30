@@ -37,9 +37,9 @@ int WINAPI WinMain(HINSTANCE h_instance, HINSTANCE, LPSTR, int n_cmd_show) {
         case WM_APP | APP_FILE_PICKER: {
             while (!file_handler->get_plot_data().empty()) {
                 PlotData plot_data = file_handler->get_plot_data().back();
-                if (counter == 0) plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(1, 50, 32));
-                else if (counter == 1) plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(0, 0, 255));
-                else plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(0, 0, 0));
+                if (counter == 0) plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(187, 187, 187), RGB(1, 50, 32));
+                else if (counter == 1) plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(187, 187, 187), RGB(0, 0, 255));
+                else plot_manager->add_plot_box(window, h_wnd, plot_data, RGB(187, 187, 187), RGB(0, 0, 0));
 
                 counter++;
                 file_handler->get_plot_data().pop_back();

@@ -18,6 +18,7 @@ public:
 
         auto click_data = ClickMessagePackage {
             .key = _key,
+            .self = nullptr
         };
 
         for (auto& graphic : _graphic) {
