@@ -99,6 +99,23 @@ function include.pgf_plot_wrap(title,
     title_shift_opt = "    title style={yshift=1.5em}, "
   end
 
+  local min_x = min(args, "x")
+  local max_x = max(args, "x")
+  local min_y = min(args, "y")
+  local max_y = max(args, "y")
+
+  local xmin_val = -0.05 * max_x + min_x
+  if min_x >= 0 and xmin_val < 0 then
+    xmin_val = 0
+  end
+  local xmax_val = 1.05 * max_x
+
+  local ymin_val = -0.05 * max_y + min_y
+  if min_y >= 0 and ymin_val < 0 then
+    ymin_val = 0
+  end
+  local ymax_val = 1.08 * max_y
+
   tex.sprint("\\begin{tikzpicture}")
   tex.sprint("\\begin{axis}[")
   tex.sprint("    title={" .. title .. "}, ")
@@ -111,8 +128,8 @@ function include.pgf_plot_wrap(title,
   tex.sprint("    height=" .. multiplicator_y .. "\\textwidth, ")
   tex.sprint("    grid=both, ")
   tex.sprint("    grid style={dashed, gray!30}, ")
-  tex.sprint("    xmin=" .. -0.1 * max(args, "x") + min(args, "x") .. ", xmax=" .. 1.1 * max(args, "x") .. ", ")
-  tex.sprint("    ymin=" .. -0.1 * max(args, "y") + min(args, "y") .. ", ymax=" .. 1.1 * max(args, "y") .. ", ")
+  tex.sprint("    xmin=" .. xmin_val .. ", xmax=" .. xmax_val .. ", ")
+  tex.sprint("    ymin=" .. ymin_val .. ", ymax=" .. ymax_val .. ", ")
   tex.sprint("    legend pos=" .. legend_pos .. ", ")
   tex.sprint("]")
 

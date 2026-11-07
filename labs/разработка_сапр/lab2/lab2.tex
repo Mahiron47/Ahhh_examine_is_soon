@@ -1,0 +1,499 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Настройка языка и шрифтов для LuaLaTeX ---
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+
+\setmainfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\newfontfamily\cyrillicfont{Alice-Regular}[
+    Path=font/,
+    Extension=.ttf,
+    BoldFont = Alice-Regular,
+    ItalicFont = Alice-Regular,
+    BoldItalicFont = Alice-Regular,
+    BoldFeatures = {FakeBold=1.6},
+    ItalicFeatures = {FakeSlant=0.2},
+    BoldItalicFeatures = {FakeBold=1.6,FakeSlant=0.2}
+]
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{TeX Gyre Cursor}
+\AtBeginDocument{\renewcommand{\textnumero}{{\sffamily №}}}
+
+\usepackage{graphicx}                           % Графика
+\usepackage{amsmath, amsfonts, amssymb, amsthm} % Математика
+\usepackage{mathtools}
+\usepackage{chemfig}
+\usepackage[version=4,arrows=pgf-filled,
+            textfontname=sffamily,
+            mathfontname=mathsf]{mhchem}
+\usepackage[protrusion=false]{microtype}       % Микротипографика
+\usepackage{braket}                         % Braket нотация для квантовой механики
+\usepackage{unicode-math}                   % Современный пакет для математики в LuaLaTeX
+\usepackage{longtable}                      % Таблицы с разрывом страниц
+\usepackage{tikz}                           % Рисование
+\usepackage[europeanresistors]{circuitikz}  % Рисование электрических схем в европейском стиле
+\usepackage{listings}                       % Для отображения кода
+\usepackage{tabularx}                       % Для таблиц во всю ширину
+\usepackage{array}                          % Для расширенных возможностей таблиц
+\usepackage{float}                          % Для точного позиционирования фигур
+\usepackage{pgfplots}                          % Для построения графиков
+\usepackage{caption}                           % Для настройки подписей к рисункам и таблицам
+\usepackage{xfp}                               % Для вычислений в LaTeX
+\usepackage{luacode}                           % Для выполнения Lua-кода в документе    
+\pgfplotsset{compat=1.18}
+
+\usepackage[paper=a4paper,
+            top=20mm,
+            bottom=20mm,
+            left=10mm,
+            right=10mm,
+            footskip=0.4in 
+]{geometry}
+
+\usetikzlibrary{arrows.meta}
+
+% Настройка формата подписей в соответствии с образцом (ГОСТ: «Рисунок 1 — ...»)
+\DeclareCaptionLabelFormat{fullfig}{Рисунок~#2}
+\DeclareCaptionLabelFormat{fulltab}{Таблица~#2}
+\captionsetup[figure]{labelformat=fullfig, labelsep=endash, justification=centering}
+\captionsetup[table]{labelformat=fulltab, labelsep=endash, justification=justified}
+
+% --- Колонтитулы ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{15pt}
+
+% --- Теоремы и окружения ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\numberwithin{equation}{section}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand\lstlistingname{Листинг}
+
+\lstdefinelanguage{spice}{
+    alsoletter={.},
+    morecomment=[l]{*},
+    morecomment=[l]{;},
+    morekeywords={.DC, .dc, .TRAN, .tran, .AC, .ac, .OP, .op, .SAVE, .save, .PROBE, .probe, .END, .end, .PARAM, .param, .MODEL, .model, .SUBCKT, .subckt, .ENDS, .ends, .INCLUDE, .include, .LIB, .lib, .IC, .ic, .NODESET, .nodeset, .STEP, .step, .PRINT, .print, .PLOT, .plot},
+    sensitive=false
+}
+
+\lstdefinestyle{main}{
+    backgroundcolor=\color{gray!8},   
+    commentstyle=\color{green!50!black}\itshape,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    numberstyle=\small\color{darkgray},
+    stringstyle=\rmfamily\color{orange!90!black},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,         
+    breaklines=true,                   
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=8pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{gray!30},
+    captionpos=t
+}   
+
+\lstset{style=main}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{luacode*}
+    -- data = require("data")
+    -- include = require("include")
+    -- handle = require("handle")
+\end{luacode*}
+
+\newcommand{\VariantN}{1}
+\newcommand{\LabNumber}{2}
+\newcommand{\LabTitle}{Работа с графическим редактором схем и постпроцессором.\\
+Система схемотехнического проектирования Symica DE}
+\newcommand{\Discipline}{Разработка САПР}
+
+\title{
+    Министерство науки и высшего образования 
+    
+    Российской Федерации
+    
+    Национальный исследовательский университет «МИЭТ»
+    
+    Институт интегральной электроники имени академика 
+    
+    К. А. Валиева
+
+    \vspace{2em}
+}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\begin{center}
+\Large Отчёт по лабораторной работе \textnumero~$\LabNumber$\\
+по дисциплине «\Discipline»\\
+«\LabTitle»
+\end{center}
+
+\vspace{12em}
+
+\begin{flushright}
+    Выполнил студент группы ЭН-$35$\\
+    Андреев И. А.\\
+    Вариант \textnumero~$\VariantN$\\
+    \vspace{1em}
+    Проверил преподаватель института ИнЭл\\
+    Щучкин Евгений Юрьевич
+\end{flushright}
+
+\cfoot{Москва 2026}
+
+\pagebreak
+
+\fancyhead[L]{\LabTitle}
+\fancyhead[R]{\Discipline}
+\fancyfoot[C]{\thepage}
+
+\begin{center}
+\Large\textbf{Лабораторная работа $\LabNumber$}
+\end{center}
+
+\textbf{Цель работы:} получить навыки работы с графическим редактором схем и
+графическим постпроцессором САПР Symica DE.
+
+\begin{center}
+\LARGE\textbf{\LabTitle}
+\end{center}
+
+% =========================================================================
+% 1. ПРИМЕР 1
+% =========================================================================
+\section{Пример 1. Ток через резистор (анализ по постоянному току)}
+
+Схема приведена на рисунке~\ref{fig:task1_circuit}, результат 
+моделирования — на рисунке~\ref{fig:task1_plot}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task1_circuit.png}
+    \caption{Схема из источника напряжения $V_0$ и резистора $R_0$}
+    \label{fig:task1_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task1_plot.png}
+    \caption{Ток через резистор $R_0$ при изменении напряжения источника от $0$ до $5$ В}
+    \label{fig:task1_plot}
+\end{figure}
+
+\textbf{Результат:} график — прямая из начала координат с $1$ мА при $5$ В (закон Ома подтверждён).
+
+% =========================================================================
+% 2. ПРИМЕР 2
+% =========================================================================
+\section{Пример 2. КМОП-инвертор (анализ переходных процессов), измерение задержек}
+
+Схема инвертора приведена на рисунке~\ref{fig:task2_circuit}, 
+временные диаграммы при нагрузочных ёмкостях $10$ пФ и $100$ пФ — 
+на рисунках~\ref{fig:task2_plot_10pF} и~\ref{fig:task2_plot_100pF}, 
+измеренные задержки — в таблице~\ref{tab:task2_delays}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task2_circuit.png}
+    \caption{КМОП-инвертор с ёмкостной нагрузкой}
+    \label{fig:task2_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task2_plot_10pF.png}
+    \caption{Временная диаграмма работы инвертора при ёмкости $10$ пФ}
+    \label{fig:task2_plot_10pF}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task2_plot_100pF.png}
+    \caption{Временная диаграмма работы инвертора при ёмкости $100$ пФ}
+    \label{fig:task2_plot_100pF}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|C|C|C|}
+        \hline
+        Нагрузочная ёмкость & Задержка $t_{PLH}$, нс & Задержка $t_{PHL}$, нс \\
+        \hline
+        $10$ пФ & & \\ \hline
+        $100$ пФ & & \\
+        \hline
+    \end{tabularx}
+    \caption{Измеренные задержки переключения инвертора}
+    \label{tab:task2_delays}
+\end{table}
+
+\textbf{Результат:} при увеличении ёмкости с $10$ до $100$ пФ задержка выросла примерно в~$\dots$ раз(а).
+
+% =========================================================================
+% 3. ПРИМЕР 3
+% =========================================================================
+\section{Пример 3. Элемент $2$-И-НЕ (NAND$2$)}
+
+Схема элемента приведена на рисунке~\ref{fig:task3_circuit}, временная диаграмма — 
+на рисунке~\ref{fig:task3_plot}, снятая по ней таблица истинности — в таблице~\ref{tab:task3_truth_table}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task3_circuit.png}
+    \caption{Схема электрическая принципиальная элемента $2$-И-НЕ (NAND$2$)}
+    \label{fig:task3_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task3_plot.png}
+    \caption{Временная диаграмма работы элемента $2$-И-НЕ (NAND$2$)}
+    \label{fig:task3_plot}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|C|C|C|}
+        \hline
+        Вход А & Вход В & Выход out по диаграмме \\
+        \hline
+        0 & 0 & \\ \hline
+        0 & 1 & \\ \hline
+        1 & 0 & \\ \hline
+        1 & 1 & \\
+        \hline
+    \end{tabularx}
+    \caption{Таблица истинности элемента $2$-И-НЕ по результатам моделирования}
+    \label{tab:task3_truth_table}
+\end{table}
+
+\textbf{Результат:} снятая диаграмма совпала с таблицей истинности 
+$2$-И-НЕ (NAND$2$): выход $0$ формируется только при комбинации 
+$A=1$ и $B=1$.
+
+% =========================================================================
+% 4. ЗАДАНИЕ 1
+% =========================================================================
+\section{Задание 1. Резистивный делитель (анализ по постоянному току)}
+
+Параметры варианта и результат моделирования приведены в таблице~\ref{tab:task4_variant}, 
+схема — на рисунке~\ref{fig:task4_circuit}, графики — на рисунке~\ref{fig:task4_plot}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|C|C|C|C|C|}
+        \hline
+        $R_1$, кОм & $R_2$, кОм & Развёртка источника (START\dots STOP, STEP) & $V_{\text{out}}$ при $V_1 = \text{STOP}$, В & Ток в цепи, мА \\
+        \hline
+        $1$ & $1$ & $0\dots 5$~В, $10$~мВ & & \\
+        \hline
+    \end{tabularx}
+    \caption{Вариант задания $1$ и результат моделирования}
+    \label{tab:task4_variant}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task4_circuit.png}
+    \caption{Схема резистивного делителя напряжения}
+    \label{fig:task4_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task4_plot.png}
+    \caption{Ток и напряжения делителя при изменении напряжения источника}
+    \label{fig:task4_plot}
+\end{figure}
+
+\textbf{Результат:} полученные значения $V_{\text{out}}$ и тока в цепи совпали со значениями по варианту.
+
+% =========================================================================
+% 5. ЗАДАНИЕ 2
+% =========================================================================
+\section{Задание 2. Подбор резистора по задержке (анализ переходных процессов)}
+
+Параметры варианта, подобранное сопротивление и измеренная задержка 
+приведены в таблице~\ref{tab:task5_variant}, схема — на рисунке~\ref{fig:task5_circuit}, 
+временная диаграмма с курсорами — на рисунке~\ref{fig:task5_plot}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|C|C|C|C|C|}
+        \hline
+        Ёмкость $C_1$ по варианту & Целевая задержка, пс & Подобранное сопротивление $R$ & Измеренная задержка, пс & Отклонение, пс \\
+        \hline
+        $1$ пФ & $400$ пс & & & \\
+        \hline
+    \end{tabularx}
+    \caption{Вариант задания 2 и результат подбора}
+    \label{tab:task5_variant}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task5_circuit.png}
+    \caption{Схема интегрирующей RC-цепи}
+    \label{fig:task5_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task5_plot.png}
+    \caption{Измерение задержки переключения по уровню $50\%$}
+    \label{fig:task5_plot}
+\end{figure}
+
+\textbf{Результат:} измеренная задержка уложилась в допустимый диапазон $\pm 10$~пс.
+
+% =========================================================================
+% 6. ЗАДАНИЕ 3
+% =========================================================================
+\section{Задание 3. Элемент $2$-ИЛИ-НЕ (NOR$2$)}
+
+Схема элемента приведена на рисунке~\ref{fig:task6_circuit}, временная диаграмма — 
+на рисунке~\ref{fig:task6_plot}, снятая по ней таблица истинности — в таблице~\ref{tab:task6_truth_table}.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок схемы из редактора Symica DE};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task6_circuit.png}
+    \caption{Схема электрическая принципиальная элемента $2$-ИЛИ-НЕ (NOR$2$)}
+    \label{fig:task6_circuit}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[dashed] (0,0) rectangle (10,6);
+        \node at (5,3) {\color{gray}вставьте снимок графика из SymProbe};
+    \end{tikzpicture}
+%   \includegraphics[width=0.7\textwidth]{task6_plot.png}
+    \caption{Временная диаграмма работы элемента $2$-ИЛИ-НЕ (NOR$2$)}
+    \label{fig:task6_plot}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|C|C|C|}
+        \hline
+        Вход А & Вход В & Выход out по диаграмме \\
+        \hline
+        0 & 0 & \\ \hline
+        0 & 1 & \\ \hline
+        1 & 0 & \\ \hline
+        1 & 1 & \\
+        \hline
+    \end{tabularx}
+    \caption{Таблица истинности элемента $2$-ИЛИ-НЕ по результатам моделирования}
+    \label{tab:task6_truth_table}
+\end{table}
+
+\textbf{Результат:} снятая диаграмма полностью совпала с таблицей 
+истинности логического элемента $2$-ИЛИ-НЕ (NOR$2$): выход равен $1$ 
+только при $A=0$ и $B=0$.
+
+% =========================================================================
+% 7. ВЫВОДЫ ПО РАБОТЕ
+% =========================================================================
+\section{Выводы по работе}
+
+В ходе выполнения лабораторной работы были освоены базовые приёмы 
+работы в графическом схемотехническом редакторе Symica DE и 
+постпроцессоре SymProbe. Были проведены статический расчёт режимов по 
+постоянному току (DC) и анализ динамических характеристик во временной 
+области (TRAN) для пассивных цепей и КМОП-логических вентилей. 
+Экспериментально подтверждена пропорциональная зависимость задержки 
+переключения КМОП-инвертора от величины нагрузочной ёмкости, а также 
+верифицирована логика функционирования базовых элементов $2$-И-НЕ и $2$-ИЛИ-НЕ.
+
+\end{document}

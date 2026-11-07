@@ -159,7 +159,7 @@
 \thispagestyle{fancy}
 
 \begin{center}
-\Large Отчёт по Лабораторной работе \textnumero~\LabNumber\\
+\Large Отчёт по Лабораторной работе \textnumero~$\LabNumber$\\
 по дисциплине «\Discipline»\\
 «\LabTitle»
 \end{center}
@@ -169,7 +169,7 @@
 \begin{flushright}
 	Выполнил студент группы ЭН-$35$\\
 	Андреев И. А.\\
-    Вариант \textnumero~\VariantN\\
+    Вариант \textnumero~$\VariantN$\\
 	Проверил преподаватель института ИнЭл\\
     Щучкин Евгений Юрьевич
 \end{flushright}
@@ -211,7 +211,7 @@ $\ref{fig:task1_plot}$.
 \end{figure}
 
 \begin{lstlisting}[language=spice,caption={SPICE-описание схемы примера 1},label={lst:task1}]
-* Resistor current
+* resistor current
 
 V0 1 gnd 5
 R0 1 gnd 1k
@@ -244,14 +244,14 @@ $\ref{fig:task2_plot}$.
 \end{figure}
 
 \begin{lstlisting}[language=spice,caption={SPICE-описание схемы примера 2},label={lst:task2}]
-*RC-net
+* RC-net example
 
 V0 in 0 PULSE(0 5 2n 1n 1n 10n 20n)
 R0 in out 1K
 C0 out 0 1p
 
 .TRAN 1n 100n
-.SAVE V(in) V(out)
+.PROBE V(in) V(out)
 .END
 \end{lstlisting}
 
@@ -262,7 +262,8 @@ C0 out 0 1p
     \label{fig:task2_plot}
 \end{figure}
 
-\textbf{Результат:} график — сглаженный импульсный сигнал с заваленными фронтами.
+\textbf{Результат:} на графике V(in) — прямоугольные
+импульсы входа, V(out) — сглаженный сигнал на конденсаторе.
 
 \section{Пример 3. Подсхемы (\textrm{.SUBCKT}) }
 
@@ -278,21 +279,22 @@ $\ref{fig:task3_plot}$.
 \end{figure}
 
 \begin{lstlisting}[language=spice,caption={SPICE-описание схемы примера 3 с подсхемой},label={lst:task3}]
-* Subcircuit example
+* subcircuit example
 
-* 1. Описание подсхемы rc_net
+* rc_net scheme subscript 
 .SUBCKT rc_net in out
 R1 in out 1k
-C1 out 0 10p
+C1 out 0 100p
 .ENDS rc_net
 
-* 2. Основная схема
+* main scheme
 V0 1 0 PULSE(0 5 2u 50n 50n 5u 10u)
 X1 1 2 rc_net
 X2 2 3 rc_net
 X3 3 4 rc_net
 
-.TRAN 10n 20u
+.PROBE TRAN V(1) V(2) V(3) V(4)
+.TRAN 0.1u 20u
 .END
 \end{lstlisting}
 
@@ -311,16 +313,22 @@ X3 3 4 rc_net
 
 Схема делителя приведена на рисунке $\ref{fig:task4_curcuit}$. Номиналы 
 резисторов рассчитаны так, чтобы при $V_\text{in} = 5$ В напряжение в средней
-точке равнялось значению $V_\text{out} = 1$ В. Расчёт и результаты моделирования
+точке равнялось значению $V_\text{out} = 1$ В. Расчёт и результаты моделирования для переменного $V_{in}$ 
 приведены в таблице $\ref{tab:task4}$.
 
 \vspace{1em}
 
-\noindent\begin{tabularx}{\textwidth}{|C|C|C|C|}
-    \hline
-    $V_\text{out} = 1$ В & $R_0$, кОм & $R_1$, кОм & $V_\text{out} = 1$ при $V_\text{in} = 5$, В \\
-    \hline
-\end{tabularx}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|C|C|C|C|}
+        \hline
+        $V_\text{out}$, В & $R_0$, кОм & $R_1$, кОм & $V_\text{out}$ при $V_\text{in} = 5$ В, В \\
+        \hline
+        $1{,}0$ & $1{,}0$ & $0{,}25$ & $1{,}0$ \\
+        \hline
+    \end{tabularx}
+    \caption{Расчёт делителя и результат моделирования}
+    \label{tab:task4}    
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -328,5 +336,125 @@ X3 3 4 rc_net
     \caption{Принципиальная схема резистивного делителя напряжения.}
     \label{fig:task4_curcuit}
 \end{figure}
+
+\begin{lstlisting}[language=spice,caption={SPICE-описание резистивного делителя},label={lst:task4}]
+* task4
+
+V0 in gnd 1
+R0 out in 1k
+R1 gnd out 0.25k
+
+.DC V0 0 5 1
+.PROBE V(in) V(out) I(R0) I(R1)
+.END
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{image/task4_plot.png}
+    \caption{Токи и напряжения делителя при изменении напряжения источника от $0$ до $5$ В}
+    \label{fig:task4_plot}
+\end{figure}
+
+\textbf{Результат:} график — прямая из начала координат в точку $1$ В при $5$ В.
+
+\section{Задание 2. Дифференцирующая RC-цепь (динамический анализ)}
+
+Схема приведена на рисунке $\ref{fig:task5_curcuit}$. Номиналы 
+элементов и время моделирования приведены в таблице $\ref{tab:task5}$.
+
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|C|C|C|C|}
+        \hline
+        $R_0$, кОм & $C_0$, пФ & $\tau = R_0 C_0$, нс & Время моделирования (.TRAN), нс \\
+        \hline
+        $1{,}0$ & $1{,}0$ & $1{,}0$ & $40{,}0$ \\
+        \hline
+    \end{tabularx}
+    \caption{Параметры варианта и настройка анализа.}
+    \label{tab:task5}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{image/task5_curcuit.png}
+    \caption{Принципиальная схема дифференцирующей RC-цепи.}
+    \label{fig:task5_curcuit}
+\end{figure}
+
+\begin{lstlisting}[language=spice,caption={SPICE-описание дифференцирующей RC-цепи},label={lst:task5}]
+* task5
+
+V0 in gnd PULSE(0 5 2n 1n 1n 10n 20n)
+C0 out in 1p
+R0 gnd out 1k
+
+.TRAN 1n 40n
+.PROBE V(in) V(out)
+.END
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{image/task5_plot.png}
+    \caption{Напряжения на входе (in) и выходе (out) дифференцирующей RC-цепи.}
+    \label{fig:task5_plot}
+\end{figure}
+
+\textbf{Результат:} на выходе — короткие всплески (пики) в
+моменты фронтов входного импульса: положительный пик на
+нарастающем фронте, отрицательный — на спадающем. Между
+фронтами выход спадает к нулю.
+
+\section{Задание 3. Источник PWL}
+
+Целевая форма сигнала для варианта приведена на рисунке 
+$\ref{fig:task6_variant1}$, схема для моделирования — на рисунке 
+$\ref{fig:task6_curcuit}$, её SPICE-описание — в листинге
+$\ref{lst:task6}$, полученный сигнал — на рисунке 
+$\ref{fig:task6_plot}$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{image/task6_variant1.png}
+    \caption{Целевая форма сигнала, вариант \textnumero~$1$}
+    \label{fig:task6_variant1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{image/task6_curcuit.png}
+    \caption{Схема для моделирования PWL-источника напряжения}
+    \label{fig:task6_curcuit}
+\end{figure}
+
+\begin{lstlisting}[language=spice,caption={SPICE-описание схемы с источником PWL},label={lst:task6}]
+* task 6
+
+V0 m gnd PWL(0 0 20n 3 40n 5 60n 5 80n 3 100n 0)
+R0 gnd m 1k
+
+.TRAN 1n 100n
+.PROBE V(m)
+.END
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{image/task6_plot.png}
+    \caption{Полученная временная диаграмма напряжения источника PWL}
+    \label{fig:task6_plot}
+\end{figure}
+
+\textbf{Результат:} график соответствует целевой форме сигнала.
+
+\section{Выводы по работе}
+
+В ходе выполнения лабораторной были моделированы схемы на входном языке симулятора SPICE, проведён статический анализ 
+(\textrm{.DC}) и динамический анализ (\textrm{.TRAN}) в САПР Symica DE.
+Изучено поведение резистивного делителя, дифференцирующей и 
+интегрирующей RC-цепей, а также источника PWL. Освоены навыки описания
+электрических схем.
+
 
 \end{document}

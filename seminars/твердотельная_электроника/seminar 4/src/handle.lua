@@ -14,7 +14,7 @@ end
 
 function minority_dist:evaluate(x)
     local delta_p0 = self.pn0 * (math.exp(self.U_ratio) - 1)
-    local delta_p = delta_p0 * math.sinh((self.w - x) / self.Lp) / math.sinh(self.w / self.Lp)
+    local delta_p = delta_p0 * math.exp(-x / self.Lp)
     return self.pn0 + delta_p
 end
 

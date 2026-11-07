@@ -83,7 +83,6 @@
 
 \numberwithin{equation}{section}
 
-
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 \renewcommand\lstlistingname{Исходный код}
@@ -141,20 +140,21 @@
         \hline
         $\varphi_{0\text{э}}$ — ? \\
         $\varphi_{0\text{б}}$ — ? \\
+        $\varphi_k$ — ? \\
         $\Delta\varphi_{0\text{э}}$ — ? \\
         $\Delta\varphi_{0\text{б}}$ — ? \\
         \hline
     \end{tabularx}
 
-    \vspace{1em}
-    Встроенные потенциалы областей относительно собственного полупроводника:
+    \vspace{0.8em}
+    Потенциалы относительно собственного Si ($E_i$):
     \begin{equation*}
         \varphi_{0\text{э}} = \frac{kT}{e}\ln\left(\frac{N_\text{э}}{n_i}\right)
     \end{equation*}
     \begin{equation*}
         \varphi_{0\text{б}} = \frac{kT}{e}\ln\left(\frac{N_\text{б}}{n_i}\right)
     \end{equation*}
-    Контактный потенциал перехода:
+    Контактный потенциал:
     \begin{equation*}
         \varphi_k = \varphi_{0\text{э}} + \varphi_{0\text{б}}
     \end{equation*}
@@ -179,16 +179,9 @@
         \begin{minipage}[t]{0.95\textwidth}
             Температурный потенциал при $T = 300\text{ К}$:
             \begin{equation*}
-                \varphi_T = \frac{kT}{e} = \directlua{
-                    tex.sprint("\\frac{"
-                               .. include.value_with_mantice(data.k, 2, 0, 0) .. 
-                               " \\cdot "
-                               .. include.value_with_mantice(data.T, 2, 0, 0) .. 
-                               "}{"
-                               .. include.value_with_mantice(data.e, 2, 0, 0) .. 
-                               "} = "
-                               .. include.value_with_mantice(data.phi_T, 2, 0, 0))
-                } \text{ В}
+                \varphi_T = \frac{kT}{e} = \frac{1.38 \cdot 10^{-23} \cdot 300}{1.60 \cdot 10^{-19}} \approx \directlua{
+                    tex.sprint(include.value_with_mantice(data.phi_T, 3, 0, 0))
+                } \text{ В} \approx 25.9\text{ мВ}
             \end{equation*}
 
             1) Встроенный потенциал в эмиттере ($n^+$-тип):
@@ -196,13 +189,13 @@
                 \begin{aligned}
                     \varphi_{0\text{э}} &= \frac{kT}{e}\ln\left(\frac{N_\text{э}}{n_i}\right) = \\
                     &= \directlua{
-                        tex.sprint(include.value_with_mantice(data.phi_T, 2, 0, 0) .. 
+                        tex.sprint(include.value_with_mantice(data.phi_T, 3, 0, 0) .. 
                                    " \\ln\\left(\\frac{"
-                                   .. include.value_with_mantice(data.N_e, 2, 0, 0) .. 
+                                   .. include.value_with_mantice(data.N_e, 3, 0, 0) .. 
                                    "}{"
-                                   .. include.value_with_mantice(data.n_i, 2, 0, 0) .. 
-                                   "}\\right) = "
-                                   .. include.value_with_mantice(data.phi_0e, 2, 0, 0))
+                                   .. include.value_with_mantice(data.n_i, 3, 0, 0) .. 
+                                   "}\\right) \\approx "
+                                   .. include.value_with_mantice(data.phi_0e, 3, -1, 0))
                     } \text{ В}
                 \end{aligned}
             \end{equation*}
@@ -212,25 +205,25 @@
                 \begin{aligned}
                     \varphi_{0\text{б}} &= \frac{kT}{e}\ln\left(\frac{N_\text{б}}{n_i}\right) = \\
                     &= \directlua{
-                        tex.sprint(include.value_with_mantice(data.phi_T, 2, 0, 0) .. 
+                        tex.sprint(include.value_with_mantice(data.phi_T, 3, 0, 0) .. 
                                    " \\ln\\left(\\frac{"
-                                   .. include.value_with_mantice(data.N_b, 2, 0, 0) .. 
+                                   .. include.value_with_mantice(data.N_b, 3, 0, 0) .. 
                                    "}{"
-                                   .. include.value_with_mantice(data.n_i, 2, 0, 0) .. 
-                                   "}\\right) = "
-                                   .. include.value_with_mantice(data.phi_0b, 2, 0, 0))
+                                   .. include.value_with_mantice(data.n_i, 3, 0, 0) .. 
+                                   "}\\right) \\approx "
+                                   .. include.value_with_mantice(data.phi_0b, 3, -1, 0))
                     } \text{ В}
                 \end{aligned}
             \end{equation*}
 
-            Полный контактный потенциал перехода:
+            Полная контактная разность потенциалов перехода:
             \begin{equation*}
                 \varphi_k = \varphi_{0\text{э}} + \varphi_{0\text{б}} = \directlua{
-                    tex.sprint(include.value_with_mantice(data.phi_0e, 2, 0, 0) .. 
+                    tex.sprint(include.value_with_mantice(data.phi_0e, 3, -1, 0) .. 
                                " + " .. 
-                               include.value_with_mantice(data.phi_0b, 2, 0, 0) .. 
+                               include.value_with_mantice(data.phi_0b, 3, -1, 0) .. 
                                " = " .. 
-                               include.value_with_mantice(data.phi_k, 2, 0, 0))
+                               include.value_with_mantice(data.phi_k, 3, 0, 0))
                 } \text{ В}
             \end{equation*}
 
@@ -238,38 +231,40 @@
             \begin{equation*}
                 \begin{aligned}
                     \Delta\varphi_{0\text{э}} &= \varphi_k \frac{N_\text{б}}{N_\text{э} + N_\text{б}} = \directlua{
-                        tex.sprint(include.value_with_mantice(data.phi_k, 2, 0, 0) .. 
+                        tex.sprint(include.value_with_mantice(data.phi_k, 3, 0, 0) .. 
                                    " \\cdot \\frac{" .. 
-                                   include.value_with_mantice(data.N_b, 2, 0, 0) .. 
+                                   include.value_with_mantice(data.N_b, 3, 0, 0) .. 
                                    "}{" .. 
-                                   include.value_with_mantice(data.N_e, 2, 0, 0) .. 
+                                   include.value_with_mantice(data.N_e, 3, 0, 0) .. 
                                    " + " .. 
-                                   include.value_with_mantice(data.N_b, 2, 0, 0) .. 
-                                   "} = " .. 
-                                   include.value_with_mantice(data.delta_phi_0e, 2, 0, 0))
+                                   include.value_with_mantice(data.N_b, 3, 0, 0) .. 
+                                   "} \\approx " .. 
+                                   include.value_with_mantice(data.delta_phi_0e, 3, 0, 0))
                     } \text{ В} \\
                     \Delta\varphi_{0\text{б}} &= \varphi_k \frac{N_\text{э}}{N_\text{э} + N_\text{б}} = \directlua{
-                        tex.sprint(include.value_with_mantice(data.phi_k, 2, 0, 0) .. 
+                        tex.sprint(include.value_with_mantice(data.phi_k, 3, 0, 0) .. 
                                    " \\cdot \\frac{" .. 
-                                   include.value_with_mantice(data.N_e, 2, 0, 0) .. 
+                                   include.value_with_mantice(data.N_e, 3, 0, 0) .. 
                                    "}{" .. 
-                                   include.value_with_mantice(data.N_e, 2, 0, 0) .. 
+                                   include.value_with_mantice(data.N_e, 3, 0, 0) .. 
                                    " + " .. 
-                                   include.value_with_mantice(data.N_b, 2, 0, 0) .. 
-                                   "} = " .. 
-                                   include.value_with_mantice(data.delta_phi_0b, 2, 0, 0))
+                                   include.value_with_mantice(data.N_b, 3, 0, 0) .. 
+                                   "} \\approx " .. 
+                                   include.value_with_mantice(data.delta_phi_0b, 3, 0, 0))
                     } \text{ В}
                 \end{aligned}
             \end{equation*}
 
-            Ответ: $\varphi_{0\text{э}} = \directlua{
-                tex.sprint(include.value_with_mantice(data.phi_0e, 2, 0, 0))
-            } \text{ В}$, $\varphi_{0\text{б}} = \directlua{
-                tex.sprint(include.value_with_mantice(data.phi_0b, 2, 0, 0))
-            } \text{ В}$ (падения на ОПЗ: $\Delta\varphi_{0\text{э}} = \directlua{
-                tex.sprint(include.value_with_mantice(data.delta_phi_0e, 2, 0, 0))
-            } \text{ В}$, $\Delta\varphi_{0\text{б}} = \directlua{
-                tex.sprint(include.value_with_mantice(data.delta_phi_0b, 2, 0, 0))
+            Ответ: $\varphi_{0\text{э}} \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.phi_0e, 3, -1, 0))
+            } \text{ В}$, $\varphi_{0\text{б}} \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.phi_0b, 3, -1, 0))
+            } \text{ В}$, контактный потенциал $\varphi_k \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.phi_k, 3, 0, 0))
+            } \text{ В}$ (падения на ОПЗ: $\Delta\varphi_{0\text{э}} \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.delta_phi_0e, 3, 0, 0))
+            } \text{ В} \approx 10.4\text{ мВ}$, $\Delta\varphi_{0\text{б}} \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.delta_phi_0b, 3, 0, 0))
             } \text{ В}$).
     \end{minipage}\end{minipage}
 \end{figure}
@@ -304,12 +299,12 @@
         \hline
     \end{tabularx}
 
-    \vspace{1em}
+    \vspace{0.8em}
     Переход $n^+\text{-}p$ резкий асимметричный ($N_\text{э} \gg N_\text{б}$):
     \begin{equation*}
-        \frac{l_n}{l_p} = \frac{N_\text{б}}{N_\text{э}} = 10^{-2}
+        \frac{l_{n0}}{l_{p0}} = \frac{N_\text{б}}{N_\text{э}} = \frac{10^{18}}{10^{20}} = 10^{-2}
     \end{equation*}
-    Вследствие резкой асимметрии ОПЗ практически целиком сосредоточена в слаболегированной базе ($l_p \approx l_0$).
+    Из условия электронейтральности $q N_\text{э} l_{n0} = q N_\text{б} l_{p0}$ следует, что ОПЗ практически целиком ($99\%$) сосредоточена в слаболегированной базе ($l_{p0} \approx l_0$).
     \end{minipage}\hfill\begin{minipage}[t]{0.7\textwidth}
         \vspace{0em}
         \begin{tabularx}{\textwidth}{C|}
@@ -322,27 +317,40 @@
         \hspace{0.025\textwidth}
         \begin{minipage}[t]{0.95\textwidth}
             \centering
-            \begin{tikzpicture}[scale=0.9, every node/.style={scale=0.92}]
+            \begin{tikzpicture}[scale=0.88, every node/.style={scale=0.90}]
                 % Emitter neutral
-                \fill[blue!10] (-4.5,-1.2) rectangle (-0.3,1.2);
+                \fill[blue!10] (-4.5,-1.1) rectangle (-0.4,1.1);
                 % Emitter SCR
-                \fill[blue!25] (-0.3,-1.2) rectangle (0,1.2);
+                \fill[blue!25] (-0.4,-1.1) rectangle (0,1.1);
                 % Base SCR
-                \fill[red!25] (0,-1.2) rectangle (2.5,1.2);
+                \fill[red!25] (0,-1.1) rectangle (2.5,1.1);
                 % Base neutral
-                \fill[red!10] (2.5,-1.2) rectangle (5.5,1.2);
+                \fill[red!10] (2.5,-1.1) rectangle (5.5,1.1);
+
+                % Ohmic contacts
+                \fill[gray!40] (-4.7,-1.1) rectangle (-4.5,1.1);
+                \fill[gray!40] (5.5,-1.1) rectangle (5.7,1.1);
+                \draw[thick] (-4.7,-1.1) rectangle (-4.5,1.1);
+                \draw[thick] (5.5,-1.1) rectangle (5.7,1.1);
+                \node[rotate=90] at (-4.95,0) {\tiny Катод (К)};
+                \node[rotate=-90] at (5.95,0) {\tiny Анод (А)};
 
                 % Border
-                \draw[thick] (-4.5,-1.2) rectangle (5.5,1.2);
+                \draw[thick] (-4.5,-1.1) rectangle (5.5,1.1);
+
                 % Metallurgical junction
-                \draw[very thick, dashed, black!80] (0,-1.4) -- (0,1.4) node[above] {$x = 0$};
-                % SCR boundaries
-                \draw[thick, black!60] (-0.3,-1.2) -- (-0.3,1.2);
-                \draw[thick, black!60] (2.5,-1.2) -- (2.5,1.2);
+                \draw[very thick, dashed, black!80] (0,-1.1) -- (0,1.8);
+                \node[above=1pt, align=center] at (0,1.8) {\footnotesize Металлургический переход ($x = 0$)};
+
+                % SCR boundaries & coordinate labels on top
+                \draw[thick, black!60] (-0.4,-1.1) -- (-0.4,1.3);
+                \draw[thick, black!60] (2.5,-1.1) -- (2.5,1.3);
+                \node[above] at (-0.4,1.25) {\footnotesize $-l_{n0}$};
+                \node[above] at (2.5,1.25) {\footnotesize $l_{p0}$};
 
                 % Charges in SCR
-                \node at (-0.15,0.45) {\footnotesize $\oplus$};
-                \node at (-0.15,-0.45) {\footnotesize $\oplus$};
+                \node at (-0.2,0.45) {\footnotesize $\oplus$};
+                \node at (-0.2,-0.45) {\footnotesize $\oplus$};
                 \node at (0.6,0.45) {\footnotesize $\ominus$};
                 \node at (0.6,-0.45) {\footnotesize $\ominus$};
                 \node at (1.3,0.45) {\footnotesize $\ominus$};
@@ -351,35 +359,39 @@
                 \node at (2.0,-0.45) {\footnotesize $\ominus$};
 
                 % Region labels
-                \node[align=center] at (-2.4,0) {\textbf{Эмиттер} ($n^+$)\\ $N_D = 10^{20}\text{ см}^{-3}$};
+                \node[align=center] at (-2.45,0) {\textbf{Эмиттер} ($n^+$)\\ $N_D = 10^{20}\text{ см}^{-3}$};
                 \node[align=center] at (4.0,0) {\textbf{База} ($p$)\\ $N_A = 10^{18}\text{ см}^{-3}$};
 
-                % Dimension brackets
-                \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.3,-1.5) -- (2.5,-1.5) 
-                    node[midway, below] {\footnotesize ОПЗ ($l_0 = l_n + l_p$)};
-                \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-4.5,-1.5) -- (-0.3,-1.5) 
-                    node[midway, below] {\footnotesize Нейтр. обл. эмиттера};
+                % Layer 1 brackets (neutral regions) below
+                \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-4.5,-1.5) -- (-0.4,-1.5) 
+                    node[midway, below, align=center] {\footnotesize Нейтральная обл. эмиттера};
                 \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (2.5,-1.5) -- (5.5,-1.5) 
-                    node[midway, below] {\footnotesize Нейтр. обл. базы};
+                    node[midway, below, align=center] {\footnotesize Нейтральная обл. базы};
+
+                % Layer 2 bracket (SCR) below
+                \draw[thin, dashed, gray!70] (-0.4,-1.1) -- (-0.4,-2.4);
+                \draw[thin, dashed, gray!70] (2.5,-1.1) -- (2.5,-2.4);
+                \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick] (-0.4,-2.3) -- (2.5,-2.3) 
+                    node[midway, below] {\footnotesize ОПЗ ($l_0 = l_{n0} + l_{p0}$)};
             \end{tikzpicture}
 
             \vspace{0.8em}
             \raggedright
             \textbf{Характеристики областей структуры:}
             \begin{itemize}
-                \item \textbf{Эмиттер} --- сильнолегированная область $n^+$-типа ($N_D = 10^{20}\text{ см}^{-3}$):
+                \item \textbf{Эмиттер} --- сильнолегированная область $n^+$-типа ($N_D = 10^{20}\text{ см}^{-3}$, вывод катода):
                 \begin{itemize}
-                    \item Основные носители: \textbf{электроны} ($n$);
-                    \item Неосновные носители: \textbf{дырки} ($p$).
+                    \item Основные носители заряда: \textbf{электроны} ($n$);
+                    \item Неосновные носители заряда: \textbf{дырки} ($p$).
                 \end{itemize}
-                \item \textbf{База} --- область $p$-типа ($N_A = 10^{18}\text{ см}^{-3}$):
+                \item \textbf{База} --- область $p$-типа ($N_A = 10^{18}\text{ см}^{-3}$, вывод анода):
                 \begin{itemize}
-                    \item Основные носители: \textbf{дырки} ($p$);
-                    \item Неосновные носители: \textbf{электроны} ($n$).
+                    \item Основные носители заряда: \textbf{дырки} ($p$);
+                    \item Неосновные носители заряда: \textbf{электроны} ($n$).
                 \end{itemize}
             \end{itemize}
 
-            \vspace{0.5em}
+            \vspace{0.4em}
             Ответ: Эмиттер: $n^+$-тип (осн. носители --- $e^-$, неосн. --- $p$). База: $p$-тип (осн. носители --- $p$, неосн. --- $e^-$).
     \end{minipage}\end{minipage}
 \end{figure}
@@ -407,7 +419,7 @@
         \hline
     \end{tabularx}
 
-    \vspace{1em}
+    \vspace{0.8em}
     Уровень инжекции $\delta$ в базе $p$-типа определяется как
     \begin{equation*}
         \delta = \frac{\Delta n(0)}{p_{p0}} = \frac{\Delta n(0)}{N_\text{б}}
@@ -431,15 +443,15 @@
         \vspace{0.5em}
         \hspace{0.025\textwidth}
         \begin{minipage}[t]{0.95\textwidth}
-            Равновесная концентрация электронов в базе:
+            Равновесная концентрация неосновных носителей (электронов) в базе:
             \begin{equation*}
                 n_{p0} = \frac{n_i^2}{N_\text{б}} = \directlua{
                     tex.sprint("\\frac{("
-                               .. include.value_with_mantice(data.n_i, 2, 0, 0) .. 
+                               .. include.value_with_mantice(data.n_i, 3, 0, 0) .. 
                                ")^2}{"
-                               .. include.value_with_mantice(data.N_b, 2, 0, 0) .. 
+                               .. include.value_with_mantice(data.N_b, 3, 0, 0) .. 
                                "} = "
-                               .. include.value_with_mantice(data.n_p0, 2, 0, 0))
+                               .. include.value_with_mantice(data.n_p0, 3, 0, 0))
                 } \text{ см}^{-3}
             \end{equation*}
 
@@ -451,26 +463,33 @@
             \begin{equation*}
                 e^{\frac{U}{\varphi_T}} = 1 + \frac{N_\text{б}}{n_{p0}} = 1 + \frac{N_\text{б}^2}{n_i^2}
             \end{equation*}
-            Так как $\frac{N_\text{б}^2}{n_i^2} \gg 1$, напряжение на переходе:
+            Так как $\frac{N_\text{б}^2}{n_i^2} \approx 4.76 \cdot 10^{15} \gg 1$, напряжение прямого смещения на переходе:
             \begin{equation*}
                 \begin{aligned}
-                    U &= \varphi_T \ln\left(1 + \frac{N_\text{б}^2}{n_i^2}\right) \approx 2\varphi_T \ln\left(\frac{N_\text{б}}{n_i}\right) = \\
+                    U &= \varphi_T \ln\left(1 + \frac{N_\text{б}^2}{n_i^2}\right) \approx 2\varphi_T \ln\left(\frac{N_\text{б}}{n_i}\right) = 2\varphi_{0\text{б}} = \\
                     &= \directlua{
-                        tex.sprint(include.value_with_mantice(data.phi_T, 2, 0, 0) .. 
+                        tex.sprint(include.value_with_mantice(data.phi_T, 3, 0, 0) .. 
                                    " \\ln\\left(1 + \\frac{(" .. 
-                                   include.value_with_mantice(data.N_b, 2, 0, 0) .. 
+                                   include.value_with_mantice(data.N_b, 3, 0, 0) .. 
                                    ")^2}{(" .. 
-                                   include.value_with_mantice(data.n_i, 2, 0, 0) .. 
-                                   ")^2}\\right) = " .. 
-                                   include.value_with_mantice(data.U_delta_1, 2, 0, 0))
+                                   include.value_with_mantice(data.n_i, 3, 0, 0) .. 
+                                   ")^2}\\right) \\approx " .. 
+                                   include.value_with_mantice(data.U_delta_1, 3, -1, 0))
                     } \text{ В}
                 \end{aligned}
             \end{equation*}
-            Величина $U$ равна удвоенному встроенному потенциалу базы: $U = 2\varphi_{0\text{б}}$.
 
-            Ответ: $U = \directlua{
-                tex.sprint(include.value_with_mantice(data.U_delta_1, 2, 0, 0))
-            } \text{ В}$.
+            \textbf{Физический смысл полученного результата:}
+            \begin{itemize}
+                \item Величина $U$ равна удвоенному встроенному потенциалу базы: $U = 2\varphi_{0\text{б}} = 2 \cdot 0.467\text{ В} \approx 0.933\text{ В}$.
+                \item При этом напряжении избыточная концентрация инжектированных электронов достигает равновесной концентрации дырок ($\Delta n(0) = N_\text{б} = 10^{18}\text{ см}^{-3}$), что является границей применимости теории слабого уровня инжекции ($\delta \le 1$).
+                \item Напряжение $U = 0.933\text{ В} < \varphi_k = 1.052\text{ В}$, что подтверждает корректность барьерного режима перехода.
+            \end{itemize}
+
+            \vspace{0.4em}
+            Ответ: $U \approx \directlua{
+                tex.sprint(include.value_with_mantice(data.U_delta_1, 3, -1, 0))
+            } \text{ В} = 2\varphi_{0\text{б}}$.
     \end{minipage}\end{minipage}
 \end{figure}
 
@@ -486,36 +505,40 @@
         \hline
         \multicolumn{1}{|C|}{Дано} \\
         \hline
-        $n$-тип области \\
-        $w = 1$ мкм $= 10^{-4}$ см \\
-        $N = 10^{18}$ см$^{-3}$ \\
-        $\tau = 10$ нс $= 10^{-8}$ с \\
-        $U_1 = +5\varphi_T$ \\
-        $U_2 = -5\varphi_T$ \\
+        $n$-тип базы \\
+        $N_D = 10^{18}$ см$^{-3}$ \\
+        $\tau_p = 10$ нс $= 10^{-8}$ с \\
+        $w = 1$ мкм (модель: $w \gg L_p$) \\
+        $U_1 = +5\varphi_T \approx +0.13$ В \\
+        $U_2 = -5\varphi_T \approx -0.13$ В \\
         \hline
         \multicolumn{1}{|C|}{Найти} \\
         \hline
-        $p(x)$ при $U_1$ — ? \\
-        $p(x)$ при $U_2$ — ? \\
-        Графики $p(x)$ \\
+        $p_n(x)$ при $U_1$ — ? \\
+        $p_n(x)$ при $U_2$ — ? \\
+        Графики $p_n(x)$ \\
         \hline
     \end{tabularx}
 
-    \vspace{1em}
-    Неосновные носители --- дырки ($p$). Распределение при $0 \le x \le w$:
+    \vspace{0.8em}
+    Стационарное уравнение диффузии в квазинейтральной $n$-базе ($E \approx 0$):
     \begin{equation*}
-        p(x) = p_{n0} + \Delta p(x)
+        \frac{d^2 \Delta p_n(x)}{dx^2} - \frac{\Delta p_n(x)}{L_p^2} = 0
     \end{equation*}
-    где $p_{n0} = \frac{n_i^2}{N}$, а из уравнения диффузии:
+    Решение для полубесконечной базы ($\Delta p_n(x \to \infty) = 0$):
     \begin{equation*}
-        \Delta p(x) = \Delta p(0)\frac{\sh\left(\frac{w - x}{L_p}\right)}{\sh\left(\frac{w}{L_p}\right)}
+        \Delta p_n(x) = \Delta p_n(0) e^{-\frac{x}{L_p}}
     \end{equation*}
-    Граничные условия:
+    Полная концентрация:
     \begin{equation*}
-        \Delta p(0) = p_{n0}\left(e^{\frac{U}{\varphi_T}} - 1\right)
+        p_n(x) = p_{n0} + \Delta p_n(x)
+    \end{equation*}
+    Условия Шокли при $x = 0$:
+    \begin{equation*}
+        p_n(0) = p_{n0} e^{\frac{U}{\varphi_T}}
     \end{equation*}
     \begin{equation*}
-        \Delta p(w) = 0 \implies p(w) = p_{n0}
+        \Delta p_n(0) = p_{n0}\left(e^{\frac{U}{\varphi_T}} - 1\right)
     \end{equation*}
     \end{minipage}\hfill\begin{minipage}[t]{0.7\textwidth}
         \vspace{0em}
@@ -525,62 +548,66 @@
             \hline
         \end{tabularx}
 
-        \vspace{0.5em}
+        \vspace{0.4em}
         \hspace{0.025\textwidth}
         \begin{minipage}[t]{0.95\textwidth}
-            Подвижность дырок $\mu_p = 150\text{ см}^2/(\text{В}\cdot\text{с})$. Коэффициент диффузии и диффузионная длина:
+            Подвижность дырок при $N_D = 10^{18}\text{ см}^{-3}$: $\mu_p = 150\text{ см}^2/(\text{В}\cdot\text{с})$.
+            Диффузионные параметры:
             \begin{equation*}
                 \begin{aligned}
-                    D_p &= \varphi_T \mu_p = \directlua{tex.sprint(include.value_with_mantice(data.D_p, 2, 0, 0))} \text{ см}^2/\text{с} \\
-                    L_p &= \sqrt{D_p \tau} = \directlua{tex.sprint(include.value_with_mantice(data.L_p, 2, 0, 0))} \text{ см} \approx 2.0\text{ мкм}
+                    D_p &= \varphi_T \mu_p = \directlua{tex.sprint(include.value_with_mantice(data.D_p, 3, 0, 0))} \text{ см}^2/\text{с} \\
+                    L_p &= \sqrt{D_p \tau_p} = \directlua{tex.sprint(include.value_with_mantice(data.L_p, 3, 0, 0))} \text{ см} \approx \directlua{tex.sprint(include.value_with_mantice(data.L_p_um, 3, 0, 0))}\text{ мкм}
                 \end{aligned}
             \end{equation*}
-
             Равновесная концентрация дырок:
-            $p_{n0} = \frac{n_i^2}{N} = \directlua{tex.sprint(include.value_with_mantice(data.p_n0, 2, 0, 0))} \text{ см}^{-3}$.
+            $p_{n0} = \frac{n_i^2}{N_D} = \directlua{tex.sprint(include.value_with_mantice(data.p_n0, 3, 0, 0))} \text{ см}^{-3}$.
 
-            Концентрации на границах:
+            Итоговая функция распределения концентрации дырок:
+            \begin{equation*}
+                p_n(x) = p_{n0}\left[1 + \left(e^{\frac{U}{\varphi_T}} - 1\right) e^{-\frac{x}{L_p}}\right]
+            \end{equation*}
             \begin{itemize}
-                \item При $U = +5\varphi_T$: $p(0) = p_{n0}e^5 = \directlua{tex.sprint(include.value_with_mantice(data.p_0_fwd, 2, 0, 0))} \text{ см}^{-3}$, $p(w) = p_{n0}$;
-                \item При $U = -5\varphi_T$: $p(0) = p_{n0}e^{-5} = \directlua{tex.sprint(include.value_with_mantice(data.p_0_rev, 2, 0, 0))} \text{ см}^{-3}$, $p(w) = p_{n0}$.
+                \item $U_1 = +5\varphi_T$ (инжекция): $p_n(0) \approx 148.41\,p_{n0} \approx \directlua{tex.sprint(include.value_with_mantice(data.p_0_fwd, 3, 0, 0))}\text{ см}^{-3}$, на расстоянии $x = L_p$: $p_n(L_p) \approx 55.23\,p_{n0} \approx \directlua{tex.sprint(include.value_with_mantice(data.p_Lp_fwd, 3, 0, 0))}\text{ см}^{-3}$;
+                \item $U_2 = -5\varphi_T$ (экстракция): $p_n(0) \approx 0.0067\,p_{n0} \approx \directlua{tex.sprint(include.value_with_mantice(data.p_0_rev, 3, 0, 0))}\text{ см}^{-3} \approx 0$, на расстоянии $x = L_p$: $p_n(L_p) \approx 0.635\,p_{n0} \approx \directlua{tex.sprint(include.value_with_mantice(data.p_Lp_rev, 3, 0, 0))}\text{ см}^{-3}$;
+                \item Предел при $x \to \infty$: $p_n(x) \to p_{n0} = \directlua{tex.sprint(include.value_with_mantice(data.p_n0, 3, 0, 0))}\text{ см}^{-3}$.
             \end{itemize}
 
-            \vspace{0.3em}
+            \vspace{0.1em}
             \directlua{
-                local x = { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 }
+                local x = { 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0 }
                 local func_fwd = handle.minority_dist:new(data.p_n0, 5, data.w_um, data.L_p_um)
                 local y_fwd = func_fwd:get_values(x)
                 local table_fwd = {
                     "red!70!black",
                     "*",
-                    "1.5pt",
+                    "1.3pt",
                     "$U = +5\\varphi_T$",
                     x, y_fwd
                 }
 
                 include.pgf_plot_wrap("Распределение дырок при $U = +5\\varphi_T$ (инжекция)", 
-                    "$x$, мкм", "$p(x)$, см$^{-3}$", "north east", 0.85, 0.38, table_fwd)
+                    "$x$, мкм", "$p_n(x)$, см$^{-3}$", "north east", 0.85, 0.32, table_fwd)
             }
 
-            \vspace{0.3em}
+            \vspace{0.1em}
             \directlua{
-                local x = { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 }
+                local x = { 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0 }
                 local func_rev = handle.minority_dist:new(data.p_n0, -5, data.w_um, data.L_p_um)
                 local y_rev = func_rev:get_values(x)
                 local table_rev = {
                     "blue!70!black",
                     "*",
-                    "1.5pt",
+                    "1.3pt",
                     "$U = -5\\varphi_T$",
                     x, y_rev
                 }
 
                 include.pgf_plot_wrap("Распределение дырок при $U = -5\\varphi_T$ (экстракция)", 
-                    "$x$, мкм", "$p(x)$, см$^{-3}$", "south east", 0.85, 0.38, table_rev)
+                    "$x$, мкм", "$p_n(x)$, см$^{-3}$", "south east", 0.85, 0.32, table_rev)
             }
 
-            \vspace{0.3em}
-            Ответ: $p(x)$ спадает от $\directlua{tex.sprint(include.value_with_mantice(data.p_0_fwd, 2, 0, 0))}\text{ см}^{-3}$ до $p_{n0}$ при $U = +5\varphi_T$, и нарастает от $\approx 0$ до $p_{n0} = \directlua{tex.sprint(include.value_with_mantice(data.p_n0, 2, 0, 0))}\text{ см}^{-3}$ при $U = -5\varphi_T$.
+            \vspace{0.1em}
+            Ответ: при $U = +5\varphi_T$ $p_n(x)$ экспоненциально спадает от $3.12 \cdot 10^4\text{ см}^{-3}$ к $p_{n0}$; при $U = -5\varphi_T$ нарастает от $\approx 0$ к $p_{n0} = 2.10 \cdot 10^2\text{ см}^{-3}$.
     \end{minipage}\end{minipage}
 \end{figure}
 

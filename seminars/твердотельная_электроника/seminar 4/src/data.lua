@@ -46,10 +46,12 @@ data.L_p_um = data.L_p * 10^4 -- мкм
 data.U_fwd = 5 * data.phi_T
 data.p_0_fwd = data.p_n0 * math.exp(5)
 data.delta_p_0_fwd = data.p_n0 * (math.exp(5) - 1)
+data.p_Lp_fwd = data.p_n0 * (1 + (math.exp(5) - 1) * math.exp(-1))
 
 -- Концентрации при U = -5 phi_T
 data.U_rev = -5 * data.phi_T
 data.p_0_rev = data.p_n0 * math.exp(-5)
 data.delta_p_0_rev = data.p_n0 * (math.exp(-5) - 1)
+data.p_Lp_rev = data.p_n0 * (1 + (math.exp(-5) - 1) * math.exp(-1))
 
 return data

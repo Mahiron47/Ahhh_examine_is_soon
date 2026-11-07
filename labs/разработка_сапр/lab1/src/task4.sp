@@ -1,8 +1,8 @@
 * Task4
 
-V0 0 in 5
-R0 in out 1k
-R1 out 0 1k
+V0 in gnd 1
+R0 out in 1k
+R1 gnd out 0.25k
 
-.TRAN 1n 100n
+.DC V0 0 5 1
 .END
